@@ -1,0 +1,36 @@
+<Game>:
+
+
+    orientation: 'vertical'
+
+
+    MDBottomNavigation:
+        name: "tools"
+        #color stuff
+        #panel_color: 0,0,1,1
+
+        MDBottomNavigationItem:
+            name: 'main'
+            text: "Майнинг"
+            icon: 'play'
+            id: hi
+
+            ImageButton:
+                size_hint: (.4,.4)
+                pos_hint: {"center_x":.5,"center_y":.5}
+                source: "mining.png"
+                on_press: root.on_tap()
+            Label:
+                size_hint: (.5,.5)
+                id: bitcoins_num
+
+                #color: 0,0,0,0
+                pos_hint: {"center_x":.5,"center_y":.9}
+
+
+                text: "0"
+        MDBottomNavigationItem:
+            id: store
+            text: "Магазин"
+            icon: 'store'
+
