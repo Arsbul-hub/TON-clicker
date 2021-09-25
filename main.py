@@ -4,7 +4,7 @@ from kivy.config import Config
 # 0 выключен 1 включен как true / false
 # Вы можете использовать 0 или 1 && True или False
 
-Config.set('graphics', 'resizable', False)
+
 
 # Импорт всех классов
 from kivy.uix.gridlayout import GridLayout
@@ -33,19 +33,45 @@ class ImageButton(ButtonBehavior,FloatLayout, Image):
     pass
 from kivy.lang import Builder
 from kivymd.app import MDApp
-
+import pickle
 from kivymd.uix.boxlayout import MDBoxLayout
-class Game(Screen):
+class Game(BoxLayout):
+
     def __init__(self, **kwargs):
+
         #self.f1 = Widget()
         super().__init__(**kwargs)
+        try:
+            with open("player.pickle","rb") as f:
+                self.player_data = pickle.load(f)
+        except:
+
+            with open("player.pickle","wb") as f:
+                pickle.dump({"bitcoins": 0},f)
+                self.player_data = {"bitcoins": 0,"doubling":1}
+                #self.bitcoin = 0
         #self.size_hint = (1,1)
-        self.bitcoin = 0
+        self.doubling_price = 0.001
+    def update_data(self):
+        with open("player.pickle", "wb") as f:
+            pickle.dump(self.player_data, f)
 
     def on_tap(self):
-        self.bitcoin+=0.000001
+        self.player_data["bitcoins"]+=0.000001*self.player_data["doubling"]
         #print(App.get_running_app().root.ids['hi'])
-        App.get_running_app().root.ids['bitcoins_num'].text = '{0:.6f}'.format(self.bitcoin)
+
+    def doubling(self):
+
+        if self.player_data["bitcoins"]- 0.001> 0:
+            self.player_data["doubling"] = self.player_data["doubling"] +2
+            self.doubling_price*=2
+            self.player_data["bitcoins"]-= self.doubling_price
+        App.get_running_app().root.ids['doubling_store'].text = f'''Удвоение майнинга до:{self.player_data["doubling"]+2}x'''
+    def loop(self,dt):
+        self.update_data()
+
+        App.get_running_app().root.ids['bitcoins_num'].text = '{0:.6f}'.format(self.player_data["bitcoins"])
+        App.get_running_app().root.ids['doubling'].text = f'''Удвоение майнинга:{self.player_data["doubling"]}x'''
 class app(MDApp):
 
 
@@ -54,7 +80,7 @@ class app(MDApp):
         #self.title = "Tap-Fight"
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
-        #Clock.schedule_interval(game.loop,1.0)
+        Clock.schedule_interval(game.loop,1/60)
     #self.background_color=(1,0.1,0.1)
         return game
 

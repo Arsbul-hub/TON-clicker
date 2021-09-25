@@ -1,35 +1,24 @@
-'''
-Rotation Example
-================
-
-This example rotates a button using PushMatrix and PopMatrix. You should see
-a static button with the words 'hello world' rotated at a 45 degree angle.
-'''
-
-
-from kivy.app import App
+from kivy.base import runTouchApp
 from kivy.lang import Builder
 
-kv = '''
-FloatLayout:
 
-    Button:
-        text: 'hello world'
-        size_hint: None, None
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        canvas.before:
-            PushMatrix
-            Rotate:
-                angle: 45
-                origin: self.center
-        canvas.after:
-            PopMatrix
+kv = '''
+<ButImage@ButtonBehavior+AsyncImage>
+
+FloatLayout:
+    ButImage:
+        id: but
+        size_hint: .5, .5
+        size_hint: (.49,.49) if self.state == 'down' else (.5,.5)
+        allow_stretch: True
+        keep_ratio: True
+        source: 'doubling.png'
+        Label:
+            center: but.center
+            text: "Normal" if but.state == 'normal' else 'down'
+
+
 '''
 
-
-class RotationApp(App):
-    def build(self):
-        return Builder.load_string(kv)
-
-
-RotationApp().run()
+if __name__ == '__main__':
+    runTouchApp(Builder.load_string(kv))
