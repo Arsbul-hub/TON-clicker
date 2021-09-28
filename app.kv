@@ -19,10 +19,13 @@
                 source: "background.jpg"
                 size_hint: 1,1
 
-            ImageButton:
 
-                size_hint: .4,.4
-                source: "mining.png"
+            ButImage:
+
+
+                size_hint: (.35,.35) if self.state == 'down' else (.4,.4)
+
+                source: 'mining.png'
                 pos_hint: {"center_x":.5,"center_y":.5}
 
                 on_press: root.on_tap()
@@ -48,17 +51,29 @@
             id: store
             text: "Магазин"
             icon: 'store'
+            Carousel:
+                direction: 'right'
+                FloatLayout:
+                    Image:
+                        source: "doubling.png"
 
 
+                    MDLabel:
+                        id: text_doubling
+                        text: ""
+                        pos_hint: {"center_x":.5,"center_y":.6}
+                        size_hint: (.2,.2)
+                    Button:
 
-            ButImage:
-                id: but
 
-                size_hint: (.35,.35) if self.state == 'down' else (.4,.4)
+                        size_hint: (.19,.19) if self.state == 'down' else (.2,.2)
 
-                source: 'doubling.png'
+                        text: "Удвоение майнинга"
 
-                id: doubling_store
-                pos_hint: {"center_x":.2,"center_y":.7}
+                        id: buy_doubling
+                        pos_hint: {"center_x":.5,"center_y":.4}
 
-                on_press: root.doubling()
+                        on_press: root.doubling()
+                FloatLayout:
+                    Label:
+                        text: "Скоро появятся новые акции!!! Ждите!!"

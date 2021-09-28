@@ -46,9 +46,12 @@ class Game(BoxLayout):
                 self.player_data = pickle.load(f)
         except:
 
-            with open("player.pickle","wb") as f:
-                pickle.dump({"bitcoins": 0},f)
-                self.player_data = {"bitcoins": 0,"doubling":1}
+            with open("player.pickle", "wb") as f:
+                self.player_data = {"bitcoins": 0, "doubling": 1}
+                pickle.dump(self.player_data,f)
+
+
+
                 #self.bitcoin = 0
         #self.size_hint = (1,1)
         self.doubling_price = 0.001
@@ -62,14 +65,15 @@ class Game(BoxLayout):
 
     def doubling(self):
 
-        if self.player_data["bitcoins"]- 0.001> 0:
+        if self.player_data["bitcoins"]- 0.001 > 0:
             self.player_data["doubling"] = self.player_data["doubling"] +2
-            self.doubling_price*=2
+            self.doubling_price*=5
             self.player_data["bitcoins"]-= self.doubling_price
-        App.get_running_app().root.ids['doubling_store'].text = f'''Удвоение майнинга до:{self.player_data["doubling"]+2}x'''
+
     def loop(self,dt):
         self.update_data()
-
+        App.get_running_app().root.ids[
+            'text_doubling'].text = f'''Удвоение майнинга до:{self.player_data["doubling"] + 1}x\nЦена: {self.doubling_price}'''
         App.get_running_app().root.ids['bitcoins_num'].text = '{0:.6f}'.format(self.player_data["bitcoins"])
         App.get_running_app().root.ids['doubling'].text = f'''Удвоение майнинга:{self.player_data["doubling"]}x'''
 class app(MDApp):
