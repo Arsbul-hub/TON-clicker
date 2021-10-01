@@ -1,10 +1,8 @@
-import numpy as np
-arr = np.arange(5)
-print("data :")
-print(arr)
-np.save('journalDev.npy', {"1":1})
-print("Your array has been saved to journalDev.npy")
-
-arr = np.load('journalDev.npy',allow_pickle=True)
-print("The data is:")
-print(arr)
+x = 0
+while 1:
+    x += 1
+    y = 3 * x + 1
+    if y % 2:
+        y = y/2
+    else:
+        y = 3 * x + 1

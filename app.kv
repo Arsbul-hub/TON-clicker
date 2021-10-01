@@ -17,13 +17,12 @@
             id: hi
             Image:
                 source: "background.jpg"
-                size_hint: 1,1
-
-
+                allow_stretch: True
+                keep_ratio: False
             ButImage:
 
 
-                size_hint: (.35,.35) if self.state == 'down' else (.4,.4)
+                size_hint: (.38,.38) if self.state == 'down' else (.4,.4)
 
                 source: 'mining.png'
                 pos_hint: {"center_x":.5,"center_y":.5}
@@ -54,26 +53,59 @@
             Carousel:
                 direction: 'right'
                 FloatLayout:
+
                     Image:
-                        source: "doubling.png"
+                        source: "doubling_background.png"
+                        allow_stretch: True
+                        keep_ratio: False
 
 
-                    MDLabel:
+                    Label:
                         id: text_doubling
                         text: ""
+                        allow_stretch: True
+                        keep_ratio: False
                         pos_hint: {"center_x":.5,"center_y":.6}
-                        size_hint: (.2,.2)
+                        size_hint: (.4,.4)
                     Button:
 
 
-                        size_hint: (.19,.19) if self.state == 'down' else (.2,.2)
+                        size_hint: .3,.1
 
-                        text: "Удвоение майнинга"
-
+                        text: "Купить"
+                        allow_stretch: True
+                        keep_ratio: False
                         id: buy_doubling
                         pos_hint: {"center_x":.5,"center_y":.4}
 
-                        on_press: root.doubling()
+                        on_press: root.buy_doubling()
+                FloatLayout:
+
+                    Image:
+                        source: "doubling_background.png"
+                        allow_stretch: True
+                        keep_ratio: False
+
+
+                    Label:
+                        id: text_bot
+                        text: ""
+                        allow_stretch: True
+                        keep_ratio: False
+                        pos_hint: {"center_x":.5,"center_y":.6}
+                        size_hint: (.4,.4)
+                    Button:
+
+
+                        size_hint: .3,.1
+
+                        text: "Купить"
+                        allow_stretch: True
+                        keep_ratio: False
+                        id: buy_bot
+                        pos_hint: {"center_x":.5,"center_y":.4}
+
+                        on_press: root.buy_bot()
                 FloatLayout:
                     Label:
                         text: "Скоро появятся новые акции!!! Ждите!!"
