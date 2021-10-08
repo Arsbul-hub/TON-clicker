@@ -1,4 +1,13 @@
+
 <ButImage@ButtonBehavior+AsyncImage>
+<SettingsTab>:
+    orientation: "vertical"
+    size_hint: 1,1
+    pos_hint: {"center_x": .5, "center_y": .5}
+    border_radius: 5
+    radius: [5]
+    elevation: 20
+
 <Game>:
 
 
@@ -50,62 +59,72 @@
             id: store
             text: "Магазин"
             icon: 'store'
-            Carousel:
-                direction: 'right'
-                FloatLayout:
 
-                    Image:
-                        source: "doubling_background.png"
-                        allow_stretch: True
-                        keep_ratio: False
+            MDTabs:
+                SettingsTab:
+                    title: "Прокачка майнинга"
 
 
-                    Label:
-                        id: text_doubling
-                        text: ""
-                        allow_stretch: True
-                        keep_ratio: False
-                        pos_hint: {"center_x":.5,"center_y":.6}
-                        size_hint: (.4,.4)
-                    Button:
+
+                    FloatLayout:
+                        Image:
+                            source: "doubling_background.png"
+                            allow_stretch: True
+                            keep_ratio: False
+                            size_hint: 1,1
 
 
-                        size_hint: .3,.1
-
-                        text: "Купить"
-                        allow_stretch: True
-                        keep_ratio: False
-                        id: buy_doubling
-                        pos_hint: {"center_x":.5,"center_y":.4}
-
-                        on_press: root.buy_doubling()
-                FloatLayout:
-
-                    Image:
-                        source: "doubling_background.png"
-                        allow_stretch: True
-                        keep_ratio: False
+                        Label:
+                            id: text_doubling
+                            text: ""
+                            allow_stretch: True
+                            keep_ratio: False
+                            pos_hint: {"center_x":.5,"center_y":.6}
+                            size_hint: (.4,.4)
+                        Button:
 
 
-                    Label:
-                        id: text_bot
-                        text: ""
-                        allow_stretch: True
-                        keep_ratio: False
-                        pos_hint: {"center_x":.5,"center_y":.6}
-                        size_hint: (.4,.4)
-                    Button:
+                            size_hint: .3,.1
+
+                            text: "Купить"
+                            allow_stretch: True
+                            keep_ratio: False
+                            id: buy_doubling
+                            pos_hint: {"center_x":.5,"center_y":.4}
+
+                            on_press: root.buy_doubling()
+
+                SettingsTab:
+
+                    title: "Клик-бот"
+                    FloatLayout:
+                        Image:
+                            source: "doubling_background.png"
+                            allow_stretch: True
+                            keep_ratio: False
 
 
-                        size_hint: .3,.1
+                        Label:
+                            id: text_bot
+                            text: ""
+                            allow_stretch: True
+                            keep_ratio: False
+                            pos_hint: {"center_x":.5,"center_y":.6}
+                            size_hint: (.4,.4)
+                        Button:
 
-                        text: "Купить"
-                        allow_stretch: True
-                        keep_ratio: False
-                        id: buy_bot
-                        pos_hint: {"center_x":.5,"center_y":.4}
 
-                        on_press: root.buy_bot()
-                FloatLayout:
-                    Label:
-                        text: "Скоро появятся новые акции!!! Ждите!!"
+                            size_hint: .3,.1
+
+                            text: "Купить"
+                            allow_stretch: True
+                            keep_ratio: False
+                            id: buy_bot
+                            pos_hint: {"center_x":.5,"center_y":.4}
+
+                            on_press: root.buy_bot()
+                SettingsTab:
+                    title: "Скоро!!!"
+                    FloatLayout:
+                        Label:
+                            text: "Скоро появятся новые акции!!! Ждите!!"

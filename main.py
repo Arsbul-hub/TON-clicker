@@ -1,5 +1,3 @@
-# code - Arsbul's Guis
-# textures: ASTghostHost
 from kivy.config import Config
 from kivy.config import Config
 
@@ -35,9 +33,15 @@ class ImageButton(ButtonBehavior,FloatLayout, Image):
     pass
 from kivy.lang import Builder
 from kivymd.app import MDApp
-import time
 import pickle
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.card import MDCard
+from kivymd.uix.tab import MDTabsBase
+
+
+
+class SettingsTab(MDCard, MDTabsBase):
+    pass
 class Game(Screen):
 
     def __init__(self, **kwargs):
@@ -76,7 +80,7 @@ class Game(Screen):
             self.player_data["doubling_price"] *= 3
 
     def buy_bot(self):
-        print(self.bot_data["bot_price"])
+        #print(self.bot_data["bot_price"])
         if self.player_data["bitcoins"]- self.bot_data["bot_price"] > 0:
             self.player_data["bitcoins"] -= self.bot_data["bot_price"]
             self.bot_data["alow_bot"] = True
