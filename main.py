@@ -74,33 +74,36 @@ class Game(Screen):
     def buy_doubling(self):
 
         if self.player_data["bitcoins"]- self.player_data["doubling_price"] > 0:
-            self.player_data["doubling"] +=1
+            self.player_data["doubling"] +=self.player_data["doubling"]/100*30
 
             self.player_data["bitcoins"]-= self.player_data["doubling_price"]
-            self.player_data["doubling_price"] *= 3
+            self.player_data["doubling_price"] += self.player_data["doubling_price"]/100*30
 
     def buy_bot(self):
         #print(self.bot_data["bot_price"])
         if self.player_data["bitcoins"]- self.bot_data["bot_price"] > 0:
             self.player_data["bitcoins"] -= self.bot_data["bot_price"]
             self.bot_data["alow_bot"] = True
-            self.bot_data["bot_speed"] +=1
-            self.bot_data["bot_price"] += 2
+            if self.bot_data["bot_speed"] != 0:
+                self.bot_data["bot_speed"] += self.bot_data["bot_speed"] / 100 * 30
+            else:
+                self.bot_data["bot_speed"] +=  1/1000000*1
+            self.bot_data["bot_price"] += self.bot_data["bot_price"]/100*30
 
     def main_loop(self,dt):
         self.update_data()
         App.get_running_app().root.ids[
-            'text_doubling'].text = f'''Удвоение майнинга до:{self.player_data["doubling"] + 1}x\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])}'''
+            'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         App.get_running_app().root.ids['bitcoins_num'].text = '{0:.6f}'.format(self.player_data["bitcoins"])
         App.get_running_app().root.ids['doubling'].text = f'''Удвоение майнинга:{self.player_data["doubling"]}x'''
 
         App.get_running_app().root.ids[
-            'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\n скорость: {self.bot_data["bot_speed"]} клик в секунду,\nцена: {self.bot_data["bot_price"]} биткоин'''
+            'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} TON в секуну на 30%\nцена: {self.bot_data["bot_price"]} TON'''
     def bot_loop(self,dt):
 
         if self.bot_data["alow_bot"]:
 
-            self.player_data["bitcoins"] += self.player_data["doubling"]
+            self.player_data["bitcoins"] += self.bot_data["bot_speed"]*self.player_data["doubling"]
 class app(MDApp):
 
 
@@ -110,7 +113,7 @@ class app(MDApp):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
         Clock.schedule_interval(game.main_loop,1/60)
-        Clock.schedule_interval(game.bot_loop, 1/game.bot_data["bot_speed"])
+        Clock.schedule_interval(game.bot_loop, 1)
     #self.background_color=(1,0.1,0.1)
         return game
 
