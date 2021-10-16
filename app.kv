@@ -22,7 +22,7 @@
         MDBottomNavigationItem:
             name: 'main'
             text: "Майнинг"
-            icon: 'play'
+            icon: 'bitcoin'
             id: hi
             Image:
                 source: "background.jpg"
@@ -39,7 +39,7 @@
                 on_press: root.on_tap()
             Label:
                 size_hint: (.5,.5)
-                id: bitcoins_num
+                id: TON_num
 
                 #color: 0,0,0,0
                 pos_hint: {"center_x":.5,"center_y":.9}
@@ -55,11 +55,15 @@
 
 
                 text: ""
+            Label:
+                id: TON_num_natural
+                size_hint: .5,.5
+                pos_hint: {"center_x":.5,"center_y":.85}
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
             icon: 'store'
-
+            name: 'store'
             MDTabs:
                 SettingsTab:
                     title: "Прокачка майнинга"
@@ -128,3 +132,23 @@
                     FloatLayout:
                         Label:
                             text: "Скоро появятся новые акции!!! Ждите!!"
+        MDBottomNavigationItem:
+            id: games
+            text: "Игры"
+            icon: 'google-controller'
+            name: 'games'
+            MDTabs:
+                SettingsTab:
+                    title: "Угадайка"
+
+
+
+                    FloatLayout:
+                        id: find_it1
+
+                        Button:
+                            id: test_b
+                            size_hint: .3,.3
+                            pos_hint: {"center_x":.5,"center_y":.5}
+                            text: "Играть"
+                            on_press: root.find_it()
