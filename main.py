@@ -38,7 +38,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
 from kivymd.uix.tab import MDTabsBase
 
-
+from decimal import Decimal
 import numpy as np
 class SettingsTab(MDCard, MDTabsBase):
     pass
@@ -55,7 +55,7 @@ class Game(Screen):
         except:
 
             with open("player.pickle", "wb") as f:
-                self.player_data = {"TON": 1.001, "doubling": 1,"doubling_price":0.001,"bot":{"alow_bot":False,"bot_speed":0,"bot_price": 1}}
+                self.player_data = {"TON": Decimal("1.001"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot":{"alow_bot":False,"bot_speed":Decimal("0"),"bot_price": Decimal("1")}}
                 pickle.dump(self.player_data,f)
 
 
@@ -78,11 +78,11 @@ class Game(Screen):
             pickle.dump(self.player_data, f)
 
     def on_tap(self):
-        self.player_data["TON"]+=0.000001*self.player_data["doubling"]
+        self.player_data["TON"]+=Decimal("0.000001")*self.player_data["doubling"]
         #print(App.get_running_app().root.ids['hi'])
 
     def buy_doubling(self):
-        print(self.player_data["TON"]- self.player_data["doubling_price"])
+
         if self.player_data["TON"]- self.player_data["doubling_price"] >= 0 :
             self.player_data["doubling"] +=self.player_data["doubling"]/100*30
 
@@ -97,7 +97,7 @@ class Game(Screen):
             if self.bot_data["bot_speed"] != 0:
                 self.bot_data["bot_speed"] += self.bot_data["bot_speed"] / 100 * 30
             else:
-                self.bot_data["bot_speed"] +=  1/1000000*1
+                self.bot_data["bot_speed"] +=  Decimal("1")/1000000*1
             self.bot_data["bot_price"] += self.bot_data["bot_price"]/100*30
 
     def main_loop(self,dt):
@@ -107,7 +107,7 @@ class Game(Screen):
             'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
 
-        App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
+        #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
         App.get_running_app().root.ids['doubling'].text = f'''Удвоение майнинга:{self.player_data["doubling"]}x'''
         if self.bot_data["bot_speed"] == 0:
             App.get_running_app().root.ids[
