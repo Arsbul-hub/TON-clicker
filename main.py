@@ -55,7 +55,7 @@ class Game(Screen):
         except:
 
             with open("player.pickle", "wb") as f:
-                self.player_data = {"TON": Decimal("1.001"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot":{"alow_bot":False,"bot_speed":Decimal("0"),"bot_price": Decimal("1")}}
+                self.player_data = {"TON": Decimal("1.003"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot":{"alow_bot":False,"bot_speed":Decimal("0"),"bot_price": Decimal("1")},"summation":{"summation_price": Decimal("0.000001"),"summation_num": Decimal("0.0000001")}}
                 pickle.dump(self.player_data,f)
 
 
@@ -63,6 +63,7 @@ class Game(Screen):
                 #self.bitcoin = 0
         #self.size_hint = (1,1)
         self.bot_data = self.player_data["bot"]
+        self.summation_data = self.player_data["summation"]
         self.n = 0
     def find_it(self):
         for i in range(0, 6,2):
@@ -78,7 +79,7 @@ class Game(Screen):
             pickle.dump(self.player_data, f)
 
     def on_tap(self):
-        self.player_data["TON"]+=Decimal("0.000001")*self.player_data["doubling"]
+        self.player_data["TON"]+=Decimal("0.000001")*self.player_data["doubling"] + self.summation_data["summation_num"]
         #print(App.get_running_app().root.ids['hi'])
 
     def buy_doubling(self):
@@ -88,6 +89,12 @@ class Game(Screen):
 
             self.player_data["TON"]-= self.player_data["doubling_price"]
             self.player_data["doubling_price"] += self.player_data["doubling_price"]/100*30
+    def buy_summation(self):
+
+        if self.player_data["TON"]- self.summation_data["summation_price"] >= 0:
+            self.player_data["TON"] -= self.summation_data["summation_price"]
+            self.summation_data["summation_num"] += self.summation_data["summation_num"] / 100 * 5
+            self.summation_data["summation_price"] += self.summation_data["summation_price"]/100 * 10
 
     def buy_bot(self):
 
@@ -102,10 +109,12 @@ class Game(Screen):
 
     def main_loop(self,dt):
         self.update_data()
-
+        #print('{0:.7f}'.format(self.summation_data["summation_num"]))
         App.get_running_app().root.ids[
-            'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
-        App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
+            'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.7f}'.format(self.player_data["doubling_price"])} TON'''
+        App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.7f}'.format(self.player_data["TON"])
+        App.get_running_app().root.ids[
+            'text_summation'].text = f'''Суммирование майнинга\nУвеличение суммирования с: {'{0:.7f}'.format(self.summation_data["summation_num"])} TON на 10%\nцена: {self.summation_data["summation_price"]} TON'''
 
         #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
         App.get_running_app().root.ids['doubling'].text = f'''Удвоение майнинга:{self.player_data["doubling"]}x'''
@@ -114,13 +123,13 @@ class Game(Screen):
                 'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {self.bot_data["bot_speed"]} на 0,000001 TON\nцена: {self.bot_data["bot_price"]} TON'''
         else:
             App.get_running_app().root.ids[
-                'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} TON на 30%\nцена: {self.bot_data["bot_price"]} TON'''
+                'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {'{0:.7f}'.format(self.bot_data["bot_speed"])} TON на 30%\nцена: {self.bot_data["bot_price"]} TON'''
 
     def bot_loop(self,dt):
 
         if self.bot_data["alow_bot"]:
 
-            self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]
+            self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]+self.summation_data["summation_num"]
 class app(MDApp):
 
 
