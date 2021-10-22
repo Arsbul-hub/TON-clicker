@@ -130,6 +130,8 @@
                 SettingsTab:
 
                     title: "Клик-бот"
+
+
                     FloatLayout:
                         Image:
                             source: "doubling_background.png"
@@ -156,6 +158,35 @@
                             pos_hint: {"center_x":.5,"center_y":.4}
 
                             on_press: root.buy_bot()
+                SettingsTab:
+
+                    title: "Майнинг бота"
+                    FloatLayout:
+                        Image:
+                            source: "doubling_background.png"
+                            allow_stretch: True
+                            keep_ratio: False
+
+
+                        Label:
+                            id: text_bot_doubling
+                            text: ""
+                            allow_stretch: True
+                            keep_ratio: False
+                            pos_hint: {"center_x":.5,"center_y":.6}
+                            size_hint: (.4,.4)
+                        Button:
+
+
+                            size_hint: .3,.1
+
+                            text: "Купить"
+                            allow_stretch: True
+                            keep_ratio: False
+                            id: buy_bot
+                            pos_hint: {"center_x":.5,"center_y":.4}
+
+                            on_press: root.buy_bot_doubling()
                 SettingsTab:
                     title: "Скоро!!!"
                     FloatLayout:
