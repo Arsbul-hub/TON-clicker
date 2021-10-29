@@ -39,7 +39,7 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.tab import MDTabsBase
 import random
 from decimal import Decimal
-import numpy as np
+#import numpy as np
 class SettingsTab(MDCard, MDTabsBase):
     pass
 class Game(Screen):
@@ -55,7 +55,7 @@ class Game(Screen):
         except:
 
             with open("player.pickle", "wb") as f:
-                self.player_data = {"TON": Decimal("1.003"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot":{"alow_bot":False,"doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot_speed":Decimal("0"),"bot_price": Decimal("1")},"summation":{"summation_price": Decimal("0.000001"),"summation_num": Decimal("0.0000001")}}
+                self.player_data = {"TON": Decimal("0"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot":{"alow_bot":False,"doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot_speed":Decimal("0"),"bot_price": Decimal("1")},"summation":{"summation_price": Decimal("0.000001"),"summation_num": Decimal("0")}}
                 pickle.dump(self.player_data,f)
 
 
@@ -64,34 +64,9 @@ class Game(Screen):
         #self.size_hint = (1,1)
         self.bot_data = self.player_data["bot"]
         self.summation_data = self.player_data["summation"]
-        self.n = 0
-        self.true_items = 0
-        self.l = [[0,0,0],
-                  [0,0,0],
-                  [0,0,0]]
-    def find_it(self):
-        for i in range(3):
-            self.l[random.randint(0,2)][random.randint(0,2)] = 1
-        for i in range(0, 6,2):
-            for j in range(0,6,2):
-                self.n += 1
-                print(self.true_items , random.randint(1,2))
-                App.get_running_app().root.ids['test_b'].pos_hint= {"x":2,"y":2}
-                self.true_items += 1
 
-                if self.l[j-2][i-2] == 1:
-                    c = self.item_true
-                else:
-                    c = self.item_false
 
-                b = Button(text = f"{self.n}",pos_hint={"x":round(j/10+.2,1),"y":round(i/10+.2,1)},size_hint=(.2,.2),on_press=c)
-                #b.bind(on_press=c)
-                App.get_running_app().root.ids['find_it1'].add_widget(b)
-                print(123)
-    def item_true(self,event):
-        print(1)
-    def item_false(self,event):
-        print(0)
+
     def update_data(self):
         with open("player.pickle", "wb") as f:
             pickle.dump(self.player_data, f)
@@ -111,8 +86,11 @@ class Game(Screen):
 
         if self.player_data["TON"]- self.summation_data["summation_price"] >= 0:
             self.player_data["TON"] -= self.summation_data["summation_price"]
-            self.summation_data["summation_num"] += self.summation_data["summation_num"] / 100 * 5
-            self.summation_data["summation_price"] += self.summation_data["summation_price"]/100 * 10
+            if self.bot_data["bot_speed"] != 0:
+                self.summation_data["summation_num"] += self.summation_data["summation_num"] / 100 * 10
+            else:
+                self.summation_data["summation_num"] += Decimal("1") / 1000000 * 1
+            self.summation_data["summation_price"] += self.summation_data["summation_price"]/100 * 30
 
     def buy_bot(self):
 
@@ -133,12 +111,13 @@ class Game(Screen):
             self.bot_data["doubling_price"] += self.bot_data["doubling_price"]/100*30
     def main_loop(self,dt):
         self.update_data()
+        #print('{1000:.9f}'.format(self.summation_data["summation_num"]))
         #print('{0:.7f}'.format(self.summation_data["summation_num"]))
         App.get_running_app().root.ids[
             'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
         App.get_running_app().root.ids[
-            'text_summation'].text = f'''Суммирование майнинга\nУвеличение суммирования с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON на 30%\nцена: {self.summation_data["summation_price"]} TON'''
+            'text_summation'].text = f'''Суммирование майнинга\nУвеличение суммирования с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON на 10%\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
         App.get_running_app().root.ids[
             'text_bot_doubling'].text = f'''Удвоение майнинга бота\nУвеличение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%\nцена: {self.bot_data["doubling_price"]} TON'''
 

@@ -55,10 +55,7 @@
 
 
                 text: ""
-            Label:
-                id: TON_num_natural
-                size_hint: .5,.5
-                pos_hint: {"center_x":.5,"center_y":.85}
+
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
@@ -66,13 +63,13 @@
             name: 'store'
             MDTabs:
                 SettingsTab:
-                    title: "Прокачка майнинга"
+                    text: "Удвоение майнинга"
 
 
 
                     FloatLayout:
                         Image:
-                            source: "doubling_background.png"
+                            source: "background_store.jpg"
                             allow_stretch: True
                             keep_ratio: False
                             size_hint: 1,1
@@ -100,10 +97,10 @@
 
                 SettingsTab:
 
-                    title: "Суммироваеие майнинга"
+                    text: "Суммироваеие майнинга"
                     FloatLayout:
                         Image:
-                            source: "doubling_background.png"
+                            source: "background_store.jpg"
                             allow_stretch: True
                             keep_ratio: False
 
@@ -129,12 +126,12 @@
                             on_press: root.buy_summation()
                 SettingsTab:
 
-                    title: "Клик-бот"
+                    text: "Клик-бот"
 
 
                     FloatLayout:
                         Image:
-                            source: "doubling_background.png"
+                            source: "background_store.jpg"
                             allow_stretch: True
                             keep_ratio: False
 
@@ -160,10 +157,10 @@
                             on_press: root.buy_bot()
                 SettingsTab:
 
-                    title: "Майнинг бота"
+                    text: "Удвоение майнинга бота"
                     FloatLayout:
                         Image:
-                            source: "doubling_background.png"
+                            source: "background_store.jpg"
                             allow_stretch: True
                             keep_ratio: False
 
@@ -188,28 +185,9 @@
 
                             on_press: root.buy_bot_doubling()
                 SettingsTab:
-                    title: "Скоро!!!"
+                    text: "Скоро!!!"
                     FloatLayout:
                         Label:
                             text: "Скоро появятся новые акции!!! Ждите!!"
 
-        MDBottomNavigationItem:
-            id: games
-            text: "Игры"
-            icon: 'google-controller'
-            name: 'games'
-            MDTabs:
-                SettingsTab:
-                    title: "Угадайка"
 
-
-
-                    FloatLayout:
-                        id: find_it1
-
-                        Button:
-                            id: test_b
-                            size_hint: .3,.3
-                            pos_hint: {"center_x":.5,"center_y":.5}
-                            text: "Играть"
-                            on_press: root.find_it()
