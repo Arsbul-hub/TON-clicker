@@ -1,19 +1,43 @@
-from kivy.base import runTouchApp
-from kivy.uix.spinner import Spinner
+from kivy.lang import Builder
 
-spinner = Spinner(
-    # default value shown
-    text='Home',
-    # available values
-    values=('Home', 'Work', 'Other', 'Custom'),
-    # just for positioning in our example
-    size_hint=(None, None),
-    size=(100, 44),
-    pos_hint={'center_x': .5, 'center_y': .5})
+from kivymd.app import MDApp
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 
-def show_selected_value(spinner, text):
-    print('The spinner', spinner, 'has text', text)
+KV = '''
+MDFloatLayout:
 
-spinner.bind(text=show_selected_value)
+    MDFlatButton:
+        text: "ALERT DIALOG"
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        on_release: app.show_alert_dialog()
+'''
 
-runTouchApp(spinner)
+
+class Example(MDApp):
+    dialog = None
+
+    def build(self):
+        return Builder.load_string(KV)
+
+    def show_alert_dialog(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Discard draft?",
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                    ),
+                    MDFlatButton(
+                        text="DISCARD",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+Example().run()

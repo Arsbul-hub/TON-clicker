@@ -38,23 +38,19 @@
 
                 on_press: root.on_tap()
             Label:
-                size_hint: (.5,.5)
+                size_hint: (1,1)
                 id: TON_num
 
                 #color: 0,0,0,0
                 pos_hint: {"center_x":.5,"center_y":.9}
 
 
-                text: "0"
-            Label:
-                size_hint: (.5,.5)
-                id: doubling
-                pos_hint: {"center_x":.5,"center_y":.98}
-                #color: 0,0,0,0
 
-
-
-                text: ""
+            MDIconButton:
+                id: show_info
+                icon: "information"
+                pos_hint: {"center_x":.9,"center_y":.95}
+                user_font_size: "65sp"
 
         MDBottomNavigationItem:
             id: store
@@ -97,7 +93,7 @@
 
                 SettingsTab:
 
-                    text: "Суммироваеие майнинга"
+                    text: "Прокачка кнопки"
                     FloatLayout:
                         Image:
                             source: "background_store.jpg"
@@ -189,5 +185,41 @@
                     FloatLayout:
                         Label:
                             text: "Скоро появятся новые акции!!! Ждите!!"
+        MDBottomNavigationItem:
+            id: games
+            text: "Игры"
+            icon: 'google-controller'
+            name: 'games'
+            MDTabs:
+                SettingsTab:
+                    text: "Рулетка"
 
 
+
+                    FloatLayout:
+                        id: find_it1
+
+                        Button:
+                            id: test_b
+                            size_hint: .2,.2
+                            pos_hint: {"center_x":.5,"center_y":.7}
+                            text: "Играть"
+                            on_press: root.find_it()
+                        Label:
+                            text: "Установите ставку в %:"
+                            size_hint: .3,.3
+                            pos_hint: {"center_x":.5,"center_y":.2}
+
+                        MDSlider:
+                            id: bet
+                            min: 0
+                            max: 100
+                            step: 1
+
+                            pos_hint: {"center_x":.5,"center_y":.1}
+                            orientation: 'horizontal'
+                SettingsTab:
+                    text: "Скоро!!!"
+                    FloatLayout:
+                        Label:
+                            text: "Скоро появятся новые миниигры!!! Ждите!!"
