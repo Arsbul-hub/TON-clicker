@@ -52,12 +52,14 @@
                 pos_hint: {"center_x":.9,"center_y":.95}
                 user_font_size: "65sp"
 
+
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
             icon: 'store'
             name: 'store'
             MDTabs:
+                lock_swiping: True
                 SettingsTab:
                     text: "Удвоение майнинга"
 
@@ -191,17 +193,23 @@
             icon: 'google-controller'
             name: 'games'
             MDTabs:
+                lock_swiping: True
                 SettingsTab:
+
                     text: "Рулетка"
 
 
 
                     FloatLayout:
                         id: find_it1
-
+                        Label:
+                            id: value_bet_text
+                            text: "Ваша ставка: ??? TON"
+                            size_hint: .3,.3
+                            pos_hint: {"center_x":.5,"center_y":.8}
                         Button:
                             id: test_b
-                            size_hint: .2,.2
+                            size_hint: .3,.1
                             pos_hint: {"center_x":.5,"center_y":.7}
                             text: "Играть"
                             on_press: root.find_it()
@@ -211,13 +219,15 @@
                             pos_hint: {"center_x":.5,"center_y":.2}
 
                         MDSlider:
-                            id: bet
+                            id: bet_value
                             min: 0
                             max: 100
                             step: 1
-
+                            on_touch_up: root.show_value()
                             pos_hint: {"center_x":.5,"center_y":.1}
                             orientation: 'horizontal'
+
+
                 SettingsTab:
                     text: "Скоро!!!"
                     FloatLayout:

@@ -68,14 +68,19 @@ class Game(Screen):
 
 
         self.n = 0
+    def show_value(self):
+        b= Decimal(f"{App.get_running_app().root.ids['bet_value'].value}")
 
+        #m = self.player_data["TON"] - s
+        w = self.player_data["TON"]/100*b
+        App.get_running_app().root.ids['value_bet_text'].text = f"Ваша ставка: {'{0:.6f}'.format(w)} TON"
     def find_it(self):
 
-        print(App.get_running_app().root.ids['bet'].value )
+        print(App.get_running_app().root.ids['bet_value'].value )
         r = random.randint(0,100)
 
-        b= Decimal(f"{App.get_running_app().root.ids['bet'].value}")
-        l = App.get_running_app().root.ids['bet'].value * (-1) + App.get_running_app().root.ids['bet'].max
+        b= Decimal(f"{App.get_running_app().root.ids['bet_value'].value}")
+        l = App.get_running_app().root.ids['bet_value'].value * (-1) + App.get_running_app().root.ids['bet'].max
         #m = self.player_data["TON"] - s
         w = self.player_data["TON"]/100*b
         self.player_data["TON"] -= w
@@ -126,9 +131,9 @@ class Game(Screen):
         if self.player_data["TON"]- self.summation_data["summation_price"] >= 0:
             self.player_data["TON"] -= self.summation_data["summation_price"]
 
-            self.summation_data["summation_num"] += self.summation_data["summation_num"] / 100 * 10
+            self.summation_data["summation_num"] += Decimal("0.000001")
 
-            self.summation_data["summation_price"] += self.summation_data["summation_price"]/100 * 30
+            self.summation_data["summation_price"] += Decimal("0.000001")*10
 
     def buy_bot(self):
 
@@ -157,7 +162,7 @@ class Game(Screen):
             'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
         App.get_running_app().root.ids[
-            'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON на 10%\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
+            'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON на 0.000001 TON\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
         App.get_running_app().root.ids[
             'text_bot_doubling'].text = f'''Удвоение майнинга бота\nУвеличение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%\nцена: {self.bot_data["doubling_price"]} TON'''
 
