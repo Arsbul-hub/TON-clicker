@@ -80,7 +80,7 @@ class Game(Screen):
         r = random.randint(0,100)
 
         b= Decimal(f"{App.get_running_app().root.ids['bet_value'].value}")
-        l = App.get_running_app().root.ids['bet_value'].value * (-1) + App.get_running_app().root.ids['bet'].max
+        l = App.get_running_app().root.ids['bet_value'].value * (-1) + App.get_running_app().root.ids['bet_value'].max
         #m = self.player_data["TON"] - s
         w = self.player_data["TON"]/100*b
         self.player_data["TON"] -= w
@@ -91,7 +91,7 @@ class Game(Screen):
             self.show_alert_dialog(text=f"Вы выиграли {'{0:.6f}'.format(w*2)} TON")
 
         else:
-            self.show_alert_dialog(text=f"Вы выиграли {'{0:.6f}'.format(w*2)} TON")
+            self.show_alert_dialog(text=f"Вы проиграли {'{0:.6f}'.format(w*2)} TON")
 
 
     def show_alert_dialog(self,text):
@@ -133,7 +133,7 @@ class Game(Screen):
 
             self.summation_data["summation_num"] += Decimal("0.000001")
 
-            self.summation_data["summation_price"] += Decimal("0.000001")*10
+            self.summation_data["summation_price"] += Decimal("0.000001")*100
 
     def buy_bot(self):
 
