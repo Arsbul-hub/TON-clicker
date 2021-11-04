@@ -61,16 +61,12 @@
             MDTabs:
                 lock_swiping: True
                 SettingsTab:
-                    text: "Удвоение майнинга"
+                    text: "Майнинг"
 
 
 
-                    FloatLayout:
-                        Image:
-                            source: "background_store.jpg"
-                            allow_stretch: True
-                            keep_ratio: False
-                            size_hint: 1,1
+                    BoxLayout:
+                        orientation: "vertical"
 
 
                         Label:
@@ -78,7 +74,7 @@
                             text: ""
                             allow_stretch: True
                             keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.6}
+                            pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
                         Button:
 
@@ -89,18 +85,14 @@
                             allow_stretch: True
                             keep_ratio: False
                             id: buy_doubling
-                            pos_hint: {"center_x":.5,"center_y":.4}
+                            pos_hint: {"center_x":.5,"center_y":.8}
 
                             on_press: root.buy_doubling()
 
-                SettingsTab:
+                #SettingsTab:
 
-                    text: "Прокачка кнопки"
-                    FloatLayout:
-                        Image:
-                            source: "background_store.jpg"
-                            allow_stretch: True
-                            keep_ratio: False
+                    #text: "Прокачка кнопки"
+
 
 
                         Label:
@@ -108,7 +100,7 @@
                             text: ""
                             allow_stretch: True
                             keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.6}
+                            pos_hint: {"center_x":.6,"center_y":.7}
                             size_hint: (.4,.4)
                         Button:
 
@@ -119,7 +111,7 @@
                             allow_stretch: True
                             keep_ratio: False
                             id: buy_summation
-                            pos_hint: {"center_x":.5,"center_y":.4}
+                            pos_hint: {"center_x":.5,"center_y":.6}
 
                             on_press: root.buy_summation()
                 SettingsTab:
@@ -127,11 +119,8 @@
                     text: "Клик-бот"
 
 
-                    FloatLayout:
-                        Image:
-                            source: "background_store.jpg"
-                            allow_stretch: True
-                            keep_ratio: False
+                    BoxLayout:
+                        orientation: "vertical"
 
 
                         Label:
@@ -139,7 +128,7 @@
                             text: ""
                             allow_stretch: True
                             keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.6}
+                            pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
                         Button:
 
@@ -150,17 +139,11 @@
                             allow_stretch: True
                             keep_ratio: False
                             id: buy_bot
-                            pos_hint: {"center_x":.5,"center_y":.4}
+                            pos_hint: {"center_x":.5,"center_y":.75}
 
                             on_press: root.buy_bot()
-                SettingsTab:
 
-                    text: "Удвоение майнинга бота"
-                    FloatLayout:
-                        Image:
-                            source: "background_store.jpg"
-                            allow_stretch: True
-                            keep_ratio: False
+
 
 
                         Label:
@@ -179,7 +162,7 @@
                             allow_stretch: True
                             keep_ratio: False
                             id: buy_bot
-                            pos_hint: {"center_x":.5,"center_y":.4}
+                            pos_hint: {"center_x":.5,"center_y":.45}
 
                             on_press: root.buy_bot_doubling()
                 SettingsTab:
