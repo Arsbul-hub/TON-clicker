@@ -162,7 +162,7 @@ class Game(Screen):
             'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         App.get_running_app().root.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
         App.get_running_app().root.ids[
-            'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON на 0.000001 TON\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
+            'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON \nна 0.000001 TON\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
         App.get_running_app().root.ids[
             'text_bot_doubling'].text = f'''Удвоение майнинга бота\nУвеличение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%\nцена: {self.bot_data["doubling_price"]} TON'''
 
@@ -186,8 +186,8 @@ class app(MDApp):
     def build(self):
         game = Game()
         #self.title = "Tap-Fight"
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_palette = "BlueGray"
+        #self.theme_cls.theme_style = "Dark"
+        #self.theme_cls.primary_palette = "BlueGray"
         Clock.schedule_interval(game.main_loop,1/60)
         Clock.schedule_interval(game.bot_loop, 1)
 

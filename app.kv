@@ -34,17 +34,20 @@
                 size_hint: (.38,.38) if self.state == 'down' else (.4,.4)
 
                 source: 'mining.png'
+
                 pos_hint: {"center_x":.5,"center_y":.5}
 
                 on_press: root.on_tap()
+
             Label:
                 size_hint: (1,1)
                 id: TON_num
 
-                #color: 0,0,0,0
+                color: 0,0,0,1
                 pos_hint: {"center_x":.5,"center_y":.9}
 
-
+                font_size: 30
+                font_name: "main_font.ttf"
 
             MDIconButton:
                 id: show_info
@@ -71,23 +74,37 @@
 
                         Label:
                             id: text_doubling
-                            text: ""
+                            font_size: 30
+                            font_name: "main_font.ttf"
+                            color: 0,0,0,1
                             allow_stretch: True
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
-                        Button:
+                            font_name: "main_font.ttf"
+                        ButImage:
 
 
                             size_hint: .3,.1
+                            pos_hint: {"center_x":.5,"center_y":.8}
 
-                            text: "Купить"
+
+
                             allow_stretch: True
                             keep_ratio: False
                             id: buy_doubling
-                            pos_hint: {"center_x":.5,"center_y":.8}
+
 
                             on_press: root.buy_doubling()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Купить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+
 
                 #SettingsTab:
 
@@ -97,23 +114,37 @@
 
                         Label:
                             id: text_summation
-                            text: ""
+                            font_size: 30
+                            font_name: "main_font.ttf"
+                            color: 0,0,0,1
                             allow_stretch: True
                             keep_ratio: False
                             pos_hint: {"center_x":.6,"center_y":.7}
                             size_hint: (.4,.4)
-                        Button:
+                        ButImage:
 
 
                             size_hint: .3,.1
+                            pos_hint: {"center_x":.5,"center_y":.8}
 
-                            text: "Купить"
+
+
                             allow_stretch: True
                             keep_ratio: False
-                            id: buy_summation
-                            pos_hint: {"center_x":.5,"center_y":.6}
+                            id: buy_doubling
+
 
                             on_press: root.buy_summation()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Купить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+
+
                 SettingsTab:
 
                     text: "Клик-бот"
@@ -125,50 +156,79 @@
 
                         Label:
                             id: text_bot
-                            text: ""
+                            font_size: 30
+                            font_name: "main_font.ttf"
+                            color: 0,0,0,1
                             allow_stretch: True
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
-                        Button:
+                        ButImage:
 
 
                             size_hint: .3,.1
+                            pos_hint: {"center_x":.5,"center_y":.8}
 
-                            text: "Купить"
+
+
                             allow_stretch: True
                             keep_ratio: False
-                            id: buy_bot
-                            pos_hint: {"center_x":.5,"center_y":.75}
+                            id: buy_doubling
+
 
                             on_press: root.buy_bot()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Купить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+
+
 
 
 
 
                         Label:
                             id: text_bot_doubling
-                            text: ""
+                            font_size: 30
+                            font_name: "main_font.ttf"
+                            color: 0,0,0,1
                             allow_stretch: True
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.6}
                             size_hint: (.4,.4)
-                        Button:
+                        ButImage:
 
 
                             size_hint: .3,.1
+                            pos_hint: {"center_x":.5,"center_y":.8}
 
-                            text: "Купить"
+
+
                             allow_stretch: True
                             keep_ratio: False
-                            id: buy_bot
-                            pos_hint: {"center_x":.5,"center_y":.45}
+                            id: buy_doubling
+
 
                             on_press: root.buy_bot_doubling()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Купить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+
+
                 SettingsTab:
                     text: "Скоро!!!"
                     FloatLayout:
                         Label:
+                            color: 0,0,0,1
                             text: "Скоро появятся новые акции!!! Ждите!!"
         MDBottomNavigationItem:
             id: games
@@ -188,17 +248,40 @@
                         Label:
                             id: value_bet_text
                             text: "Ваша ставка: ??? TON"
+                            font_size: 30
+                            font_name: "main_font.ttf"
                             size_hint: .3,.3
+                            color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.8}
-                        Button:
-                            id: test_b
+                        ButImage:
+
+
                             size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.7}
-                            text: "Играть"
+                            pos_hint: {"center_x":.5,"center_y":.8}
+
+
+
+                            allow_stretch: True
+                            keep_ratio: False
+                            id: buy_doubling
+
+
                             on_press: root.find_it()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Крутить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+
                         Label:
                             text: "Установите ставку в %:"
+                            font_size: 30
+                            font_name: "main_font.ttf"
                             size_hint: .3,.3
+                            color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.2}
 
                         MDSlider:
@@ -215,4 +298,7 @@
                     text: "Скоро!!!"
                     FloatLayout:
                         Label:
+                            color: 0,0,0,1
+                            font_size: 30
+                            font_name: "main_font.ttf"
                             text: "Скоро появятся новые миниигры!!! Ждите!!"
