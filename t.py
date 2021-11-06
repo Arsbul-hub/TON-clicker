@@ -1,65 +1,55 @@
-## Sample Python application demonstrating that
-## how to create button using image in kivy 
+# Program to explain how to use scroll view in kivy
 
-##################################################      
-# import kivy module 
+# import kivy module
 import kivy
 
-# this restrict the kivy version i.e 
-# below this kivy version you cannot 
-# use the app or software 
-kivy.require("1.9.1")
-
-# base Class of your App inherits from the App class. 
-# app:always refers to the instance of your application 
+# base Class of your App inherits from the App class.
+# app:always refers to the instance of your application
 from kivy.app import App
 
-# creates the button in kivy 
-# if not imported shows the error 
-from kivy.uix.button import Button
-
-# this restrict the kivy version i.e   
-# below this kivy version you cannot   
-# use the app or software   
+# this restrict the kivy version i.e
+# below this kivy version you cannot
+# use the app or software
 kivy.require('1.9.0')
 
-# to change the kivy default settings we use this module config 
-from kivy.config import Config
+# The Label widget is for rendering text
+from kivy.uix.label import Label
 
-# 0 being off 1 being on as in true / false 
-# you can use 0 or 1 && True or False 
-Config.set('graphics', 'resizable', True)
+# The ScrollView widget provides a scrollable view
+from kivy.uix.scrollview import ScrollView
+
+# Property that represents a string value
+from kivy.properties import StringProperty
+
+# Static main function that starts the application loop.
+from kivy.base import runTouchApp
+
+# Builder is a global Kivy instance used in
+# widgets that you can use to load other
+# kv files in addition to the default ones.
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+# Build the .kv file
+Builder.load_string('''
+
+# Define the scroll view
+<ScrollableLabel>:
+    BoxLayout:
+        ScrollView:
+            
+            Label:
+                text: "root.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.textroot.text"
+                #font_size: 50
+                #text_size: self.width, None
+                size_hint_y: None
+                #height: self.texture_size[1]
+''')
 
 
-# class in which we are creating the imagebutton 
-class ButtonApp(App):
-
-    def build(self):
-        # create a fully styled functional button
-        # Adding images normal.png and down.png
-        btn = Button(text="Push Me !",
-                     background_normal='button_normal.jpg',
-                     background_down='button_down.jpg',
-                     size_hint=(.9, .1),
-                     pos_hint={"x": 0.35, "y": 0.3}
-                     )
-
-        # bind() use to bind the button to function callback 
-        btn.bind(on_press=self.callback)
-        return btn
-
-        # callback function tells when button pressed
-
-    def callback(self, event):
-        print("button pressed")
-        print('Yoooo !!!!!!!!!!!')
-
-    # creating the object root for ButtonApp() class
+# Define scrollview class
+class ScrollableLabel(BoxLayout):
+    text = StringProperty('ScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollViewScrollView')
 
 
-root = ButtonApp()
-
-# run function runs the whole program 
-# i.e run() method which calls the target 
-# function passed to the constructor. 
-root.run()
+# run the App
+runTouchApp(ScrollableLabel())

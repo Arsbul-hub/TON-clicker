@@ -131,7 +131,7 @@
 
                             allow_stretch: True
                             keep_ratio: False
-                            id: buy_doubling
+
 
 
                             on_press: root.buy_summation()
@@ -149,8 +149,10 @@
 
                     text: "Клик-бот"
 
-
+                    # Купить бота и изменить его скорость
                     BoxLayout:
+
+
                         orientation: "vertical"
 
 
@@ -189,7 +191,7 @@
 
 
 
-
+                        #Увеличение удвоения майнинга бота
 
                         Label:
                             id: text_bot_doubling
@@ -223,6 +225,38 @@
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
 
+                        # Прокачка клика бота
+                        Label:
+                            id: text_bot_summation
+                            font_size: 30
+                            font_name: "main_font.ttf"
+                            color: 0,0,0,1
+                            allow_stretch: True
+                            keep_ratio: False
+                            pos_hint: {"center_x":.6,"center_y":.7}
+                            size_hint: (.4,.4)
+                        ButImage:
+
+
+                            size_hint: .3,.1
+                            pos_hint: {"center_x":.5,"center_y":.8}
+
+
+
+                            allow_stretch: True
+                            keep_ratio: False
+
+
+
+                            on_press: root.buy_bot_summation()
+
+                            source: "button_normal.jpg"
+                            Label:
+                                text: "Купить"
+                                font_size: 30
+                                font_name: "main_font.ttf"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
 
                 SettingsTab:
                     text: "Скоро!!!"
