@@ -1,3 +1,19 @@
-<Test>:
-    Label:
-        text: "he"
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+
+    MDTextField:
+        hint_text: "City"
+
+    MDTextField:
+        hint_text: "Street"
+
+<g>:
+    MDFloatLayout:
+
+        MDFlatButton:
+            text: "ALERT DIALOG"
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            on_release: app.show_confirmation_dialog()

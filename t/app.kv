@@ -1,6 +1,5 @@
 
 <ButImage@ButtonBehavior+AsyncImage>
-
 <SettingsTab>:
     orientation: "vertical"
     size_hint: 1,1
@@ -8,40 +7,10 @@
     border_radius: 5
     radius: [5]
     elevation: 20
-ScreenManagement:
-    #transition: FadeTransition()
-    id: d
-    Settings_gui:
-    Clicker:
 
-<Settings_gui>:
-
-    BoxLayout:
-        orientation: "vertical"
-        Button:
-
-            text: "<Сохранить"
-            size_hint: .2,.1
-            pos_hint_y: .9
-            on_press: root.back()
-        Label:
-            text: "Размер шрифта"
-            color: 0,0,0,1
-        MDSlider:
-            id: settings_font_slider
-            min: 0
-
-            max: 100
-            step: 1
-            on_touch_up: root.set_font()
-            size_hint: .8,.3
-            pos_hint: {"center_x":.5,"center_y":.1}
-            orientation: 'horizontal'
+<Game>:
 
 
-<Clicker>:
-    id: main_gui
-    main_font_size: 29
     orientation: 'vertical'
 
 
@@ -76,8 +45,8 @@ ScreenManagement:
 
                 color: 1,1,1,1
                 pos_hint: {"center_x":.5,"center_y":.9}
-                size_hint: 1,1
-                font_size: 30
+
+                font_size: 25
                 font_name: "main_font.ttf"
 
             MDIconButton:
@@ -86,15 +55,9 @@ ScreenManagement:
                 #color: 1,1,1,1
 
                 pos_hint: {"center_x":.90,"center_y":.90}
-                user_font_size: "5sp"
+                user_font_size: "20sp"
 
-            #MDIconButton:
-            #    id: settings_button
-            #    icon: "settings.png"
-            #    #color: 1,1,1,1
-            #    on_press: root.to_settings()
-            #    pos_hint: {"center_x":.1,"center_y":.90}
-            #    user_font_size: "5sp"
+
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
@@ -113,7 +76,7 @@ ScreenManagement:
 
                         Label:
                             id: text_doubling
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
@@ -139,7 +102,7 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Купить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -153,7 +116,7 @@ ScreenManagement:
                         #Суммирование майнинга
                         Label:
                             id: text_summation
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
@@ -178,7 +141,7 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Купить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -197,7 +160,7 @@ ScreenManagement:
 
                         Label:
                             id: text_bot
-                            font_size: root.main_font_size
+
                             font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
@@ -222,7 +185,7 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Купить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -230,11 +193,11 @@ ScreenManagement:
 
 
 
-                        #Удвоение майнинга бота
+                        #Увеличение удвоения майнинга бота
 
                         Label:
                             id: text_bot_doubling
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
@@ -259,7 +222,7 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Купить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -267,7 +230,7 @@ ScreenManagement:
                         # Прокачка клика бота
                         Label:
                             id: text_bot_summation
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
@@ -292,7 +255,7 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Купить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -303,7 +266,7 @@ ScreenManagement:
                         Label:
                             color: 0,0,0,1
                             font_name: "main_font.ttf"
-                            font_size: root.main_font_size
+
 
                             text: "Скоро появятся новые акции!!! Ждите!!"
         MDBottomNavigationItem:
@@ -324,7 +287,7 @@ ScreenManagement:
                         Label:
                             id: value_bet_text
                             text: "Ваша ставка: ??? TON"
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             size_hint: .3,.3
                             color: 0,0,0,1
@@ -333,7 +296,7 @@ ScreenManagement:
 
 
                             size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.5}
+                            pos_hint: {"center_x":.5,"center_y":.6}
 
 
 
@@ -347,14 +310,14 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Крутить"
-                                font_size: root.main_font_size
+                                #font_size: 30
                                 font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
 
                         Label:
                             text: "Установите ставку в %:"
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             size_hint: .3,.3
                             color: 0,0,0,1
@@ -363,11 +326,9 @@ ScreenManagement:
                         MDSlider:
                             id: bet_value
                             min: 0
-
                             max: 100
                             step: 1
                             on_touch_up: root.show_value()
-                            size_hint: .8,.3
                             pos_hint: {"center_x":.5,"center_y":.1}
                             orientation: 'horizontal'
 
@@ -377,6 +338,6 @@ ScreenManagement:
                     FloatLayout:
                         Label:
                             color: 0,0,0,1
-                            font_size: root.main_font_size
+                            #font_size: 30
                             font_name: "main_font.ttf"
                             text: "Скоро появятся новые миниигры!!! Ждите!!"
