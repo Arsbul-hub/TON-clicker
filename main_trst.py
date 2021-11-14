@@ -1,34 +1,24 @@
-from kivy.app import App
-from kivy.clock import Clock
-from kivy.lang import Builder
-from kivy.properties import ListProperty
-from kivy.uix.label import Label
+x = int(input())
+y = int(input())
+px = 0
+py = 0
+n = 0
+v = 0
+while True:
+    rot = input()
+    if rot == "стоп":
+        break
+    steps = int(input())
+    if rot == "север":
+        py += steps
+    if rot == "юг":
+        py -= steps
+    if rot == "запад":
+        px -= steps
+    if rot == "восток":
+        px += steps
+    n += 1
+    if x == px and y == py and v == 0:
+        v = n
 
-kv = '''
-BoxLayout:
-    ScrollView:
-        GridLayout:
-            cols: 1
-            id: target
-            size_hint: 1, None
-            height: self.minimum_height
-    Button:
-        text: 'add 100'
-        on_press: app.consumables.extend(range(100))
-'''
-
-class ProdConApp(App):
-    consumables = ListProperty([])
-
-    def build(self):
-        Clock.schedule_interval(self.consume, 0)
-        return Builder.load_string(kv)
-
-    def consume(self, *args):
-        if self.consumables:
-            item = self.consumables.pop(0)
-            label = Label(text='%s' % item)
-            self.root.ids.target.add_widget(label)
-
-if __name__ == '__main__':
-    ProdConApp().run()
+print(v)

@@ -42,7 +42,15 @@ from kivymd.uix.tab import MDTabsBase
 import random
 from decimal import Decimal
 #import numpy as np
+from kivy.storage.jsonstore import JsonStore
 main_font_size = 20
+import os
+import firebase_admin
+from firebase_admin import db
+import random
+from decimal import Decimal
+
+
 class SettingsTab(MDCard, MDTabsBase):
     pass
 class Settings_gui(Screen):
@@ -73,30 +81,9 @@ class Clicker(Screen):
         super().__init__(**kwargs)
         #self.main_font_size = main_font_size
 
-
-
-
-
-        try:
-            with open("data/mining.pickle","rb") as f:
-                self.player_data = pickle.load(f)
-        except:
-
-            with open("data/mining.pickle", "wb") as f:
-                self.player_data = {"TON": Decimal("0"), "doubling": Decimal("1"),"doubling_price":Decimal("0.001"),
-
-                                    "bot":{"alow_bot":False,"doubling": Decimal("1"),"doubling_price":Decimal("0.001"),"bot_speed":Decimal("0"),"bot_price": Decimal("1"),
-                                           "summation_price": Decimal("0.000001"),"summation_num": Decimal("0.000001")},
-
-                                    "summation":{"summation_price": Decimal("0.000001"),"summation_num": Decimal("0.000001")}}
-                pickle.dump(self.player_data,f)
-
-
-                #self.bitcoin = 0
-        #self.size_hint = (1,1)
-        self.bot_data = self.player_data["bot"]
-        self.summation_data = self.player_data["summation"]
-        #self.main_font_size = self.settings["font_size"]
+            # self.bitcoin = 0
+            #self.bitcoin = 0
+    #self.size_hint = (1,1)
 
         self.n = 0
     def show_value(self):
@@ -172,9 +159,9 @@ class Clicker(Screen):
 
 
     def update_data(self):
-        with open("player.pickle", "wb") as f:
-            pickle.dump(self.player_data, f)
-        #with open("data/settings.pickle", "rb") as f:
+        #print(self.player_data)
+        #ref = db.reference(f"/{self.account['email']}")
+        self.ref.set({"account": self.account, "data": self.player_data})
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
     def on_tap(self):
@@ -235,7 +222,7 @@ class Clicker(Screen):
         #self.ids['settings'].on_press =  self.swi
         self.ids[
             'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
-        self.ids['TON_num'].text = "TON " + '{0:.6f}'.format(self.player_data["TON"])
+        self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
         self.ids[
             'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON \nна 0.000001 TON\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
         self.ids[
@@ -261,7 +248,57 @@ class app(MDApp):
 
 
     def build(self):
+
+        cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
+        app = firebase_admin.initialize_app(cred_obj, {
+            'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
+        })
+
+        print(123)
+        type = input("r/l: ")
+        if type == "r":
+            player_name = input("Имя: ")
+            player_email = input("Электронная почта: ")
+            player_password = input("Пароль: ")
+            self.data = {
+                                "account": {"name": player_name,
+                                    "email": player_email,
+                                    "password": player_password},
+                                "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
+                                    "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
+                                        "bot_speed": 0, "bot_price": 1,
+                                        "summation_price": 0.000001, "summation_num": 0.000001},
+
+                                    "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
+                                         }
+                                }
+            ref = db.reference(f"/{player_email}")
+            ref.set(self.data)
+            self.player_data = self.data["data"]
+            self.account = self.data["account"]
+        if type == "l":
+
+            player_email = input("Электронная почта: ")
+            player_password = input("Пароль: ")
+
+            ref = db.reference(f"/{player_email}")
+
+            if ref.get()["account"]["password"] == player_password:
+                self.player_data = ref.get()["data"]
+                self.account = ref.get()["account"]
+
+
+
+
+
+
         game = Clicker(name="1")
+        game.account = self.account
+        game.player_data = self.player_data
+        game.bot_data = self.player_data["bot"]
+        game.summation_data = self.player_data["summation"]
+        game.ref = ref
+        #self.main_font_size = self.settings["font_size"]
         #self.title = "Tap-Fight"
         #self.theme_cls.theme_style = "Dark"
         #self.theme_cls.primary_palette = "BlueGray"
