@@ -50,7 +50,9 @@ from firebase_admin import db
 import random
 from decimal import Decimal
 
+from threading import Thread
 
+import asyncio
 class SettingsTab(MDCard, MDTabsBase):
     pass
 class Settings_gui(Screen):
@@ -84,10 +86,10 @@ class Clicker(Screen):
             # self.bitcoin = 0
             #self.bitcoin = 0
     #self.size_hint = (1,1)
-
+        self.loop = asyncio.new_event_loop()
         self.n = 0
     def show_value(self):
-        b = Decimal(f"{self.ids['bet_value'].value}")
+        b = f"{self.ids['bet_value'].value}"
 
         #m = self.player_data["TON"] - s
         w = self.player_data["TON"]/100*b
@@ -97,7 +99,7 @@ class Clicker(Screen):
 
         r = random.randint(0,100)
 
-        b= Decimal(f"{self.ids['bet_value'].value}")
+        b= f"{self.ids['bet_value'].value}"
         l = self.ids['bet_value'].value * (-1) + self.ids['bet_value'].max
         #m = self.player_data["TON"] - s
         w = self.player_data["TON"]/100*b
@@ -180,9 +182,9 @@ class Clicker(Screen):
         if self.player_data["TON"]- self.summation_data["summation_price"] >= 0:
             self.player_data["TON"] -= self.summation_data["summation_price"]
 
-            self.summation_data["summation_num"] += Decimal("0.000001")
+            self.summation_data["summation_num"] += 0.000001
 
-            self.summation_data["summation_price"] += Decimal("0.000001")*100
+            self.summation_data["summation_price"] += 0.000001*100
 
     def buy_bot(self):
 
@@ -192,7 +194,7 @@ class Clicker(Screen):
             if self.bot_data["bot_speed"] != 0:
                 self.bot_data["bot_speed"] += self.bot_data["bot_speed"] / 100 * 30
             else:
-                self.bot_data["bot_speed"] +=  Decimal("1")/1000000*1
+                self.bot_data["bot_speed"] +=  1/1000000*1
             self.bot_data["bot_price"] += self.bot_data["bot_price"]/100*30
     def buy_bot_doubling(self):
 
@@ -206,14 +208,18 @@ class Clicker(Screen):
         if self.player_data["TON"]- self.bot_data["summation_price"] >= 0:
             self.player_data["TON"] -= self.bot_data["summation_price"]
 
-            self.bot_data["summation_num"] += Decimal("0.000001")
+            self.bot_data["summation_num"] += 0.000001
 
-            self.bot_data["summation_price"] += Decimal("0.000001")*100
+            self.bot_data["summation_price"] += 0.000001*100
     def to_settings(self):
         #print(self.manager.current)
         self.manager.current = "2"
-    def main_loop(self,dt):
+    def test_threading(self):
         self.update_data()
+    def main_loop(self,dt):
+        #self.test_threading()
+        th = Thread(target=self.test_threading)
+        th.start()
         #print(self.main_font_size)
         #print('{1000:.9f}'.format(self.summation_data["summation_num"]))
         #print('{0:.7f}'.format(self.summation_data["summation_num"]))
@@ -298,10 +304,13 @@ class app(MDApp):
         game.bot_data = self.player_data["bot"]
         game.summation_data = self.player_data["summation"]
         game.ref = ref
+
         #self.main_font_size = self.settings["font_size"]
         #self.title = "Tap-Fight"
         #self.theme_cls.theme_style = "Dark"
         #self.theme_cls.primary_palette = "BlueGray"
+
+
         Clock.schedule_interval(game.main_loop,1/60)
         Clock.schedule_interval(game.bot_loop, 1)
         screen_manager = ScreenManager()
