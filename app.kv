@@ -13,11 +13,55 @@ ScreenManagement:
     id: d
     Settings_gui:
     Clicker:
+    Auth:
+<Auth>:
+    MDBottomNavigation:
+        name: "auth_choose"
+        #color stuff
+        #panel_color: 0,0,1,1
 
+        MDBottomNavigationItem:
+            title: "Регистрация"
+            name: "registration"
+            BoxLayout:
+                orientation: "vertical"
+                TextInput:
+                    id: name_r
+                    size_hint: .3, .3
+                    multiline: False
+                TextInput:
+                    id: email_r
+                    size_hint: .3, .3
+                    multiline: False
+                TextInput:
+                    id: password_r
+                    size_hint: .3, .3
+                    multiline: False
+                Button:
+                    size_hint: .3, .3
+                    text: "Войти"
+                    on_press: root.registration()
+        MDBottomNavigationItem:
+            title: "Вход"
+            name: "login"
+            BoxLayout:
+                orientation: "vertical"
+                TextInput:
+                    id: email_l
+                    size_hint: .3, .3
+                    multiline: False
+                TextInput:
+                    id: password_l
+                    size_hint: .3, .3
+                    multiline: False
+                Button:
+                    size_hint: .3, .3
+                    text: "Войти"
+                    on_press: root.login()
 <Settings_gui>:
 
     BoxLayout:
-        orientation: "vertical"
+
         Button:
 
             text: "<Сохранить"
