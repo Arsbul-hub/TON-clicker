@@ -8,12 +8,20 @@
     border_radius: 5
     radius: [5]
     elevation: 20
+<Error_show>:
+
+    Label:
+        color: 0,0,0,1
+        text: "Ошибка!!! \nПроизошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
+
 ScreenManagement:
     #transition: FadeTransition()
     id: d
+    Error_show:
     Settings_gui:
-    Clicker:
     Auth:
+    Clicker:
+
 <Auth>:
     MDBottomNavigation:
         name: "auth_choose"
@@ -21,66 +29,147 @@ ScreenManagement:
         #panel_color: 0,0,1,1
 
         MDBottomNavigationItem:
-            title: "Регистрация"
+            text: "Регистрация"
+            icon: "account"
             name: "registration"
             BoxLayout:
-                orientation: "vertical"
-                TextInput:
-                    id: name_r
-                    size_hint: .3, .3
-                    multiline: False
-                TextInput:
-                    id: email_r
-                    size_hint: .3, .3
-                    multiline: False
-                TextInput:
-                    id: password_r
-                    size_hint: .3, .3
-                    multiline: False
-                Button:
-                    size_hint: .3, .3
-                    text: "Войти"
-                    on_press: root.registration()
+                orientation: "horizontal"
+                Image:
+                    source: "classic_avatar.png"
+                BoxLayout:
+                    orientation: "vertical"
+                    Label:
+                        text: "Введите имя:"
+                        color: 0,0,0,1
+                        size_hint: .1,.1
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        pos_hint: {"center_x":.5}
+                    TextInput:
+                        id: name_r
+                        size_hint: .9, .05
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        pos_hint: {"center_x":.5}
+                        multiline: False
+                    Label:
+                        text: "Введите логин:"
+                        color: 0,0,0,1
+                        size_hint: .1,.1
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        pos_hint: {"center_x":.5}
+                    TextInput:
+                        id: email_r
+                        size_hint: .9, .05
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        pos_hint: {"center_x":.5}
+                        multiline: False
+                    Label:
+                        text: "Введите пароль:"
+                        color: 0,0,0,1
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        size_hint: .1,.1
+                        pos_hint: {"center_x":.5}
+                    TextInput:
+                        id: password_r
+                        size_hint: .9, .05
+                        font_name: "main_font.ttf"
+                        font_size: 35
+                        pos_hint: {"center_x":.5}
+                        multiline: False
+                    MDRaisedButton:
+
+                        md_bg_color: 0, .7, 1, 1
+                        #size_hint: .3, .1
+
+                        pos_hint: {"center_x":.5}
+                        text: "Зарегистриоваться"
+                        on_press: root.registration()
         MDBottomNavigationItem:
-            title: "Вход"
+            text: "Вход"
             name: "login"
+            icon: "account"
             BoxLayout:
                 orientation: "vertical"
+                Label:
+                    text: "Введите логин:"
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    color: 0,0,0,1
+                    size_hint: .1,.1
+                    pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_l
-                    size_hint: .3, .3
+                    size_hint: .9, .05
+                    font_size: 50
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
                     multiline: False
+                Label:
+                    text: "Введите пароль:"
+                    color: 0,0,0,1
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    size_hint: .1,.1
+                    pos_hint: {"center_x":.5}
                 TextInput:
                     id: password_l
-                    size_hint: .3, .3
+                    size_hint: .9, .05
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
                     multiline: False
-                Button:
-                    size_hint: .3, .3
+                MDRaisedButton:
+
+                    md_bg_color: 0, .7, 1, 1
+                    #size_hint: .3, .1
+
+                    pos_hint: {"center_x":.5}
                     text: "Войти"
                     on_press: root.login()
 <Settings_gui>:
 
-    BoxLayout:
+    MDTabs:
+        lock_swiping: True
+        SettingsTab:
+            text: "Аккаунт"
+            Button:
 
-        Button:
+                text: "<Сохранить"
+                size_hint: .2,.1
+                pos_hint_y: .9
+                on_press: root.u()
 
-            text: "<Сохранить"
-            size_hint: .2,.1
-            pos_hint_y: .9
-            on_press: root.back()
-        Label:
-            text: "Размер шрифта"
-            color: 0,0,0,1
-        MDSlider:
-            id: settings_font_slider
-            min: 0
 
-            max: 100
-            step: 1
-            on_touch_up: root.set_font()
-            size_hint: .8,.3
-            pos_hint: {"center_x":.5,"center_y":.1}
-            orientation: 'horizontal'
+            Label:
+                id: f
+                text: "Ваш аккаунт"
+                color: 0,0,0,1
+        SettingsTab:
+            text: "Шрифт"
+            Button:
+
+                text: "<Сохранить"
+                size_hint: .2,.1
+                pos_hint_y: .9
+                on_press: root.back()
+            Label:
+                text: "Размер шрифта"
+                color: 0,0,0,1
+            MDSlider:
+                id: settings_font_slider
+                min: 0
+
+                max: 100
+                step: 1
+                on_touch_up: root.set_font()
+                size_hint: .8,.3
+                pos_hint: {"center_x":.5,"center_y":.1}
+                orientation: 'horizontal'
 
 
 <Clicker>:
@@ -99,10 +188,25 @@ ScreenManagement:
             text: "Майнинг"
             icon: 'bitcoin'
             id: hi
+
+
             Image:
                 source: "background.jpg"
                 allow_stretch: True
                 keep_ratio: False
+
+            MDToolbar:
+                id: toolbar
+
+                left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                title:'Настройки'
+                pos_hint: {"y": .93}
+                size_hint_y: .07
+                left_action_items:[['account-cog',lambda x: nav_drawer.set_state("open")]]
+                right_action_items:[['information',lambda x: root.show_info()]]
+                elevation:10
+                #md_bg_color: 0,0,100/255,1
+
             ButImage:
 
 
@@ -124,21 +228,16 @@ ScreenManagement:
                 font_size: 30
                 font_name: "main_font.ttf"
 
-            MDIconButton:
-                id: show_info
-                icon: "info_icon.png"
-                #color: 1,1,1,1
 
-                pos_hint: {"center_x":.90,"center_y":.90}
-                user_font_size: "5sp"
+            MDNavigationDrawer:
+                id: nav_drawer
 
-            #MDIconButton:
-            #    id: settings_button
-            #    icon: "settings.png"
-            #    #color: 1,1,1,1
-            #    on_press: root.to_settings()
-            #    pos_hint: {"center_x":.1,"center_y":.90}
-            #    user_font_size: "5sp"
+                ScrollView:
+                    MDList:
+                        OneLineListItem:
+                            icon: "account-cog"
+                            text: "Настройки"
+                            on_press: root.to_settings()
         MDBottomNavigationItem:
             id: store
             text: "Магазин"

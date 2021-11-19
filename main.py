@@ -61,7 +61,8 @@ auth_succefull = False
 class SettingsTab(MDCard, MDTabsBase):
     pass
 
-
+class Error_show(Screen):
+    pass
 class Auth(Screen):
     def __init__(self, **kwargs):
 
@@ -98,8 +99,9 @@ class Auth(Screen):
         player_password = self.ids["password_r"].text
         self.data = {
                             "account": {"name": player_name,
-                                "email": player_email,
-                                "password": player_password},
+                                "login": player_email,
+                                "password": player_password,
+                                "avatar": "classic_avatar",},
                             "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
                                 "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
                                     "bot_speed": 0, "bot_price": 1,
@@ -122,19 +124,30 @@ class Auth(Screen):
     def start_loops(self):
         global auth_succefull
         auth_succefull = True
+        with open("account.pickle", "wb") as f:
+
+            pickle.dump(self.account, f)
+
         self.manager.current = "clicker"
 class Settings_gui(Screen):
 
     def __init__(self, **kwargs):
 
         #self.f1 = Widget()
+
         super().__init__(**kwargs)
         #self.main_font_size = main_font_size
     def set_font(self):
-        Clicker().ids["main_gui"].font_size = self.ids["settings_font_slider"].value
+        pass
+        #Clicker().ids["main_gui"].font_size = self.ids["settings_font_slider"].value
 
         #Clicker().main_font_size = self.ids["settings_font_slider"]
         #print(Clicker().main_font_size)
+    def u(self):
+        self.ids["f"].text ="Gfresefsf"
+    def update_info(self,account_data):
+        self.u()
+        print(self.name)
     def back(self):
         self.manager.current = "clicker"
 
@@ -151,7 +164,7 @@ class Clicker(Screen):
         #self.f1 = Widget()
         super().__init__(**kwargs)
         #self.main_font_size = main_font_size
-
+        self.connect_error = False
             # self.bitcoin = 0
             #self.bitcoin = 0
     #self.size_hint = (1,1)
@@ -182,6 +195,14 @@ class Clicker(Screen):
 
         else:
             self.show_alert_dialog(text=f"Вы проиграли {'{0:.6f}'.format(w*2)} TON")
+    def show_info(self):
+
+        self.show_alert_dialog(f'''
+Клик: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON
+Удвоение майнинга: x{self.player_data["doubling"]}
+Бот: {self.bot_data["alow_bot"]}
+Удвоение майнинга бота: x{self.bot_data["doubling"]}
+            ''')
     def show_alert_dialog(self,text):
         self.dialog = None
         if not self.dialog:
@@ -227,15 +248,21 @@ class Clicker(Screen):
         self.dialog.open()
     def close_dialog(self):
         self.dialog.dismiss()
-
+        self.connect_error = False
 
 
     def update_data(self):
         #print(self.player_data)
         #ref = db.reference(f"/{self.account['email']}")
-        self.ref.set({"account": self.account, "data": self.player_data})
+        try:
+            self.ref.set({"account": self.account, "data": self.player_data})
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
+        except:
+
+            if not self.connect_error:
+                self.manager.current = "error_show"
+
     def on_tap(self):
         self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
         #print(App.get_running_app().root.ids['hi'])
@@ -283,37 +310,58 @@ class Clicker(Screen):
             self.bot_data["summation_price"] += 0.000001*100
     def to_settings(self):
         #print(self.manager.current)
-        self.manager.current = "2"
+        s = Settings_gui()
+
+        s.update_info(account_data=self.account)
+        self.manager.current = "settings"
 
     def main_loop(self,dt):
         #self.test_threading()
         if up_data:
+            #print(123)
             th = Thread(target=self.update_data)
             th.start()
         #print(self.main_font_size)
         #print('{1000:.9f}'.format(self.summation_data["summation_num"]))
         #print('{0:.7f}'.format(self.summation_data["summation_num"]))
         #print(123)
-        self.ids['show_info'].on_press = lambda: self.show_alert_dialog(text=f'''Клик: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON\nУдвоение майнинга: x{self.player_data["doubling"]}\nБот: {self.bot_data["alow_bot"]}\nУдвоение майнинга бота: x{self.bot_data["doubling"]}''')
+
         #self.ids['settings'].on_press =  self.swi
-        self.ids[
-            'text_doubling'].text = f'''Удвоение майнинга с:{self.player_data["doubling"] } на 30%\nЦена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
+        self.ids['text_doubling'].text = f'''
+Удвоение майнинга с:{self.player_data["doubling"] } на 30%
+Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON
+'''
         self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
-        self.ids[
-            'text_summation'].text = f'''Прокачка кнопки\nУвеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON \nна 0.000001 TON\nцена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
-        self.ids[
-            'text_bot_doubling'].text = f'''Удвоение майнинга бота\nУдвоение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%\nцена: {self.bot_data["doubling_price"]} TON'''
-        self.ids[
-            'text_bot_summation'].text = f'''Увеличение майнинга бота\nУвеличение майнинга с: {'{0:.6f}'.format(self.bot_data["summation_num"])} на 30%\nцена: {self.bot_data["summation_price"]} TON'''
+        self.ids['text_summation'].text = f'''
+Прокачка кнопки
+Увеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON 
+на 0.000001 TON
+цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON
+'''
+        self.ids['text_bot_doubling'].text = f'''
+Удвоение майнинга бота
+Удвоение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%
+цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON
+'''
+        self.ids['text_bot_summation'].text = f'''Увеличение майнинга бота
+Увеличение майнинга с: {'{0:.6f}'.format(self.bot_data["summation_num"])} на 30%
+цена: {self.bot_data["summation_price"]} TON
+'''
 
         #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
 
         if self.bot_data["bot_speed"] == 0:
-           self.ids[
-                'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {self.bot_data["bot_speed"]} на 0,000001 TON\nцена: {self.bot_data["bot_price"]} TON'''
+           self.ids['text_bot'].text = f'''Клик-бот
+Автоматически майнит
+Увеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} на 0,000001 TON
+цена: {self.bot_data["bot_price"]} TON
+'''
         else:
-            self.ids[
-                'text_bot'].text = f'''Клик-бот\nАвтоматически майнит\nУвеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} TON на 30%\nцена: {self.bot_data["bot_price"]} TON'''
+            self.ids['text_bot'].text = f'''Клик-бот
+Автоматически майнит
+Увеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} TON на 30%
+цена: {self.bot_data["bot_price"]} TON
+'''
 
     def bot_loop(self,dt):
 
@@ -340,9 +388,51 @@ class app(MDApp):
 
             auth_succefull = False
     def build(self):
-
+        global auth_succefull
         Clock.schedule_interval(self.start_loops, 1/30)
+        screen_manager = ScreenManager()
+        d = Error_show(name="error_show")
+
+        #d.folder_path = folder_path
+        screen_manager.add_widget(d)
+        d = Settings_gui(name="settings")
+
+        #d.folder_path = folder_path
+        screen_manager.add_widget(d)
+        auth = Auth(name="auth")
+
+        #d.folder_path = folder_path
+        screen_manager.add_widget(auth)
+
         self.game = Clicker(name="clicker")
+
+        screen_manager.add_widget(self.game)
+
+        try:
+
+            ref = db.reference("")
+            ref.get()
+            try:
+                with open("account.pickle", "rb") as f:
+                    print("done_loading")
+                    account = pickle.load(f)
+                    ref = db.reference(f"/{account['login']}")
+                    player_data = ref.get()["data"]
+
+                    self.game.account = account
+
+                    self.game.ref = ref
+                    self.game.player_data = player_data
+                    self.game.bot_data = player_data["bot"]
+                    self.game.summation_data = player_data["summation"]
+                    auth_succefull = True
+                    screen_manager.current = "clicker"
+            except:
+                screen_manager.current = "auth"
+        except:
+
+            screen_manager.current = "error_show"
+
 
         #self.main_font_size = self.settings["font_size"]
         #self.title = "Tap-Fight"
@@ -351,21 +441,13 @@ class app(MDApp):
 
 
 
-        screen_manager = ScreenManager()
+
 
         # Add the screens to the manager and then supply a name
         # that is used to switch screens
-        screen_manager.add_widget(self.game)
 
-        d = Settings_gui(name="settings")
 
-        #d.folder_path = folder_path
-        screen_manager.add_widget(d)
-        self.auth = Auth(name="auth")
 
-        #d.folder_path = folder_path
-        screen_manager.add_widget(self.auth)
-        screen_manager.current = "auth"
 
     #self.background_color=(1,0.1,0.1)
         return screen_manager

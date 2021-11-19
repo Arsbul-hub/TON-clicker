@@ -1,52 +1,56 @@
-'''
-Widget animation
-================
-
-This example demonstrates creating and applying a multi-part animation to
-a button widget. You should see a button labelled 'plop' that will move with
-an animation when clicked.
-'''
-
-import kivy
-kivy.require('1.0.7')
-
-from kivy.animation import Animation
 from kivy.app import App
-from kivy.uix.button import Button
-import firebase_admin
-from firebase_admin import db
+from kivymd.app import MDApp
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, StringProperty
+from kivymd.theming import ThemeManager
+
+from kivymd.uix.navigationdrawer import MDNavigationDrawer
+# from navigationdrawer import NavigationDrawer
+
+main_widget_kv = '''
 
 
-from threading import Thread
+BoxLayout:
+    orientation: 'vertical'
+    MDToolbar:
+        id: toolbar
+        title: 'Welcome'
+        background_color: app.theme_cls.primary_dark
+        left_action_items: [['menu', lambda x: app.nav_drawer.toggle()]]
+        right_action_items: [['more-vert', lambda x: app.raised_button.open(self.parent)]]
 
-cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
-app = firebase_admin.initialize_app(cred_obj, {
-    'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
-})
-ref = db.reference("/er")
-print(ref.get())
-class TestApp(App):
+    NavigationDrawerIconButton:
+        icon: 'face'
+        text: 'Kuldeep Singh'
+    NavigationDrawerIconButton:
+        icon: 'email'
+        text: 'kuldeepbb.grewal@gmail.com'
+        on_release: app.root.ids.scr_mngr.current = 'bottomsheet'
+    NavigationDrawerIconButton:
+        icon: 'phone'
+        text: '+91-7727XXXXXX'
+    NavigationDrawerIconButton:
+        icon: 'cake'
+        text: '26/11/1994'
+    NavigationDrawerIconButton:
+        icon: 'city-alt'
+        text: 'Rohtak'
+    NavigationDrawerIconButton:
+        icon: 'settings'
+        text: 'Settings'
+    '''
 
-    def animate(self, instance):
-        # create an animation object. This object could be stored
-        # and reused each call or reused across different widgets.
-        # += is a sequential step, while &= is in parallel
-        animation = Animation(pos=(100, 100), t='out_bounce')
-        animation += Animation(pos=(200, 100), t='out_bounce')
-        animation &= Animation(size=(500, 500))
-        animation += Animation(size=(100, 50))
+class Navigator(MDNavigationDrawer):
+    image_source = StringProperty('images/me.png')
 
-        # apply the animation on the button, passed in the "instance" argument
-        # Notice that default 'click' animation (changing the button
-        # color while the mouse is down) is unchanged.
-        animation.start(instance)
+class NavigateApp(MDApp):
+    theme_cls = ThemeManager()
+    nav_drawer = ObjectProperty()
 
     def build(self):
-        # create a button, and  attach animate() method as a on_press handler
-        button = Button(size_hint=(None, None), text='plop',
-                        on_press=self.animate)
-        return button
+        main_widget = Builder.load_string(main_widget_kv)
+        self.nav_drawer = Navigator()
+        return main_widget
+if __name__ == "__main__":
+    NavigateApp().run()
 
-
-if __name__ == '__main__':
-    TestApp().run()
