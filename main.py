@@ -58,11 +58,39 @@ app_d = firebase_admin.initialize_app(cred_obj, {
 
 up_data = True
 auth_succefull = False
+offline = False
 class SettingsTab(MDCard, MDTabsBase):
     pass
 
 class Error_show(Screen):
-    pass
+    def __init__(self, **kwargs):
+
+        #self.f1 = Widget()
+        super().__init__(**kwargs)
+        offline = False
+    def try_offline(self):
+        global auth_succefull, offline
+        try:
+            with open("data.pickle", "rb") as f:
+                d = pickle.load(f)
+                game = Clicker
+                account = d["account"]
+
+
+                game.account = account
+                data = d["data"]
+
+                game.player_data = data
+                game.bot_data = data["bot"]
+                game.summation_data = data["summation"]
+                offline = True
+                auth_succefull = True
+
+                self.manager.current = "clicker"
+                print(self.offline)
+        except:
+
+            self.offline = False
 class Auth(Screen):
     def __init__(self, **kwargs):
 
@@ -93,6 +121,7 @@ class Auth(Screen):
         self.game.summation_data = self.player_data["summation"]
         self.game.ref = ref
         self.start_loops()
+
     def registration(self):
         player_name = self.ids["name_r"].text
         player_email = self.ids["email_r"].text
@@ -122,7 +151,7 @@ class Auth(Screen):
         self.game.ref = ref
         self.start_loops()
     def start_loops(self):
-        global auth_succefull
+        global auth_succefull, offline
         auth_succefull = True
         with open("account.pickle", "wb") as f:
 
@@ -253,17 +282,25 @@ class Clicker(Screen):
 
     def update_data(self):
         #print(self.player_data)
-        #ref = db.reference(f"/{self.account['email']}")
-        try:
-            self.ref.set({"account": self.account, "data": self.player_data})
-        #    self.settings = pickle.load(f)
-        #    self.main_font_size = self.settings["font_size"]
-        except:
+        global offline
+        if up_data:
+            with open("data.pickle", "wb") as f:
+                pickle.dump({"account": self.account, "data": self.player_data},f)
 
-            if not self.connect_error:
-                self.manager.current = "error_show"
+            try:
+                ref = db.reference(f"/{self.account['login']}")
+                ref.set({"account": self.account, "data": self.player_data})
+
+            #    self.settings = pickle.load(f)
+            #    self.main_font_size = self.settings["font_size"]
+            except:
+
+                if offline == False:
+                    self.manager.current = "error_show"
+
 
     def on_tap(self):
+        #print('{0:.6f}'.format(self.player_data["TON"]))
         self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
         #print(App.get_running_app().root.ids['hi'])
 
@@ -310,10 +347,9 @@ class Clicker(Screen):
             self.bot_data["summation_price"] += 0.000001*100
     def to_settings(self):
         #print(self.manager.current)
-        s = Settings_gui()
 
-        s.update_info(account_data=self.account)
-        self.manager.current = "settings"
+
+        self.manager.current = "auth"
 
     def main_loop(self,dt):
         #self.test_threading()
@@ -321,6 +357,7 @@ class Clicker(Screen):
             #print(123)
             th = Thread(target=self.update_data)
             th.start()
+
         #print(self.main_font_size)
         #print('{1000:.9f}'.format(self.summation_data["summation_num"]))
         #print('{0:.7f}'.format(self.summation_data["summation_num"]))
@@ -381,6 +418,7 @@ class app(MDApp):
 
     def start_loops(self,dt):
         global auth_succefull
+        #print(auth_succefull)
         if auth_succefull:
 
             Clock.schedule_interval(self.game.main_loop,1/60)
@@ -413,21 +451,25 @@ class app(MDApp):
             ref = db.reference("")
             ref.get()
             try:
-                with open("account.pickle", "rb") as f:
-                    print("done_loading")
-                    account = pickle.load(f)
-                    ref = db.reference(f"/{account['login']}")
-                    player_data = ref.get()["data"]
 
-                    self.game.account = account
+                with open("data.pickle", "rb") as f:
+                    data = pickle.load(f)
 
-                    self.game.ref = ref
-                    self.game.player_data = player_data
-                    self.game.bot_data = player_data["bot"]
-                    self.game.summation_data = player_data["summation"]
-                    auth_succefull = True
-                    screen_manager.current = "clicker"
+                    ref = db.reference(f"/{data['account']['login']}")
+                    ref.set(data)
+                account = data["account"]
+                player_data = data["data"]
+
+                self.game.account = account
+
+                self.game.ref = ref
+                self.game.player_data = player_data
+                self.game.bot_data = player_data["bot"]
+                self.game.summation_data = player_data["summation"]
+                auth_succefull = True
+                screen_manager.current = "clicker"
             except:
+
                 screen_manager.current = "auth"
         except:
 

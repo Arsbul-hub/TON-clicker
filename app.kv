@@ -9,11 +9,15 @@
     radius: [5]
     elevation: 20
 <Error_show>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
 
-    Label:
-        color: 0,0,0,1
-        text: "Ошибка!!! \nПроизошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
-
+            color: 0,0,0,1
+            text: "Ошибка!!! \nПроизошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
+        Button:
+            text: "Оффлайн майнинг"
+            on_press: root.try_offline()
 ScreenManagement:
     #transition: FadeTransition()
     id: d
@@ -236,7 +240,7 @@ ScreenManagement:
                     MDList:
                         OneLineListItem:
                             icon: "account-cog"
-                            text: "Настройки"
+                            text: "Выйти из текущего аккаунта"
                             on_press: root.to_settings()
         MDBottomNavigationItem:
             id: store
