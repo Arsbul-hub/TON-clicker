@@ -108,17 +108,17 @@ class Auth(Screen):
         ref = db.reference(f"/{player_email}")
         if ref.get()["account"]["password"] == player_password:
 
-            self.player_data = ref.get()["data"]
-            self.account = ref.get()["account"]
+            self.data = ref.get()
 
 
 
 
 
-        self.game.account = self.account
-        self.game.player_data = self.player_data
-        self.game.bot_data = self.player_data["bot"]
-        self.game.summation_data = self.player_data["summation"]
+
+        self.game.account = self.data["account"]
+        self.game.player_data = self.data["data"]
+        self.game.bot_data = self.data["data"]["bot"]
+        self.game.summation_data = self.data["data"]["summation"]
         self.game.ref = ref
         self.start_loops()
 
@@ -153,9 +153,9 @@ class Auth(Screen):
     def start_loops(self):
         global auth_succefull, offline
         auth_succefull = True
-        with open("account.pickle", "wb") as f:
+        with open("data.pickle", "wb") as f:
 
-            pickle.dump(self.account, f)
+            pickle.dump(self.data, f)
 
         self.manager.current = "clicker"
 class Settings_gui(Screen):
