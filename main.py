@@ -162,7 +162,7 @@ class Auth(Screen):
         player_email = self.ids["email_r"].text
         player_password = self.ids["password_r"].text
         if player_password != "" and player_email != "" and player_name != "":
-            self.data = {
+            data = {
                                 "account": {"name": player_name,
                                             "login": player_email,
                                             "password": player_password,
@@ -177,16 +177,9 @@ class Auth(Screen):
                                 }
 
             ref = db.reference(f"/{player_email}")
-            ref.set(self.data)
-            self.game = Clicker
-            self.player_data = self.data["data"]
-            self.account = self.data["account"]
+            ref.set(data)
 
-            self.game.account = self.account
-            self.game.player_data = self.player_data
-            self.game.bot_data = self.player_data["bot"]
-            self.game.summation_data = self.player_data["summation"]
-            self.game.ref = ref
+
             #print(self.game.player_data["TON"])
             self.start_loops()
         else:
@@ -520,17 +513,8 @@ class app(MDApp):
 
                     ref = db.reference(f"/{data['account']['login']}")
                     ref.set(data)
-                account = data["account"]
-                player_data = data["data"]
 
-                self.game.account = account
-
-                self.game.ref = ref
-                self.game.player_data = player_data
-                self.game.bot_data = player_data["bot"]
-                self.game.summation_data = player_data["summation"]
                 auth_succefull = True
-
                 screen_manager.current = "clicker"
             except:
 
