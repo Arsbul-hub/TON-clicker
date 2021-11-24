@@ -180,7 +180,6 @@ class Auth(Screen):
             ref.set(data)
 
 
-            #print(self.game.player_data["TON"])
             self.start_loops()
         else:
             self.show_dialog('''
@@ -216,7 +215,7 @@ class Settings_gui(Screen):
         self.ids["f"].text ="Gfresefsf"
     def update_info(self,account_data):
         self.u()
-        print(self.name)
+
     def back(self):
         self.manager.current = "clicker"
 
