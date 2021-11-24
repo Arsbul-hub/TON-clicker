@@ -59,6 +59,7 @@ app_d = firebase_admin.initialize_app(cred_obj, {
 up_data = True
 auth_succefull = False
 offline = False
+already_auth = False
 class SettingsTab(MDCard, MDTabsBase):
     pass
 
@@ -96,68 +97,121 @@ class Auth(Screen):
 
         #self.f1 = Widget()
         super().__init__(**kwargs)
-        self.game = Clicker
+        self.game = Clicker()
 
         #self.main_font_size = main_font_size
+    def show_dialog(self,text):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=text,
+#                text_color=(0,0,0,1),
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        #text_font_name= "main_font.ttf",
+                        text_color=(0,0,0,1),
+                        font_size=19,
+                        font_name="main_font.ttf",
+                        #text_color=self.theme_cls.primary_color,
+                        on_press= lambda x: self.close_dialog()
+                    ),
+                ],
+            )
+        self.dialog.open()
+    def close_dialog(self):
+        self.dialog.dismiss()
     def login(self):
-
         player_email = self.ids["email_l"].text
         player_password = self.ids["password_l"].text
-
-
-        ref = db.reference(f"/{player_email}")
-        if ref.get()["account"]["password"] == player_password:
-
-            self.data = ref.get()
-
-
-
-
-
-
-        self.game.account = self.data["account"]
-        self.game.player_data = self.data["data"]
-        self.game.bot_data = self.data["data"]["bot"]
-        self.game.summation_data = self.data["data"]["summation"]
-        self.game.ref = ref
-        self.start_loops()
-
+        self.game.login(player_email=player_email,player_password=player_password,start_loops=self.start_loops)
     def registration(self):
         player_name = self.ids["name_r"].text
         player_email = self.ids["email_r"].text
         player_password = self.ids["password_r"].text
-        self.data = {
-                            "account": {"name": player_name,
-                                "login": player_email,
-                                "password": player_password,
-                                "avatar": "classic_avatar",},
-                            "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
-                                "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
-                                    "bot_speed": 0, "bot_price": 1,
-                                    "summation_price": 0.000001, "summation_num": 0.000001},
+        self.game.registration(player_name=player_name,player_email=player_email,player_password=player_password)
 
-                                "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
-                                     }
-                            }
-        ref = db.reference(f"/{player_email}")
-        ref.set(self.data)
-        self.player_data = self.data["data"]
-        self.account = self.data["account"]
+#     def login(self):
+#
+#         player_email = self.ids["email_l"].text
+#         player_password = self.ids["password_l"].text
+#         if player_password != "" and player_email != "":
+#
+#             ref = db.reference(f"/{player_email}")
+#
+#             if ref.get() and ref.get()["account"]["password"] == player_password:
+#
+#                 self.data = ref.get()
+#
+#                 self.game = Clicker()
+#                 self.game.test()
+#                 self.game.account = self.data["account"]
+#                 self.game.player_data = self.data["data"]
+#                 self.game.bot_data = self.data["data"]["bot"]
+#                 self.game.summation_data = self.data["data"]["summation"]
+#                 self.game.ref = ref
+#                 self.start_loops()
+#
+#             else:
+#                 self.show_dialog('''
+# Неверный логин или пароль!
+# Проверьте их корректность!
+#                 ''')
+#
+#
+#         else:
+#             self.show_dialog('''
+# Все поля должны быть заполнены!
+# И не должны содержать специальные симбволы: . ! : ; ' " @ -
+#             ''')
+#
+#
+#     def registration(self):
+#         player_name = self.ids["name_r"].text
+#         player_email = self.ids["email_r"].text
+#         player_password = self.ids["password_r"].text
+#         if player_password != "" and player_email != "" and player_name != "":
+#             self.data = {
+#                                 "account": {"name": player_name,
+#                                             "login": player_email,
+#                                             "password": player_password,
+#                                             "avatar": "classic_avatar",},
+#                                 "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
+#                                     "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
+#                                             "bot_speed": 0, "bot_price": 1,
+#                                             "summation_price": 0.000001, "summation_num": 0.000001},
+#
+#                                     "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
+#                                          }
+#                                 }
+#
+#             ref = db.reference(f"/{player_email}")
+#             ref.set(self.data)
+#
+#             self.player_data = self.data["data"]
+#             self.account = self.data["account"]
+#
+#             self.account = self.account
+#             self.player_data = self.player_data
+#             self.bot_data = self.player_data["bot"]
+#             self.summation_data = self.player_data["summation"]
+#             self.ref = ref
+#             #print(self.game.player_data["TON"])
+#             self.start_loops()
+#         else:
+#             self.show_dialog('''
+# Все поля должны быть заполнены!
+# И не должны содержать специальные симбволы: . ! : ; ' " @ -
+#                             ''')
+#     def start_loops(self):
+#         global auth_succefull, offline
+#         auth_succefull = True
+#         with open("data.pickle", "wb") as f:
+#
+#             pickle.dump(self.data, f)
 
-        self.game.account = self.account
-        self.game.player_data = self.player_data
-        self.game.bot_data = self.player_data["bot"]
-        self.game.summation_data = self.player_data["summation"]
-        self.game.ref = ref
-        self.start_loops()
-    def start_loops(self):
-        global auth_succefull, offline
-        auth_succefull = True
-        with open("data.pickle", "wb") as f:
-
-            pickle.dump(self.data, f)
-
-        self.manager.current = "clicker"
+        #self.manager.current = "clicker"
 class Settings_gui(Screen):
 
     def __init__(self, **kwargs):
@@ -199,6 +253,90 @@ class Clicker(Screen):
     #self.size_hint = (1,1)
 
         self.n = 0
+
+    def login(self, player_email, player_password):
+
+        # player_email = Auth().ids["email_l"].text
+        # player_password = Auth().ids["password_l"].text
+        if player_password != "" and player_email != "":
+
+            ref = db.reference(f"/{player_email}")
+
+            if ref.get() and ref.get()["account"]["password"] == player_password:
+
+                self.data = ref.get()
+
+
+                self.account = self.data["account"]
+                self.player_data = self.data["data"]
+                print(self.player_data)
+                self.bot_data = self.data["data"]["bot"]
+                self.summation_data = self.data["data"]["summation"]
+                self.ref = ref
+                print(12345678)
+                self.start_loops()
+                print(self.manager)
+
+            else:
+                self.show_alert_dialog('''
+Неверный логин или пароль!
+Проверьте их корректность!
+                ''')
+
+
+        else:
+            self.show_alert_dialog('''
+Все поля должны быть заполнены!
+И не должны содержать специальные симбволы: . ! : ; ' " @ -
+            ''')
+
+    def registration(self,player_name,player_email,player_password,start_loops):
+        # player_name = Auth().ids["name_r"].text
+        # player_email = Auth().ids["email_r"].text
+        # player_password = Auth().ids["password_r"].text
+        if player_password != "" and player_email != "" and player_name != "":
+            self.data = {
+                "account": {"name": player_name,
+                            "login": player_email,
+                            "password": player_password,
+                            "avatar": "classic_avatar", },
+                "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
+                         "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
+                                 "bot_speed": 0, "bot_price": 1,
+                                 "summation_price": 0.000001, "summation_num": 0.000001},
+
+                         "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
+                         }
+            }
+
+            ref = db.reference(f"/{player_email}")
+            ref.set(self.data)
+
+            self.player_data = self.data["data"]
+            self.account = self.data["account"]
+
+            self.account = self.account
+            self.player_data = self.player_data
+            self.bot_data = self.player_data["bot"]
+            self.summation_data = self.player_data["summation"]
+            self.ref = ref
+            # print(self.game.player_data["TON"])
+            self.start_loops()
+        else:
+            self.show_alert_dialog('''
+Все поля должны быть заполнены!
+И не должны содержать специальные симбволы: . ! : ; ' " @ -
+                            ''')
+
+
+    def start_loops(self):
+        global auth_succefull, offline
+        auth_succefull = True
+        with open("data.pickle", "wb") as f:
+
+            pickle.dump(self.data, f)
+
+        self.manager.current = "clicker"
     def show_value(self):
         b = self.ids['bet_value'].value
 
@@ -283,20 +421,21 @@ class Clicker(Screen):
     def update_data(self):
         #print(self.player_data)
         global offline
-        if up_data:
-            with open("data.pickle", "wb") as f:
-                pickle.dump({"account": self.account, "data": self.player_data},f)
+        #print(self.account["login"])
+        #print('{0:.6f}'.format(self.player_data["TON"]))
+        with open("data.pickle", "wb") as f:
+            pickle.dump({"account": self.account, "data": self.player_data},f)
 
-            try:
-                ref = db.reference(f"/{self.account['login']}")
-                ref.set({"account": self.account, "data": self.player_data})
+        try:
+            ref = db.reference(f"/{self.account['login']}")
+            ref.set({"account": self.account, "data": self.player_data})
 
-            #    self.settings = pickle.load(f)
-            #    self.main_font_size = self.settings["font_size"]
-            except:
+        #    self.settings = pickle.load(f)
+        #    self.main_font_size = self.settings["font_size"]
+        except:
 
-                if offline == False:
-                    self.manager.current = "error_show"
+            if offline == False:
+                self.manager.current = "error_show"
 
 
     def on_tap(self):
@@ -352,18 +491,12 @@ class Clicker(Screen):
         self.manager.current = "auth"
 
     def main_loop(self,dt):
-        #self.test_threading()
-        if up_data:
-            #print(123)
-            th = Thread(target=self.update_data)
-            th.start()
 
-        #print(self.main_font_size)
-        #print('{1000:.9f}'.format(self.summation_data["summation_num"]))
-        #print('{0:.7f}'.format(self.summation_data["summation_num"]))
-        #print(123)
+        th = Thread(target=self.update_data)
+        th.start()
 
-        #self.ids['settings'].on_press =  self.swi
+
+
         self.ids['text_doubling'].text = f'''
 Удвоение майнинга с:{self.player_data["doubling"] } на 30%
 Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON
@@ -417,22 +550,27 @@ class app(MDApp):
     #self.size_hint = (1,1)
 
     def start_loops(self,dt):
-        global auth_succefull
+        global auth_succefull, already_auth
         #print(auth_succefull)
-        if auth_succefull:
+        #already_auth = True
+        if auth_succefull and already_auth == False:
 
             Clock.schedule_interval(self.game.main_loop,1/60)
             Clock.schedule_interval(self.game.bot_loop, 1)
 
             auth_succefull = False
+            already_auth = True
     def build(self):
-        global auth_succefull
+        global auth_succefull, already_auth
         Clock.schedule_interval(self.start_loops, 1/30)
         screen_manager = ScreenManager()
         d = Error_show(name="error_show")
 
         #d.folder_path = folder_path
         screen_manager.add_widget(d)
+        self.game = Clicker(name="clicker")
+
+        screen_manager.add_widget(self.game)
         d = Settings_gui(name="settings")
 
         #d.folder_path = folder_path
@@ -442,9 +580,7 @@ class app(MDApp):
         #d.folder_path = folder_path
         screen_manager.add_widget(auth)
 
-        self.game = Clicker(name="clicker")
 
-        screen_manager.add_widget(self.game)
 
         try:
 
@@ -467,6 +603,7 @@ class app(MDApp):
                 self.game.bot_data = player_data["bot"]
                 self.game.summation_data = player_data["summation"]
                 auth_succefull = True
+
                 screen_manager.current = "clicker"
             except:
 
