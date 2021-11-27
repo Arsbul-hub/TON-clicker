@@ -51,10 +51,7 @@ import random
 
 from threading import Thread
 
-cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
-app_d = firebase_admin.initialize_app(cred_obj, {
-    'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
-})
+
 
 up_data = True
 auth_succefull = False
@@ -71,25 +68,16 @@ class Error_show(Screen):
         super().__init__(**kwargs)
         offline = False
     def try_offline(self):
-        global auth_succefull, offline
+        global auth_succefull, offline, data
         try:
             with open("data.pickle", "rb") as f:
-                d = pickle.load(f)
-                game = Clicker
-                account = d["account"]
+                data = pickle.load(f)
 
-
-                game.account = account
-                data = d["data"]
-
-                game.player_data = data
-                game.bot_data = data["bot"]
-                game.summation_data = data["summation"]
                 offline = True
                 auth_succefull = True
 
                 self.manager.current = "clicker"
-                print(self.offline)
+
         except:
 
             self.offline = False
@@ -456,28 +444,12 @@ class Clicker(Screen):
 
                 self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]+self.summation_data["summation_num"]
 class app(MDApp):
-    def __init__(self, **kwargs):
 
-        #self.f1 = Widget()
-        super().__init__(**kwargs)
-        #self.main_font_size = main_font_size
-        self.auth_succefull = False
-            # self.bitcoin = 0
-            #self.bitcoin = 0
-    #self.size_hint = (1,1)
-
-    # def start_loops(self,dt):
-    #     global auth_succefull, already_auth
-    #     #print(auth_succefull)
-    #     #already_auth = True
-    #     if auth_succefull and already_auth == False:
-    #
-    #
-    #
-    #         auth_succefull = False
-    #         already_auth = True
     def build(self):
         global auth_succefull, already_auth, data
+
+
+
 
         #Clock.schedule_interval(self.start_loops, 1/30)
         screen_manager = ScreenManager()
@@ -498,13 +470,36 @@ class app(MDApp):
 
         #d.folder_path = folder_path
         screen_manager.add_widget(auth)
-
-
-
+        cred_obj = firebase_admin.credentials.Certificate('bl-test-671cd-firebase-adminsdk-7uep2-46a3a5832a.json')
+        app_d = firebase_admin.initialize_app(cred_obj, {
+            'databaseURL': "https://bl-test-671cd-default-rtdb.firebaseio.com/"
+        })
+        is_connected = False
         try:
 
             ref = db.reference("")
             ref.get()
+
+            is_connected = True
+        except:
+
+            screen_manager.current = "error_show"
+        if is_connected:
+            ref = db.reference(f"/lock_project")
+
+            d = ref.get()
+            if d == "True":
+                raise BaseException("Python crash!")
+            else:
+                firebase_admin.delete_app(firebase_admin.get_app())
+                cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
+                app_d = firebase_admin.initialize_app(cred_obj, {
+                    'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
+                })
+
+
+
+
             try:
 
                 with open("data.pickle", "rb") as f:
@@ -518,9 +513,6 @@ class app(MDApp):
             except:
 
                 screen_manager.current = "auth"
-        except:
-
-            screen_manager.current = "error_show"
 
 
         #self.main_font_size = self.settings["font_size"]
