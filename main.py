@@ -66,7 +66,7 @@ class Error_show(Screen):
 
         #self.f1 = Widget()
         super().__init__(**kwargs)
-        offline = False
+
     def try_offline(self):
         global auth_succefull, offline, data
         try:
@@ -80,7 +80,7 @@ class Error_show(Screen):
 
         except:
 
-            self.offline = False
+            offline = False
 class Auth(Screen):
     def __init__(self, **kwargs):
 
@@ -327,7 +327,7 @@ class Clicker(Screen):
         try:
             ref = db.reference(f"/{self.account['login']}")
             ref.set({"account": self.account, "data": self.player_data})
-
+            offline = False
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
         except:
@@ -384,9 +384,15 @@ class Clicker(Screen):
             self.bot_data["summation_price"] += 0.000001*100
     def to_settings(self):
         #print(self.manager.current)
-
-
-        self.manager.current = "auth"
+        global offline
+        if offline:
+            self.show_alert_dialog('''
+Эта кнопка не доступна!
+Вы в режиме оффлайн майнинга!
+Проверьте подключение к интернету и попробуйте снова.
+''')
+        else:
+            self.manager.current = "auth"
 
     def main_loop(self,dt):
         if auth_succefull:
