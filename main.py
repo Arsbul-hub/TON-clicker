@@ -7,8 +7,7 @@ from kivy.uix.screenmanager import ScreenManager
 
 
 # Импорт всех классов
-from kivy.uix.gridlayout import GridLayout
-import pickle
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -48,7 +47,7 @@ import os
 import firebase_admin
 from firebase_admin import db
 import random
-
+from ping3 import ping
 from threading import Thread
 
 
@@ -67,6 +66,29 @@ class Error_show(Screen):
         #self.f1 = Widget()
         super().__init__(**kwargs)
 
+    def show_dialog(self, text):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=text,
+                #                text_color=(0,0,0,1),
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        # text_font_name= "main_font.ttf",
+                        text_color=(0, 0, 0, 1),
+                        font_size=19,
+                        font_name="main_font.ttf",
+                        # text_color=self.theme_cls.primary_color,
+                        on_press=lambda x: self.close_dialog()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def close_dialog(self):
+        self.dialog.dismiss()
     def try_offline(self):
         global auth_succefull, offline, data
         try:
@@ -79,7 +101,10 @@ class Error_show(Screen):
                 self.manager.current = "clicker"
 
         except:
-
+            self.show_dialog(text='''
+Вы не вошли в свой аккаунт!
+Подключитесь к интернету и войдите в систему.            
+''')
             offline = False
 class Auth(Screen):
     def __init__(self, **kwargs):
@@ -89,28 +114,7 @@ class Auth(Screen):
         self.game = Clicker()
 
         #self.main_font_size = main_font_size
-    def show_dialog(self,text):
-        self.dialog = None
-        if not self.dialog:
-            self.dialog = MDDialog(
-                text=text,
-#                text_color=(0,0,0,1),
-                buttons=[
-                    MDFlatButton(
-                        text="Ок",
-                        theme_text_color="Custom",
-                        #text_font_name= "main_font.ttf",
-                        text_color=(0,0,0,1),
-                        font_size=19,
-                        font_name="main_font.ttf",
-                        #text_color=self.theme_cls.primary_color,
-                        on_press= lambda x: self.close_dialog()
-                    ),
-                ],
-            )
-        self.dialog.open()
-    def close_dialog(self):
-        self.dialog.dismiss()
+
 
     def login(self):
         global data
@@ -146,6 +150,7 @@ class Auth(Screen):
 
 
     def registration(self):
+        global data
         player_name = self.ids["name_r"].text
         player_email = self.ids["email_r"].text
         player_password = self.ids["password_r"].text
@@ -324,13 +329,14 @@ class Clicker(Screen):
         with open("data.pickle", "wb") as f:
             pickle.dump({"account": self.account, "data": self.player_data},f)
 
-        try:
+        p = ping('google.com', timeout=1,unit ="ms")
+        if p:
             ref = db.reference(f"/{self.account['login']}")
             ref.set({"account": self.account, "data": self.player_data})
             offline = False
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
-        except:
+        else:
 
             if offline == False:
                 self.manager.current = "error_show"
@@ -382,7 +388,7 @@ class Clicker(Screen):
             self.bot_data["summation_num"] += 0.000001
 
             self.bot_data["summation_price"] += 0.000001*100
-    def to_settings(self):
+    def sign_out(self):
         #print(self.manager.current)
         global offline
         if offline:
@@ -392,6 +398,7 @@ class Clicker(Screen):
 Проверьте подключение к интернету и попробуйте снова.
 ''')
         else:
+            os.remove("data.pickle")
             self.manager.current = "auth"
 
     def main_loop(self,dt):
@@ -400,8 +407,7 @@ class Clicker(Screen):
             self.player_data = data["data"]
             self.bot_data = data["data"]["bot"]
             self.summation_data = data["data"]["summation"]
-            th = Thread(target=self.update_data)
-            th.start()
+
 
 
             #print(self.account)
@@ -449,6 +455,13 @@ class Clicker(Screen):
             if self.bot_data["alow_bot"]:
 
                 self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]+self.summation_data["summation_num"]
+    def theard_update_data(self, dt):
+        global auth_succefull
+        if auth_succefull:
+            th = Thread(target=self.update_data)
+            th.start()
+
+
 class app(MDApp):
 
     def build(self):
@@ -468,6 +481,7 @@ class app(MDApp):
         screen_manager.add_widget(self.game)
         Clock.schedule_interval(self.game.main_loop, 1 / 60)
         Clock.schedule_interval(self.game.bot_loop, 1)
+        Clock.schedule_interval(self.game.theard_update_data, 5)
         d = Settings_gui(name="settings")
 
         #d.folder_path = folder_path
@@ -480,17 +494,11 @@ class app(MDApp):
         app_d = firebase_admin.initialize_app(cred_obj, {
             'databaseURL': "https://bl-test-671cd-default-rtdb.firebaseio.com/"
         })
-        is_connected = False
-        try:
+        p = ping('google.com', timeout=1,unit ="ms")
+        print(p)
+        if p:
 
-            ref = db.reference("")
-            ref.get()
 
-            is_connected = True
-        except:
-
-            screen_manager.current = "error_show"
-        if is_connected:
             ref = db.reference(f"/lock_project")
 
             d = ref.get()
@@ -503,11 +511,7 @@ class app(MDApp):
                     'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
                 })
 
-
-
-
             try:
-
                 with open("data.pickle", "rb") as f:
                     data = pickle.load(f)
 
@@ -519,6 +523,24 @@ class app(MDApp):
             except:
 
                 screen_manager.current = "auth"
+
+        else:
+            firebase_admin.delete_app(firebase_admin.get_app())
+            cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
+            app_d = firebase_admin.initialize_app(cred_obj, {
+                'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
+            })
+            screen_manager.current = "error_show"
+
+
+
+
+
+        #self.main_font_size = self.settings["font_size"]
+        #self.title = "Tap-Fight"
+        #self.theme_cls.theme_style = "Dark"
+        #self.theme_cls.primary_palette = "BlueGray"
+
 
 
 
