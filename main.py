@@ -521,13 +521,6 @@ class app(MDApp):
                 screen_manager.current = "auth"
 
 
-        #self.main_font_size = self.settings["font_size"]
-        #self.title = "Tap-Fight"
-        #self.theme_cls.theme_style = "Dark"
-        #self.theme_cls.primary_palette = "BlueGray"
-
-
-
 
 
         # Add the screens to the manager and then supply a name
