@@ -184,6 +184,7 @@ ScreenManagement:
 
     MDBottomNavigation:
         name: "tools"
+        id: tools
         #color stuff
         #panel_color: 0,0,1,1
 
@@ -241,7 +242,7 @@ ScreenManagement:
                         OneLineListItem:
                             icon: "account-cog"
                             text: "Выйти из текущего аккаунта"
-                            on_press: root.to_settings()
+                            on_press: root.sign_out()
         MDBottomNavigationItem:
             id: store
             text: "Магазин"

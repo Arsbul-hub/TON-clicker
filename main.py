@@ -67,29 +67,6 @@ class Error_show(Screen):
         #self.f1 = Widget()
         super().__init__(**kwargs)
 
-    def show_dialog(self, text):
-        self.dialog = None
-        if not self.dialog:
-            self.dialog = MDDialog(
-                text=text,
-                #                text_color=(0,0,0,1),
-                buttons=[
-                    MDFlatButton(
-                        text="Ок",
-                        theme_text_color="Custom",
-                        # text_font_name= "main_font.ttf",
-                        text_color=(0, 0, 0, 1),
-                        font_size=19,
-                        font_name="main_font.ttf",
-                        # text_color=self.theme_cls.primary_color,
-                        on_press=lambda x: self.close_dialog()
-                    ),
-                ],
-            )
-        self.dialog.open()
-
-    def close_dialog(self):
-        self.dialog.dismiss()
     def try_offline(self):
         global auth_succefull, offline, data
         try:
@@ -102,10 +79,7 @@ class Error_show(Screen):
                 self.manager.current = "clicker"
 
         except:
-            self.show_dialog(text='''
-Вы не вошли в свой аккаунт!
-Подключитесь к интернету и войдите в систему.            
-''')
+
             offline = False
 class Auth(Screen):
     def __init__(self, **kwargs):
@@ -115,7 +89,28 @@ class Auth(Screen):
         self.game = Clicker()
 
         #self.main_font_size = main_font_size
-
+    def show_dialog(self,text):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=text,
+#                text_color=(0,0,0,1),
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        #text_font_name= "main_font.ttf",
+                        text_color=(0,0,0,1),
+                        font_size=19,
+                        font_name="main_font.ttf",
+                        #text_color=self.theme_cls.primary_color,
+                        on_press= lambda x: self.close_dialog()
+                    ),
+                ],
+            )
+        self.dialog.open()
+    def close_dialog(self):
+        self.dialog.dismiss()
 
     def login(self):
         global data
@@ -405,7 +400,8 @@ class Clicker(Screen):
             self.player_data = data["data"]
             self.bot_data = data["data"]["bot"]
             self.summation_data = data["data"]["summation"]
-
+            th = Thread(target=self.update_data)
+            th.start()
 
 
             #print(self.account)
@@ -453,13 +449,6 @@ class Clicker(Screen):
             if self.bot_data["alow_bot"]:
 
                 self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]+self.summation_data["summation_num"]
-    def theard_update_data(self, dt):
-        global auth_succefull
-        if auth_succefull:
-            th = Thread(target=self.update_data)
-            th.start()
-
-
 class app(MDApp):
 
     def build(self):
@@ -479,7 +468,6 @@ class app(MDApp):
         screen_manager.add_widget(self.game)
         Clock.schedule_interval(self.game.main_loop, 1 / 60)
         Clock.schedule_interval(self.game.bot_loop, 1)
-        Clock.schedule_interval(self.game.theard_update_data, 4)
         d = Settings_gui(name="settings")
 
         #d.folder_path = folder_path
