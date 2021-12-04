@@ -15,20 +15,24 @@
 
             color: 0,0,0,1
             text: "Ошибка!!! \nПроизошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
+            text_size: self.width, None
         Button:
             text: "Оффлайн майнинг"
             on_press: root.try_offline()
 ScreenManagement:
     #transition: FadeTransition()
     id: d
-    Error_show:
-    Settings_gui:
-    Auth:
-    Clicker:
+    Error_show
+    Settings_gui
+    Auth
+    Clicker
 
 <Auth>:
+
+
     MDBottomNavigation:
-        name: "auth_choose"
+        name: "auth"
+        id: auth
         #color stuff
         #panel_color: 0,0,1,1
 
@@ -36,73 +40,93 @@ ScreenManagement:
             text: "Регистрация"
             icon: "account"
             name: "registration"
+
             BoxLayout:
-                orientation: "horizontal"
-                Image:
-                    source: "classic_avatar.png"
-                BoxLayout:
-                    orientation: "vertical"
-                    Label:
-                        text: "Введите имя:"
-                        color: 0,0,0,1
-                        size_hint: .1,.1
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        pos_hint: {"center_x":.5}
-                    TextInput:
-                        id: name_r
-                        size_hint: .9, .05
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        pos_hint: {"center_x":.5}
-                        multiline: False
-                    Label:
-                        text: "Введите логин:"
-                        color: 0,0,0,1
-                        size_hint: .1,.1
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        pos_hint: {"center_x":.5}
-                    TextInput:
-                        id: email_r
-                        size_hint: .9, .05
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        pos_hint: {"center_x":.5}
-                        multiline: False
-                    Label:
-                        text: "Введите пароль:"
-                        color: 0,0,0,1
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        size_hint: .1,.1
-                        pos_hint: {"center_x":.5}
-                    TextInput:
-                        id: password_r
-                        size_hint: .9, .05
-                        font_name: "main_font.ttf"
-                        font_size: 35
-                        pos_hint: {"center_x":.5}
-                        multiline: False
-                    MDRaisedButton:
+                size_hint: .5, .7
+                pos_hint: {"center_x":.5, "center_y":.5}
 
-                        md_bg_color: 0, .7, 1, 1
-                        #size_hint: .3, .1
+                orientation: "vertical"
+                canvas.before:
+                    Color:
+                        rgba: .1, .6, .8, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    text: "Введите имя:"
+                    color: 1,1,1,1
+                    size_hint: .1,.1
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
+                TextInput:
+                    id: name_r
+                    size_hint: .9, .05
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
+                    multiline: False
+                Label:
+                    text: "Введите логин:"
+                    color: 1,1,1,1
+                    size_hint: .1,.1
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
+                TextInput:
+                    id: email_r
+                    size_hint: .9, .05
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
+                    multiline: False
+                Label:
+                    text: "Введите пароль:"
+                    color: 1,1,1,1
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    size_hint: .1,.1
+                    pos_hint: {"center_x":.5}
+                TextInput:
+                    id: password_r
+                    size_hint: .9, .05
+                    font_name: "main_font.ttf"
+                    font_size: 35
+                    pos_hint: {"center_x":.5}
+                    multiline: False
+                MDFillRoundFlatButton:
 
-                        pos_hint: {"center_x":.5}
-                        text: "Зарегистриоваться"
-                        on_press: root.registration()
+                    md_bg_color: 1, 1, 1, 1
+                    #size_hint: .3, .1
+
+                    pos_hint: {"center_x":.5}
+
+
+                    text: "Зарегистриоваться"
+                    text_color: .1, .6, .8, 1
+                    on_press: root.registration()
         MDBottomNavigationItem:
             text: "Вход"
             name: "login"
             icon: "account"
+
             BoxLayout:
+
+                size_hint: .5, .5
+                pos_hint: {"center_x":.5, "center_y":.5}
+
                 orientation: "vertical"
+                canvas.before:
+                    Color:
+                        rgba: .1, .6, .8, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
                 Label:
                     text: "Введите логин:"
                     font_name: "main_font.ttf"
                     font_size: 35
-                    color: 0,0,0,1
+                    color: 1,1,1,1
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
@@ -115,7 +139,7 @@ ScreenManagement:
                     multiline: False
                 Label:
                     text: "Введите пароль:"
-                    color: 0,0,0,1
+                    color: 1,1,1,1
                     font_name: "main_font.ttf"
                     font_size: 35
                     size_hint: .1,.1
@@ -127,13 +151,14 @@ ScreenManagement:
                     font_size: 35
                     pos_hint: {"center_x":.5}
                     multiline: False
-                MDRaisedButton:
+                MDFillRoundFlatButton:
 
-                    md_bg_color: 0, .7, 1, 1
+                    md_bg_color: 1, 1, 1, 1
                     #size_hint: .3, .1
 
                     pos_hint: {"center_x":.5}
                     text: "Войти"
+                    text_color: .1, .6, .8, 1
                     on_press: root.login()
 <Settings_gui>:
 
@@ -262,13 +287,13 @@ ScreenManagement:
                         Label:
                             id: text_doubling
                             font_size: root.main_font_size
-                            font_name: "main_font.ttf"
                             color: 0,0,0,1
                             allow_stretch: True
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
                             font_name: "main_font.ttf"
+                            text_size: self.width, None
                         ButImage:
 
 
@@ -308,6 +333,7 @@ ScreenManagement:
                             keep_ratio: False
                             pos_hint: {"center_x":.6,"center_y":.7}
                             size_hint: (.4,.4)
+                            text_size: self.width, None
                         ButImage:
 
 
@@ -352,6 +378,7 @@ ScreenManagement:
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.9}
                             size_hint: (.4,.4)
+                            text_size: self.width, None
                         ButImage:
 
 
@@ -389,6 +416,7 @@ ScreenManagement:
                             keep_ratio: False
                             pos_hint: {"center_x":.5,"center_y":.6}
                             size_hint: (.4,.4)
+                            text_size: self.width, None
                         ButImage:
 
 
@@ -422,6 +450,7 @@ ScreenManagement:
                             keep_ratio: False
                             pos_hint: {"center_x":.6,"center_y":.7}
                             size_hint: (.4,.4)
+                            text_size: self.width, None
                         ButImage:
 
 
@@ -454,6 +483,7 @@ ScreenManagement:
                             font_size: root.main_font_size
 
                             text: "Скоро появятся новые акции!!! Ждите!!"
+                            text_size: self.width, None
         MDBottomNavigationItem:
             id: games
             text: "Игры"
@@ -477,6 +507,7 @@ ScreenManagement:
                             size_hint: .3,.3
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.8}
+                            text_size: self.width, None
                         ButImage:
 
 

@@ -115,7 +115,28 @@ class Auth(Screen):
 
         #self.main_font_size = main_font_size
 
+    def show_dialog(self,text):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=text,
 
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        #text_font_name= "main_font.ttf",
+                        text_color=(0,0,0,1),
+                        font_size=19,
+                        font_name="main_font.ttf",
+                        #text_color=self.theme_cls.primary_color,
+                        on_press= lambda x: self.close_dialog()
+                    ),
+                ],
+            )
+        self.dialog.open()
+    def close_dialog(self):
+        self.dialog.dismiss()
     def login(self):
         global data
         player_email = self.ids["email_l"].text
@@ -329,7 +350,7 @@ class Clicker(Screen):
         with open("data.pickle", "wb") as f:
             pickle.dump({"account": self.account, "data": self.player_data},f)
 
-        p = ping('google.com', timeout=1,unit ="ms")
+        p = ping('google.com', timeout=1)
         if p:
             ref = db.reference(f"/{self.account['login']}")
             ref.set({"account": self.account, "data": self.player_data})
@@ -494,7 +515,7 @@ class app(MDApp):
         app_d = firebase_admin.initialize_app(cred_obj, {
             'databaseURL': "https://bl-test-671cd-default-rtdb.firebaseio.com/"
         })
-        p = ping('google.com', timeout=1,unit ="ms")
+        p = ping('google.com', timeout=1)
         print(p)
         if p:
 
