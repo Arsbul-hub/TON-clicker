@@ -40,18 +40,17 @@ ScreenManagement:
             text: "Регистрация"
             icon: "account"
             name: "registration"
-
+            background_color: 0,1,0,1
+            Image:
+                source: "auth.png"
+                size_hint: .5, .7
+                pos_hint: {"center_x":.5, "center_y":.5}
             BoxLayout:
                 size_hint: .5, .7
                 pos_hint: {"center_x":.5, "center_y":.5}
 
                 orientation: "vertical"
-                canvas.before:
-                    Color:
-                        rgba: .1, .6, .8, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+
                 Label:
                     text: "Введите имя:"
                     color: 1,1,1,1
@@ -61,7 +60,7 @@ ScreenManagement:
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: name_r
-                    size_hint: .9, .05
+                    size_hint: .7, .05
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -75,7 +74,7 @@ ScreenManagement:
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_r
-                    size_hint: .9, .05
+                    size_hint: .7, .05
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -88,8 +87,8 @@ ScreenManagement:
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
+                    size_hint: .7, .05
                     id: password_r
-                    size_hint: .9, .05
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -110,18 +109,17 @@ ScreenManagement:
             name: "login"
             icon: "account"
 
+            Image:
+                source: "auth.png"
+                size_hint: .5, .7
+                pos_hint: {"center_x":.5, "center_y":.5}
             BoxLayout:
 
                 size_hint: .5, .5
                 pos_hint: {"center_x":.5, "center_y":.5}
 
                 orientation: "vertical"
-                canvas.before:
-                    Color:
-                        rgba: .1, .6, .8, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+
                 Label:
                     text: "Введите логин:"
                     font_name: "main_font.ttf"
@@ -131,7 +129,7 @@ ScreenManagement:
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_l
-                    size_hint: .9, .05
+                    size_hint: .7, .05
                     font_size: 50
                     font_name: "main_font.ttf"
                     font_size: 35
@@ -146,7 +144,7 @@ ScreenManagement:
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: password_l
-                    size_hint: .9, .05
+                    size_hint: .7, .05
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -254,7 +252,7 @@ ScreenManagement:
 
                 color: 1,1,1,1
                 pos_hint: {"center_x":.5,"center_y":.9}
-                size_hint: 1,1
+                #size_hint: 1,1
                 font_size: 30
                 font_name: "main_font.ttf"
 
