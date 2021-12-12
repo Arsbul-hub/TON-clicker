@@ -1,35 +1,79 @@
-import random
-import pickle
-import datetime
-from statistics import mean
-time = []
-for i in range(5):
-    a = []
-    b = []
-    c = []
-    d = []
+from kivy.lang import Builder
 
-    for i in range(1000000):
-        a.append(random.randint(0,1000))
-        b.append(random.randint(0, 1000))
-    old_time = datetime.datetime.now().time().second
-    for i in a:
-        if i not in d:
-            d.append(i)
-    for i in b:
-        if i not in c:
-            c.append(i)
-    d.sort()
-    c.sort()
-    #c = set(a)
-    #d = set(b)
-    new_time = datetime.datetime.now().time().second
-    time.append(new_time - old_time)
-    #print(a,b)
-    if c == d:
-        print("True")
-    else:
-        print("False")
+from kivymd.app import MDApp
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelThreeLine
+from kivymd import images_path
+from kivymd.uix.expansionpanel import TwoLineAvatarIconListItem
+KV = '''
+<Content>
+    adaptive_height: True
+    MDList:
+        id: g
+        TwoLineIconListItem:
+            text: "(050)-123-45-67"
+            secondary_text: "Mobile"
+    
+            IconLeftWidget:
+                icon: 'phone'
+    
+        TwoLineIconListItem:
+            text: "(050)-123-45-67"
+            secondary_text: "Mobile"
+    
+            IconLeftWidget:
+                icon: 'phone'
+        TwoLineIconListItem:
+            text: "(050)-d-45-67"
+            secondary_text: "Mobile"
+            on_press: root.git()
+            IconLeftWidget:
+                icon: 'phone'
+
+ScrollView:
+
+    MDGridLayout:
+        id: box
+        cols: 1
+        adaptive_height: True
+'''
 
 
-print(f"{mean(time)} seconds" )
+class Content(MDBoxLayout):
+    def git(self):
+
+        self.ids["g"].add_widget(
+            TwoLineAvatarIconListItem(
+                text="hello!"
+            )
+        )
+
+
+class Test(MDApp):
+    def build(self):
+        for i in range(10):
+            g = Content()
+            g.ids["g"].add_widget(
+                                        TwoLineAvatarIconListItem(
+                                            text="hello!"
+                                        )
+                                    )
+        return Builder.load_string(KV)
+
+    def on_start(self):
+
+        self.root.ids.box.add_widget(
+
+            MDExpansionPanel(
+                icon=f"{images_path}kivymd.png",
+                content=Content(),
+                panel_cls=MDExpansionPanelThreeLine(
+                    text="Text",
+                    secondary_text="Secondary text",
+                    tertiary_text="Tertiary text",
+                )
+            )
+        )
+
+
+Test().run()

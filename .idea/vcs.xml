@@ -3,5 +3,14 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Minecraft" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/0.2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/GitHub/the-cave-of-arsbul" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/TON_clicker" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/bot_click" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/game" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/intelegent_python_editor/GitHub/very_secret_project" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/moon_graphics" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/the-cave-of-arsbul" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Документы/very_secret_project" vcs="Git" />
   </component>
 </project>

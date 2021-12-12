@@ -51,7 +51,7 @@ from ping3 import ping
 from threading import Thread
 
 
-
+from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelThreeLine
 up_data = True
 auth_succefull = False
 offline = False
@@ -183,7 +183,7 @@ class Auth(Screen):
                                             "avatar": "classic_avatar",},
                                 "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
                                     "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
-                                            "bot_speed": 0, "bot_price": 1,
+                                            "videocard": "Celeron Pro", "bot_price": 1,
                                             "summation_price": 0.000001, "summation_num": 0.000001},
 
                                     "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
@@ -250,7 +250,19 @@ class Clicker(Screen):
             # self.bitcoin = 0
             #self.bitcoin = 0
     #self.size_hint = (1,1)
-
+        self.videocards = [{"name": "Celeron Pro", "boost": 0.1, "price": 0.10},
+                           {"name": "Gt 770", "boost": 0.2, "price": 0.50},
+                           {"name": "Gt 870", "boost": 0.3, "price": 0.70},
+                           {"name": "Gtx 970", "boost": 0.4, "price": 0.90},
+                           {"name": "Rtx 1050", "boost": 0.5, "price": 1},
+                           {"name": "Rtx 1070", "boost": 0.6, "price": 1.5},
+                           {"name": "Rtx 2060", "boost": 0.7, "price": 1.9},
+                           {"name": "Rtx 2070 Super", "boost": 0.8, "price": 2.1},
+                           {"name": "Rtx 2080 TI", "boost": 0.9, "price": 2.6},
+                           {"name": "Rtx 3060 Super", "boost": 1.0, "price": 3.0},
+                           {"name": "Rtx 3090 Super TI", "boost": 1.1, "price": 3.8},
+                           {"name": "Rtx 8000 Super TI Extreme Edition", "boost": 1.2, "price": 4.5}
+                           ]
         self.n = 0
 
     # def set_data(self):
@@ -259,7 +271,72 @@ class Clicker(Screen):
     #     self.player_data = data["data"]
     #     self.bot_data = data["data"]["bot"]
     #     self.summation_data = data["data"]["summation"]
+    def buy_confirm(self, name, form="player_mining"):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text=f'''
+Вы действительно хотите купить {name}?                
+''',
 
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        #text_font_name= "main_font.ttf",
+                        text_color=(0,0,0,1),
+                        font_size=19,
+                        font_name="main_font.ttf",
+                        #text_color=self.theme_cls.primary_color,
+                        on_press= lambda x: self.buy(name=name, form=form)
+                    ),
+                ],
+            )
+        self.dialog.open()
+    def buy(self,name,form):
+        self.dialog.dismiss()
+        if form == "videocard":
+            for i in self.videocards:
+                if i["name"] == name:
+                    print(i["name"])
+                    name = i["name"]
+                    boost = i["boost"]
+                    price = i["price"]
+                    if self.player_data["TON"] - price >= 0 and self.player_data["videocard"] != name:
+
+                        self.player_data["TON"] -= price
+                        self.player_data["videocard"] = name
+        elif form == "player_mining":
+            if name == "удвоение майнинга":
+                if self.player_data["TON"] - self.player_data["doubling_price"] >= 0:
+                    self.player_data["doubling"] += self.player_data["doubling"] / 100 * 30
+
+                    self.player_data["TON"] -= self.player_data["doubling_price"]
+                    self.player_data["doubling_price"] += self.player_data["doubling_price"] / 100 * 30
+            if name == "прокачка кнопки":
+                if self.player_data["TON"] - self.summation_data["summation_price"] >= 0:
+                    self.player_data["TON"] -= self.summation_data["summation_price"]
+
+                    self.summation_data["summation_num"] += 0.000001
+
+                    self.summation_data["summation_price"] += 0.000001 * 100
+            if name == "прокачка майнинга бота":
+                if self.player_data["TON"] - self.bot_data["summation_price"] >= 0:
+                    self.player_data["TON"] -= self.bot_data["summation_price"]
+
+                    self.bot_data["summation_num"] += 0.000001
+
+                    self.bot_data["summation_price"] += 0.000001 * 100
+
+            if name == "автомайнер":
+                if self.player_data["TON"] - self.bot_data["bot_price"] >= 0:
+                    self.player_data["TON"] -= self.bot_data["bot_price"]
+                    self.bot_data["alow_bot"] = True
+                    if self.bot_data["videocard"] != 0:
+                        self.bot_data["videocard"] += self.bot_data["videocard"] / 100 * 30
+                    else:
+                        self.bot_data["videocard"] += 1 / 1000000 * 1
+                    self.bot_data["bot_price"] += self.bot_data["bot_price"] / 100 * 30
 
     def show_value(self):
         b = self.ids['bet_value'].value
@@ -368,47 +445,6 @@ class Clicker(Screen):
         self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
         #print(App.get_running_app().root.ids['hi'])
 
-    def buy_doubling(self):
-
-        if self.player_data["TON"]- self.player_data["doubling_price"] >= 0 :
-            self.player_data["doubling"] +=self.player_data["doubling"]/100*30
-
-            self.player_data["TON"]-= self.player_data["doubling_price"]
-            self.player_data["doubling_price"] += self.player_data["doubling_price"]/100*30
-    def buy_summation(self):
-
-        if self.player_data["TON"]- self.summation_data["summation_price"] >= 0:
-            self.player_data["TON"] -= self.summation_data["summation_price"]
-
-            self.summation_data["summation_num"] += 0.000001
-
-            self.summation_data["summation_price"] += 0.000001*100
-
-    def buy_bot(self):
-
-        if self.player_data["TON"]- self.bot_data["bot_price"] >= 0:
-            self.player_data["TON"] -= self.bot_data["bot_price"]
-            self.bot_data["alow_bot"] = True
-            if self.bot_data["bot_speed"] != 0:
-                self.bot_data["bot_speed"] += self.bot_data["bot_speed"] / 100 * 30
-            else:
-                self.bot_data["bot_speed"] +=  1/1000000*1
-            self.bot_data["bot_price"] += self.bot_data["bot_price"]/100*30
-    def buy_bot_doubling(self):
-
-        if self.player_data["TON"]- self.bot_data["doubling_price"] >= 0 :
-            self.bot_data["doubling"] +=self.bot_data["doubling"]/100*30
-
-            self.player_data["TON"]-= self.bot_data["doubling_price"]
-            self.bot_data["doubling_price"] += self.bot_data["doubling_price"]/100*30
-    def buy_bot_summation(self):
-
-        if self.player_data["TON"]- self.bot_data["summation_price"] >= 0:
-            self.player_data["TON"] -= self.bot_data["summation_price"]
-
-            self.bot_data["summation_num"] += 0.000001
-
-            self.bot_data["summation_price"] += 0.000001*100
     def sign_out(self):
         #print(self.manager.current)
         global offline
@@ -432,56 +468,44 @@ class Clicker(Screen):
 
 
             #print(self.account)
-            self.ids['text_doubling'].text = f'''
-Удвоение майнинга с:{self.player_data["doubling"] } на 30%
-Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON
-'''
+            self.ids['text_doubling'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
+            # Удвоение майнинга с:{self.player_data["doubling"] } на 30%
             self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
-            self.ids['text_summation'].text = f'''
-Прокачка кнопки
-Увеличение майнинга с: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON 
-на 0.000001 TON
-цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON
-'''
-            self.ids['text_bot_doubling'].text = f'''
-Удвоение майнинга бота
-Удвоение майнинга с: {'{0:.6f}'.format(self.bot_data["doubling"])} на 30%
-цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON
-'''
-            self.ids['text_bot_summation'].text = f'''
-Увеличение майнинга бота
-Увеличение майнинга с: {'{0:.6f}'.format(self.bot_data["summation_num"])} на 30%
-цена: {self.bot_data["summation_price"]} TON
-'''
-
-            #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
-
-            if self.bot_data["bot_speed"] == 0:
-               self.ids['text_bot'].text = f'''
-Клик-бот
-Автоматически майнит
-Увеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} на 0,000001 TON
-цена: {self.bot_data["bot_price"]} TON
-'''
+            self.ids['text_summation'].secondary_text = f'''цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
+            #self.ids['video_shop'].secondary_text = f'''цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON'''
+            self.ids['text_bot_summation'].secondary_text = f'''цена: {self.bot_data["summation_price"]} TON'''
+#
+#             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
+#
+            if self.bot_data["videocard"] == 0:
+               self.ids['text_bot'].secondary_text = f'''цена: {self.bot_data["bot_price"]} TON'''
             else:
-                self.ids['text_bot'].text = f'''
-Клик-бот
-Автоматически майнит
-Увеличение скорости с: {'{0:.6f}'.format(self.bot_data["bot_speed"])} TON на 30%
-цена: {self.bot_data["bot_price"]} TON
-'''
+                self.ids['text_bot'].secondary_text = f'''цена: {self.bot_data["bot_price"]} TON'''
 
     def bot_loop(self,dt):
         if auth_succefull:
             if self.bot_data["alow_bot"]:
-
-                self.player_data["TON"] += self.bot_data["bot_speed"]*self.player_data["doubling"]+self.summation_data["summation_num"]
+                video = self.bot_data["videocard"]
+                self.player_data["TON"] += self.videocards[video]*self.player_data["doubling"]+self.summation_data["summation_num"]
     def theard_update_data(self, dt):
         global auth_succefull
         if auth_succefull:
             th = Thread(target=self.update_data)
             th.start()
+from kivymd.uix.list import MDList
+from kivymd.uix.list import TwoLineIconListItem
+class Card(MDList):
+    def gg(self):
+        game = Clicker()
+        for i in game.videocards:
+            print(i)
+            self.add_widget(
 
+                    TwoLineIconListItem(
+                        text="ertyuio",
+                        secondary_text="dddd"
+                    )
+            )
 
 class app(MDApp):
 
@@ -503,6 +527,34 @@ class app(MDApp):
         Clock.schedule_interval(self.game.main_loop, 1 / 60)
         Clock.schedule_interval(self.game.bot_loop, 1)
         Clock.schedule_interval(self.game.theard_update_data, 5)
+
+        for i in self.game.videocards:
+            name = i["name"]
+            boost = i["boost"]
+            price = i["price"]
+            self.game.ids["bot_shop"].add_widget(
+
+                TwoLineIconListItem(
+                    text=name,
+                    secondary_text=f"Цена: {price}",
+                    tertiary_text=f"Увеличивает скорость добычи в {boost} раз",
+                    on_press= lambda event: self.game.buy_confirm(name=name, form="videocard")
+                )
+            )
+
+        # f = MDExpansionPanel(
+        #
+        #     content=Card(),
+        #     panel_cls=MDExpansionPanelThreeLine(
+        #         text="Text",
+        #         secondary_text="Secondary text",
+        #         tertiary_text="Tertiary text",
+        #     )
+        # )
+        #
+        # self.game.ids["bot_shop"].add_widget(f)
+        #
+
         d = Settings_gui(name="settings")
 
         #d.folder_path = folder_path
@@ -574,6 +626,10 @@ class app(MDApp):
 
     #self.background_color=(1,0.1,0.1)
         return screen_manager
+    def on_start(self):
+        c = Card()
+
+        c.add_widget(Button(text="fffff"))
 
 # Запуск проекта
 if __name__ == "__main__":

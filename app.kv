@@ -41,11 +41,16 @@ ScreenManagement:
             icon: "account"
             name: "registration"
             background_color: 0,1,0,1
-            Image:
-                source: "auth.png"
-                size_hint: .5, .7
-                pos_hint: {"center_x":.5, "center_y":.5}
+
             BoxLayout:
+                canvas.before:
+                    Color:
+                        #rgba: 0, 1, 0, 1
+                    Rectangle:
+                        source: "auth.png"
+                        # self here refers to the widget i.e FloatLayout
+                        pos: self.pos
+                        size: self.size
                 size_hint: .5, .7
                 pos_hint: {"center_x":.5, "center_y":.5}
 
@@ -56,11 +61,12 @@ ScreenManagement:
                     color: 1,1,1,1
                     size_hint: .1,.1
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "60sp"
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: name_r
-                    size_hint: .7, .05
+                    size_hint: .7, None
+                    size: 0, 100
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -70,11 +76,12 @@ ScreenManagement:
                     color: 1,1,1,1
                     size_hint: .1,.1
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "60sp"
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_r
-                    size_hint: .7, .05
+                    size_hint: .7, None
+                    size: 0, 100
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -83,11 +90,12 @@ ScreenManagement:
                     text: "Введите пароль:"
                     color: 1,1,1,1
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "60sp"
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
-                    size_hint: .7, .05
+                    size_hint: .7, None
+                    size: 0, 100
                     id: password_r
                     font_name: "main_font.ttf"
                     font_size: 35
@@ -109,12 +117,15 @@ ScreenManagement:
             name: "login"
             icon: "account"
 
-            Image:
-                source: "auth.png"
-                size_hint: .5, .7
-                pos_hint: {"center_x":.5, "center_y":.5}
             BoxLayout:
-
+                canvas.before:
+                    Color:
+                        #rgba: 0, 1, 0, 1
+                    Rectangle:
+                        source: "auth.png"
+                        # self here refers to the widget i.e FloatLayout
+                        pos: self.pos
+                        size: self.size
                 size_hint: .5, .5
                 pos_hint: {"center_x":.5, "center_y":.5}
 
@@ -123,14 +134,15 @@ ScreenManagement:
                 Label:
                     text: "Введите логин:"
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "60sp"
                     color: 1,1,1,1
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_l
-                    size_hint: .7, .05
-                    font_size: 50
+                    size_hint: .7, None
+                    size: 0, 100
+                    #font_size: 50
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -139,12 +151,13 @@ ScreenManagement:
                     text: "Введите пароль:"
                     color: 1,1,1,1
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "60sp"
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: password_l
-                    size_hint: .7, .05
+                    size_hint: .7, None
+                    size: 0, 100
                     font_name: "main_font.ttf"
                     font_size: 35
                     pos_hint: {"center_x":.5}
@@ -198,6 +211,11 @@ ScreenManagement:
                 pos_hint: {"center_x":.5,"center_y":.1}
                 orientation: 'horizontal'
 
+<Card>:
+    adaptive_height: True
+    TwoLineIconListItem:
+        text: "(050)-123-45-67"
+        secondary_text: "Mobile"
 
 <Clicker>:
     id: main_gui
@@ -246,14 +264,16 @@ ScreenManagement:
 
                 on_press: root.on_tap()
 
-            Label:
-                size_hint: (1,1)
+            MDLabel:
+                #size_hint: None, None
+                #size: 200, 200
                 id: TON_num
 
                 color: 1,1,1,1
-                pos_hint: {"center_x":.5,"center_y":.9}
+                halign: "center"
+                pos_hint: {"center_y":.85}
                 #size_hint: 1,1
-                font_size: 30
+                font_size: "60sp"
                 font_name: "main_font.ttf"
 
 
@@ -276,201 +296,66 @@ ScreenManagement:
                 SettingsTab:
                     text: "Майнинг"
 
+                    ScrollView:
+                        #size_hint: 1,1
+                        #pos_hint: {"center_x": .5}
+                        #Удвоение майнинга
+                        MDList:
+                            #size_hint: 1,1
+                            #pos_hint: {"center_x": .5}
+                            #orientation: "vertical"
+                            TwoLineAvatarListItem:
+                                id: text_summation
+                                icon: "account-cog"
+                                text: "Прокачка кнопки"
+                                on_press: root.buy_confirm(name= "прокачка кнопки")
+                                ImageLeftWidget:
+                                    source: "1.png"
 
-                    #Удвоение майнинга
-                    BoxLayout:
-                        orientation: "vertical"
+                            TwoLineAvatarListItem:
+                                id: text_doubling
+                                icon: "account-cog"
+                                text: "Удвоение майнинга"
 
+                                on_press: root.buy_confirm(name= "удвоение майнинга")
 
-                        Label:
-                            id: text_doubling
-                            font_size: root.main_font_size
-                            color: 0,0,0,1
-                            allow_stretch: True
-                            keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.9}
-                            size_hint: (.4,.4)
-                            font_name: "main_font.ttf"
-                            text_size: self.width, None
-                        ButImage:
-
-
-                            size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.8}
-
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-                            id: buy_doubling
-
-
-                            on_press: root.buy_doubling()
-
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Купить"
-                                font_size: root.main_font_size
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-
-
-                #SettingsTab:
-
-                    #text: "Прокачка кнопки"
-
-
-                        #Суммирование майнинга
-                        Label:
-                            id: text_summation
-                            font_size: root.main_font_size
-                            font_name: "main_font.ttf"
-                            color: 0,0,0,1
-                            allow_stretch: True
-                            keep_ratio: False
-                            pos_hint: {"center_x":.6,"center_y":.7}
-                            size_hint: (.4,.4)
-                            text_size: self.width, None
-                        ButImage:
-
-
-                            size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.8}
-
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-
-
-
-                            on_press: root.buy_summation()
-
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Купить"
-                                font_size: root.main_font_size
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-
+                                ImageLeftWidget:
+                                    source: "2.png"
 
                 SettingsTab:
 
                     text: "Кликер"
+                    ScrollView:
+                        #size_hint: 1,1
+                        #pos_hint: {"center_x": .5}
+                        #Удвоение майнинга
+                        MDList:
+                            id: bot_shop
+                            #size_hint: 1,1
+                            #pos_hint: {"center_x": .5}
+                            #orientation: "vertical"
+                            TwoLineAvatarListItem:
+                                id: text_bot
+                                icon: "account-cog"
+                                text: "Автомайнер"
+                                on_press: root.buy_confirm(name= "автомайнер")
 
-                    # Купить бота и изменить его скорость
-                    BoxLayout:
-                        center_y: 1111111111111
+                            TwoLineAvatarListItem:
+                                id: text_bot_summation
+                                icon: "account-cog"
+                                text: "прокачка майнинга автомайнера"
+                                on_press: root.buy_confirm(name="прокачка майнинга бота")
 
-                        orientation: "vertical"
-
-
-                        Label:
-                            id: text_bot
-                            font_size: root.main_font_size
-                            font_name: "main_font.ttf"
-                            color: 0,0,0,1
-                            allow_stretch: True
-                            keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.9}
-                            size_hint: (.4,.4)
-                            text_size: self.width, None
-                        ButImage:
-
-
-                            size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.8}
-
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-                            id: buy_doubling
-
-
-                            on_press: root.buy_bot()
-
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Купить"
-                                font_size: root.main_font_size
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
+                                #on_press:
+                        #size_hint: 1,1
+                        #pos_hint: {"center_x": .5}
+                        #Удвоение майнинга
+                        #MDList:
+                            #size_hint: 1,1
+                            #pos_hint: {"center_x": .5}
+                            #orientation: "vertical"
 
 
-
-
-                        #Удвоение майнинга бота
-
-                        Label:
-                            id: text_bot_doubling
-                            font_size: root.main_font_size
-                            font_name: "main_font.ttf"
-                            color: 0,0,0,1
-                            allow_stretch: True
-                            keep_ratio: False
-                            pos_hint: {"center_x":.5,"center_y":.6}
-                            size_hint: (.4,.4)
-                            text_size: self.width, None
-                        ButImage:
-
-
-                            size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.8}
-
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-                            id: buy_doubling
-
-
-                            on_press: root.buy_bot_doubling()
-
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Купить"
-                                font_size: root.main_font_size
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-
-                        # Прокачка клика бота
-                        Label:
-                            id: text_bot_summation
-                            font_size: root.main_font_size
-                            font_name: "main_font.ttf"
-                            color: 0,0,0,1
-                            allow_stretch: True
-                            keep_ratio: False
-                            pos_hint: {"center_x":.6,"center_y":.7}
-                            size_hint: (.4,.4)
-                            text_size: self.width, None
-                        ButImage:
-
-
-                            size_hint: .3,.1
-                            pos_hint: {"center_x":.5,"center_y":.8}
-
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-
-
-
-                            on_press: root.buy_bot_summation()
-
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Купить"
-                                font_size: root.main_font_size
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
 
                 SettingsTab:
                     text: "Скоро!!!"
@@ -479,7 +364,8 @@ ScreenManagement:
                             color: 0,0,0,1
                             font_name: "main_font.ttf"
                             font_size: root.main_font_size
-
+                            size_hint: None, None
+                            size: 200, 200
                             text: "Скоро появятся новые акции!!! Ждите!!"
                             text_size: self.width, None
         MDBottomNavigationItem:
@@ -502,14 +388,16 @@ ScreenManagement:
                             text: "Ваша ставка: ??? TON"
                             font_size: root.main_font_size
                             font_name: "main_font.ttf"
-                            size_hint: .3,.3
+                            size_hint: None, None
+                            size: 200, 200
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.8}
                             text_size: self.width, None
                         ButImage:
 
 
-                            size_hint: .3,.1
+                            size_hint: None, None
+                            size: 200, 200
                             pos_hint: {"center_x":.5,"center_y":.5}
 
 
@@ -533,7 +421,8 @@ ScreenManagement:
                             text: "Установите ставку в %:"
                             font_size: root.main_font_size
                             #font_name: "main_font.ttf"
-                            size_hint: .3,.3
+                            size_hint: None, None
+                            size: 200, 200
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.2}
 
@@ -554,6 +443,8 @@ ScreenManagement:
                     FloatLayout:
                         Label:
                             color: 0,0,0,1
+                            size_hint: None, None
+                            size: 200, 200
                             font_size: root.main_font_size
                             font_name: "main_font.ttf"
                             text: "Скоро появятся новые миниигры!!! Ждите!!"
