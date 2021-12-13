@@ -61,14 +61,14 @@ ScreenManagement:
                     color: 1,1,1,1
                     size_hint: .1,.1
                     font_name: "main_font.ttf"
-                    font_size: "60sp"
+                    font_size: "16sp"
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: name_r
                     size_hint: .7, None
                     size: 0, 100
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: "16sp"
                     pos_hint: {"center_x":.5}
                     multiline: False
                 Label:
@@ -76,21 +76,21 @@ ScreenManagement:
                     color: 1,1,1,1
                     size_hint: .1,.1
                     font_name: "main_font.ttf"
-                    font_size: "60sp"
+                    font_size: "16sp"
                     pos_hint: {"center_x":.5}
                 TextInput:
                     id: email_r
                     size_hint: .7, None
                     size: 0, 100
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: 40
                     pos_hint: {"center_x":.5}
                     multiline: False
                 Label:
                     text: "Введите пароль:"
                     color: 1,1,1,1
                     font_name: "main_font.ttf"
-                    font_size: "60sp"
+                    font_size: "16sp"
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
@@ -98,7 +98,7 @@ ScreenManagement:
                     size: 0, 100
                     id: password_r
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: 40
                     pos_hint: {"center_x":.5}
                     multiline: False
                 MDFillRoundFlatButton:
@@ -134,7 +134,7 @@ ScreenManagement:
                 Label:
                     text: "Введите логин:"
                     font_name: "main_font.ttf"
-                    font_size: "60sp"
+                    font_size: "16sp"
                     color: 1,1,1,1
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
@@ -144,14 +144,14 @@ ScreenManagement:
                     size: 0, 100
                     #font_size: 50
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: 40
                     pos_hint: {"center_x":.5}
                     multiline: False
                 Label:
                     text: "Введите пароль:"
                     color: 1,1,1,1
                     font_name: "main_font.ttf"
-                    font_size: "60sp"
+                    font_size: "16sp"
                     size_hint: .1,.1
                     pos_hint: {"center_x":.5}
                 TextInput:
@@ -159,7 +159,7 @@ ScreenManagement:
                     size_hint: .7, None
                     size: 0, 100
                     font_name: "main_font.ttf"
-                    font_size: 35
+                    font_size: 40
                     pos_hint: {"center_x":.5}
                     multiline: False
                 MDFillRoundFlatButton:
@@ -273,7 +273,7 @@ ScreenManagement:
                 halign: "center"
                 pos_hint: {"center_y":.85}
                 #size_hint: 1,1
-                font_size: "60sp"
+                font_size: "40sp"
                 font_name: "main_font.ttf"
 
 
@@ -282,6 +282,8 @@ ScreenManagement:
 
                 ScrollView:
                     MDList:
+
+
                         OneLineListItem:
                             icon: "account-cog"
                             text: "Выйти из текущего аккаунта"
@@ -329,22 +331,22 @@ ScreenManagement:
                         #size_hint: 1,1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
+                        adaptive_height: True
                         MDList:
+
                             id: bot_shop
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
                             TwoLineAvatarListItem:
                                 id: text_bot
+
                                 icon: "account-cog"
                                 text: "Автомайнер"
+                                secondary_text: "Автоматически майнит"
                                 on_press: root.buy_confirm(name= "автомайнер")
-
-                            TwoLineAvatarListItem:
-                                id: text_bot_summation
-                                icon: "account-cog"
-                                text: "прокачка майнинга автомайнера"
-                                on_press: root.buy_confirm(name="прокачка майнинга бота")
+                                ImageLeftWidget:
+                                    source: "bot.png"
 
                                 #on_press:
                         #size_hint: 1,1
@@ -360,14 +362,17 @@ ScreenManagement:
                 SettingsTab:
                     text: "Скоро!!!"
                     FloatLayout:
-                        Label:
+                        MDLabel:
                             color: 0,0,0,1
                             font_name: "main_font.ttf"
                             font_size: root.main_font_size
-                            size_hint: None, None
-                            size: 200, 200
+
+                            #size_hint: None, None
+                            #size: 200, 200
+                            font_size: self.font_size
+                            halign: "center"
                             text: "Скоро появятся новые акции!!! Ждите!!"
-                            text_size: self.width, None
+                            #text_size: self.width, None
         MDBottomNavigationItem:
             id: games
             text: "Игры"
@@ -386,18 +391,18 @@ ScreenManagement:
                         Label:
                             id: value_bet_text
                             text: "Ваша ставка: ??? TON"
-                            font_size: root.main_font_size
+                            font_size: "25sp"
                             font_name: "main_font.ttf"
-                            size_hint: None, None
-                            size: 200, 200
+#                            size_hint: None, None
+#                            size: 200, 200
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.8}
-                            text_size: self.width, None
+                            #text_size: self.width, None
                         ButImage:
 
 
                             size_hint: None, None
-                            size: 200, 200
+                            size: 200, 100
                             pos_hint: {"center_x":.5,"center_y":.5}
 
 
@@ -412,17 +417,17 @@ ScreenManagement:
                             source: "button_normal.jpg"
                             Label:
                                 text: "Крутить"
-                                font_size: root.main_font_size
+                                font_size: "20sp"
                                 #font_name: "main_font.ttf"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
 
                         Label:
                             text: "Установите ставку в %:"
-                            font_size: root.main_font_size
+                            font_size: "25sp"
                             #font_name: "main_font.ttf"
-                            size_hint: None, None
-                            size: 200, 200
+                            #size_hint: None, None
+                            #size: 200, 200
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.2}
 
@@ -443,8 +448,9 @@ ScreenManagement:
                     FloatLayout:
                         Label:
                             color: 0,0,0,1
-                            size_hint: None, None
-                            size: 200, 200
-                            font_size: root.main_font_size
+                            #size_hint: None, None
+                            #size: 200, 200
+                            font_size: self.font_size
                             font_name: "main_font.ttf"
+                            halign: "center"
                             text: "Скоро появятся новые миниигры!!! Ждите!!"

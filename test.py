@@ -1,79 +1,32 @@
-from kivy.lang import Builder
-
 from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelThreeLine
-from kivymd import images_path
-from kivymd.uix.expansionpanel import TwoLineAvatarIconListItem
-KV = '''
-<Content>
-    adaptive_height: True
-    MDList:
-        id: g
-        TwoLineIconListItem:
-            text: "(050)-123-45-67"
-            secondary_text: "Mobile"
-    
-            IconLeftWidget:
-                icon: 'phone'
-    
-        TwoLineIconListItem:
-            text: "(050)-123-45-67"
-            secondary_text: "Mobile"
-    
-            IconLeftWidget:
-                icon: 'phone'
-        TwoLineIconListItem:
-            text: "(050)-d-45-67"
-            secondary_text: "Mobile"
-            on_press: root.git()
-            IconLeftWidget:
-                icon: 'phone'
+from kivy.lang import Builder
+from kivy.core.window import Window
 
-ScrollView:
+Window.size = (300, 500)
 
-    MDGridLayout:
-        id: box
-        cols: 1
-        adaptive_height: True
-'''
+navigation_helper = """
+
+Screen:
+    NavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Navigation Drawer"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.toggle_nav_drawer()]]
+                    Widget:
+        MDNavigationDrawer:
+            id: nav_drawer
+"""
 
 
-class Content(MDBoxLayout):
-    def git(self):
+class DemoApp(MDApp):
 
-        self.ids["g"].add_widget(
-            TwoLineAvatarIconListItem(
-                text="hello!"
-            )
-        )
-
-
-class Test(MDApp):
     def build(self):
-        for i in range(10):
-            g = Content()
-            g.ids["g"].add_widget(
-                                        TwoLineAvatarIconListItem(
-                                            text="hello!"
-                                        )
-                                    )
-        return Builder.load_string(KV)
-
-    def on_start(self):
-
-        self.root.ids.box.add_widget(
-
-            MDExpansionPanel(
-                icon=f"{images_path}kivymd.png",
-                content=Content(),
-                panel_cls=MDExpansionPanelThreeLine(
-                    text="Text",
-                    secondary_text="Secondary text",
-                    tertiary_text="Tertiary text",
-                )
-            )
-        )
+        screen = Builder.load_string(navigation_helper)
+        return screen
 
 
-Test().run()
+DemoApp().run()
