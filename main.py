@@ -163,7 +163,7 @@ class Auth(Screen):
 
                 self.game = Clicker
                 # self.game.test()
-                print(123)
+                #print(123)
 
                 self.start_loops()
 
@@ -441,11 +441,11 @@ class Clicker(Screen):
         with open("data.pickle", "wb") as f:
             pickle.dump({"account": self.account, "data": self.player_data}, f)
 
-        p = ping('google.com', timeout=1)
+        p = ping("ton-clicker-default-rtdb.firebaseio.com", timeout=1)
         if p:
             ref = db.reference(f"/{self.account['login']}")
             ref.set({"account": self.account, "data": self.player_data})
-            offline = False
+            #offline = False
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
         else:
@@ -460,7 +460,7 @@ class Clicker(Screen):
 
     def sign_out(self):
         # print(self.manager.current)
-        global offline
+        global offline, auth_succefull
         if offline:
             self.show_alert_dialog(title="Ошибка!",text='''
 Эта кнопка не доступна!
@@ -468,6 +468,7 @@ class Clicker(Screen):
 Проверьте подключение к интернету и попробуйте снова.
 ''')
         else:
+            auth_succefull = False
             os.remove("data.pickle")
             self.manager.current = "auth"
 
@@ -491,21 +492,24 @@ class Clicker(Screen):
             #             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
             #
 
-
-    def bot_loop(self, dt):
-        if auth_succefull:
-            if self.bot_data["alow_bot"]:
-                video = self.bot_data["video card"]
-                for i in self.videocards:
-                    if video == i["name"]:
-                        self.player_data["TON"] += i["boost"] * self.player_data["doubling"] + self.summation_data[
-                            "summation_num"]
-
     def theard_update_data(self, dt):
         global auth_succefull
         if auth_succefull:
             th = Thread(target=self.update_data)
             th.start()
+
+    def bot_loop(self, dt):
+        global auth_succefull
+        if auth_succefull:
+            th = Thread(target=self.autominer)
+            th.start()
+    def autominer(self):
+        if self.bot_data["alow_bot"]:
+            video = self.bot_data["video card"]
+            for i in self.videocards:
+                if video == i["name"]:
+                    self.player_data["TON"] += i["boost"] * self.player_data["doubling"] + self.summation_data["summation_num"]
+
 
 
 from kivymd.uix.list import MDList
@@ -575,9 +579,9 @@ class app(MDApp):
         app_d = firebase_admin.initialize_app(cred_obj, {
             'databaseURL': "https://bl-test-671cd-default-rtdb.firebaseio.com/"
         })
-        p = ping('google.com', timeout=1)
-        print(p)
-        if p:
+        p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
+        #print(p == "False")
+        if p != False and p < 70:
 
             ref = db.reference(f"/lock_project")
 
