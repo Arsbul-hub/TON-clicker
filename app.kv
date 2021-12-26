@@ -42,14 +42,9 @@
             #text_color: .1, .6, .8, 1
             #theme_text_color: "Custom"
             on_press: root.try_offline()
-ScreenManagement:
-    #transition: FadeTransition()
-    id: d
-    Error_show
-    Settings_gui
-    Auth
-    Clicker
-    Loading
+
+
+
 <Loading>:
 
     MDSpinner:
@@ -427,7 +422,7 @@ ScreenManagement:
 
 
             Image:
-                source: "background.jpg"
+                source: "background.png"
                 allow_stretch: True
                 keep_ratio: False
 
@@ -516,13 +511,13 @@ ScreenManagement:
                         #source: "mine.jpg"
                     MDLabel:
                         id: player_name
-                        text: "Attreya"
+                        #text: "Attreya"
                         font_style: "Subtitle1"
                         size_hint_y: None
                         height: self.texture_size[1]
                     MDLabel:
                         id: player_login
-                        text: "attreya01@gmail.com"
+                        #text: "attreya01@gmail.com"
                         size_hint_y: None
                         font_style: "Caption"
                         height: self.texture_size[1]

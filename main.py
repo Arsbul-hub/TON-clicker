@@ -23,7 +23,7 @@ import random
 from ping3 import ping
 from threading import Thread
 
-
+from kivy.uix.screenmanager import NoTransition
 
 up_data = True
 auth_succefull = False
@@ -150,7 +150,12 @@ class Auth(Screen):
         self.ids["avatar_image"].source = p
 
     def login(self):
+        #self.manager.current = "loading"
+        th = Thread(target=self.start_login)
+        th.start()
+    def start_login(self):
         global data
+
         player_email = self.ids["email_l"].text
         player_password = self.ids["password_l"].text
         if player_password != "" and player_email != "":
@@ -171,16 +176,20 @@ class Auth(Screen):
                 self.show_dialog('''
 Неверный логин или пароль!
 Проверьте их корректность!
-                ''')
+''')
 
 
         else:
             self.show_dialog('''
 Все поля должны быть заполнены!
 И не должны содержать специальные симбволы: . ! : ; ' " @ -
-            ''')
+''')
 
     def registration(self):
+        #self.manager.current = "loading"
+        th = Thread(target=self.start_login)
+        th.start()
+    def start_registration(self):
         global data
         if self.ids["avatar"].text:
             avatar = self.ids["avatar"].text
@@ -219,23 +228,28 @@ class Auth(Screen):
                 self.show_dialog('''
 Аккаует с таким ником или логином уже существует!
 Придумайте новый!
-                                            ''')
+''')
 
         else:
             self.show_dialog('''
 Все поля должны быть заполнены!
 И не должны содержать специальные симбволы: . ! : ; ' " @ -
-                            ''')
+''')
 
     def start_loops(self):
-        global auth_succefull, offline
+        global auth_succefull, offline, data
 
         # c = Clicker()
         # c.set_data()
         auth_succefull = True
         with open("data.pickle", "wb") as f:
             pickle.dump(data, f)
+        c = Clicker
 
+        c.account = data["account"]
+        c.player_data = data["data"]
+        c.bot_data = data["data"]["bot"]
+        c.summation_data = data["data"]["summation"]
         self.manager.current = "clicker"
 
 
@@ -315,6 +329,16 @@ class Clicker(Screen):
 ''',
 
                 buttons=[
+                    MDFlatButton(
+                        text="Отмена",
+                        theme_text_color="Custom",
+                        # text_font_name= "main_font.ttf",
+                        text_color=(0, 0, 0, 1),
+                        font_size="20sp",
+                        font_name="main_font.ttf",
+                        # text_color=self.theme_cls.primary_color,
+                        on_press=lambda event: self.close_dialog()
+                    ),
                     MDFlatButton(
                         text="Ок",
                         theme_text_color="Custom",
@@ -489,17 +513,14 @@ class Clicker(Screen):
         else:
 
             self.show_alert_dialog(title="Ошибка!", text='''
-    Эта кнопка не доступна!
-    Вы в режиме оффлайн майнинга!
-    Проверьте подключение к интернету и попробуйте снова.
+Эта кнопка не доступна!
+Вы в режиме оффлайн майнинга!
+Проверьте подключение к интернету и попробуйте снова.
     ''')
 
     def main_loop(self, dt):
         if auth_succefull:
-            self.account = data["account"]
-            self.player_data = data["data"]
-            self.bot_data = data["data"]["bot"]
-            self.summation_data = data["data"]["summation"]
+
             self.ids["player_name"].text = f'''Имя: {self.account["name"]}'''
             self.ids["player_login"].text = f'''Логин: {self.account["login"]}'''
             self.ids["avatar"].source = self.account["avatar"]
@@ -548,6 +569,7 @@ class app(MDApp):
         print(123)
         # Clock.schedule_interval(self.start_loops, 1/30)
         self.screen_manager = ScreenManager()
+        self.screen_manager.transition = SwapTransition()
         d = Error_show(name="error_show")
 
         # d.folder_path = folder_path
@@ -602,7 +624,9 @@ class app(MDApp):
         self.screen_manager.add_widget(auth)
         loading = Loading(name="loading")
         self.screen_manager.add_widget(loading)
+
         self.screen_manager.current = "loading"
+
         # self.main_font_size = self.settings["font_size"]
         # self.title = "Tap-Fight"
         # self.theme_cls.theme_style = "Dark"
@@ -621,7 +645,7 @@ class app(MDApp):
 
         th = Thread(target=self.start_game)
         th.start()
-        self.fps_monitor_start()
+        #self.fps_monitor_start()
 
     def start_game(self):
         global data,auth_succefull
@@ -655,6 +679,12 @@ class app(MDApp):
                     ref.set(data)
 
                 auth_succefull = True
+                c = Clicker
+
+                c.account = data["account"]
+                c.player_data = data["data"]
+                c.bot_data = data["data"]["bot"]
+                c.summation_data = data["data"]["summation"]
                 self.screen_manager.current = "clicker"
             except:
 
