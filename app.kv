@@ -9,15 +9,38 @@
     radius: [5]
     elevation: 20
 <Error_show>:
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
-        Label:
+        spacing: 10
+        MDLabel:
+            font_style: "H1"
+            color: 0,0,0,1
+            halign: "center"
+            text: "Ошибка!!!"
+        MDLabel:
 
             color: 0,0,0,1
-            text: "Ошибка!!! \nПроизошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
-            text_size: self.width, None
-        Button:
+            halign: "center"
+            text: "Произошла ошибка подключения к интернету или wifi.\nЕсли вы подключены к wifi, то проверьте корректность его работы. \nЕсли вы используете мобильные интернет, то проверьте его работоспособность. \nЕсли вы уверены, что у вас работает интренет, поробуте перезапустить приложение."
+            #text_size: self.width, None
+        MDFillRoundFlatButton:
+
+            #size_hint: .3, .3
+            text: "Повторить еще раз"
+            pos_hint: {"center_x":.5}
+
+            font_size: 40
+            on_press: root.reconnect()
+        MDFillRoundFlatButton:
+
+            #\md_bg_color: 1, 1, 1, 1
+            #size_hint: .3, .3
+            font_size: 40
             text: "Оффлайн майнинг"
+            pos_hint: {"center_x":.5}
+
+            #text_color: .1, .6, .8, 1
+            #theme_text_color: "Custom"
             on_press: root.try_offline()
 ScreenManagement:
     #transition: FadeTransition()
@@ -26,6 +49,14 @@ ScreenManagement:
     Settings_gui
     Auth
     Clicker
+    Loading
+<Loading>:
+
+    MDSpinner:
+        size_hint: None, None
+        size: dp(46), dp(46)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        active: True
 
 <Auth>:
 
@@ -40,137 +71,301 @@ ScreenManagement:
             text: "Регистрация"
             icon: "account"
             name: "registration"
-            background_color: 0,1,0,1
 
-            BoxLayout:
-                canvas.before:
+            FloatLayout:
+                canvas:
                     Color:
-                        #rgba: 0, 1, 0, 1
+                        rgb: [35/255,49/255,48/255,1]
                     Rectangle:
-                        source: "auth.png"
-                        # self here refers to the widget i.e FloatLayout
                         pos: self.pos
                         size: self.size
-                size_hint: .5, .7
-                pos_hint: {"center_x":.5, "center_y":.5}
+                MDBoxLayout:
+                    orientation : 'vertical'
+                    size_hint: .5,.5
+                    #size : 400,600
+                    pos_hint : {"center_x":.5,"center_y":.5}
+                    #elevation : 15
+                    #md_bg_color: [35/255,49/255,48/255,1]
+                    padding : 20
+                    spacing : 30
 
-                orientation: "vertical"
+                    MDLabel :
+                        text : "Регистрация"
+                        font_style : "Button"
+                        font_size : 40
+                        halign : "center"
+                        size_hint_y : None
+                        font_name: "main_font.ttf"
+                        height : self.texture_size[1]
+                        padding_y : 30
+                    AsyncImage:
+                        id: avatar_image
+                        source: "classic_avatar.png"
+                        size_hint : None,None
+                        pos_hint: {"center_x": .5}
+                        size: 90,90
 
-                Label:
-                    text: "Введите имя:"
-                    color: 1,1,1,1
-                    size_hint: .1,.1
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    pos_hint: {"center_x":.5}
-                TextInput:
-                    id: name_r
-                    size_hint: .7, None
-                    size: 0, 100
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    pos_hint: {"center_x":.5}
-                    multiline: False
-                Label:
-                    text: "Введите логин:"
-                    color: 1,1,1,1
-                    size_hint: .1,.1
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    pos_hint: {"center_x":.5}
-                TextInput:
-                    id: email_r
-                    size_hint: .7, None
-                    size: 0, 100
-                    font_name: "main_font.ttf"
-                    font_size: 40
-                    pos_hint: {"center_x":.5}
-                    multiline: False
-                Label:
-                    text: "Введите пароль:"
-                    color: 1,1,1,1
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    size_hint: .1,.1
-                    pos_hint: {"center_x":.5}
-                TextInput:
-                    size_hint: .7, None
-                    size: 0, 100
-                    id: password_r
-                    font_name: "main_font.ttf"
-                    font_size: 40
-                    pos_hint: {"center_x":.5}
-                    multiline: False
-                MDFillRoundFlatButton:
+                    MDTextFieldRound :
+                        id: avatar
+                        hint_text : "url аватара"
+                        #size_hint : .6,.6
+                        font_name: "main_font.ttf"
+                        icon_right : "account"
+    #                    width : 270
 
-                    md_bg_color: 1, 1, 1, 1
-                    #size_hint: .3, .1
+                        font_size : 25
 
-                    pos_hint: {"center_x":.5}
+                        pos_hint : {"center_x":.5}
 
+                        color_active : [1,1,1,1]
+                        #on_focus: root.load_avatar(self.text)
+                    MDTextFieldRound:
+                        id: name_r
+                        hint_text: "Имя"
+                        #size_hint_x: None
+                        font_name: "main_font.ttf"
+                        icon_right: "account"
+                        font_size : 25
+                        pos_hint: {"center_x":.5}
 
-                    text: "Зарегистриоваться"
-                    text_color: .1, .6, .8, 1
-                    on_press: root.registration()
+                        color_active: [1,1,1,1]
+                    MDTextFieldRound:
+                        id: email_r
+                        hint_text: "Логин"
+                        #size_hint_x: None
+                        font_name: "main_font.ttf"
+                        icon_right: "account"
+                        font_size : 25
+                        pos_hint: {"center_x":.5}
+
+                        color_active: [1,1,1,1]
+                    MDTextFieldRound:
+                        id: password_r
+                        hint_text: "Пароль"
+                        password: True
+                        #size_hint_x: None
+                        font_name: "main_font.ttf"
+                        icon_right: "eye-off"
+                        font_size : 25
+                        pos_hint: {"center_x":.5}
+
+                        color_active: [1,1,1,1]
+
+                    MDRoundFlatButton:
+                        text: "Регистрация"
+                        font_size: 20
+                        font_name: "main_font.ttf"
+                        pos_hint: {"center_x":.5}
+                        theme_text_color: "Custom"
+
+                        on_press: root.registration()
+
+                    #height: 30
+#                AsyncImage:
+#                    id: avatar_image
+#                    source: "https://i.ibb.co/zr8HtNr/classic-avatar.png"
+#                Label:
+#                    text: "Введите url картинки в качестве аватара:"
+#                    color: 1,1,1,1
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    pos_hint: {"center_x":.5}
+#                TextInput:
+#                    id: avatar
+#
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                    on_text_validate: root.load_avatar(self.text)
+#                Label:
+#                    text: "Введите имя:"
+#                    color: 1,1,1,1
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    pos_hint: {"center_x":.5}
+#                TextInput:
+#                    id: name_r
+#
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                Label:
+#                    text: "Введите логин:"
+#                    color: 1,1,1,1
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    pos_hint: {"center_x":.5}
+#                TextInput:
+#                    id: email_r
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                Label:
+#                    text: "Введите пароль:"
+#                    color: 1,1,1,1
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    pos_hint: {"center_x":.5}
+#                TextInput:
+#                    size_hint: None, None
+#                    width: 300
+#                    height: 50
+#                    id: password_r
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                MDFillRoundFlatButton:
+#
+#                    md_bg_color: 1, 1, 1, 1
+#                    #size_hint: .3, .1
+#
+#                    pos_hint: {"center_x":.5}
+#
+#
+#                    text: "Зарегистриоваться"
+#                    text_color: .1, .6, .8, 1
+#                    on_press: root.registration()
         MDBottomNavigationItem:
             text: "Вход"
             name: "login"
             icon: "account"
+#
+#            MDBoxLayout:
+#                md_bg_color: app.theme_cls.primary_color
+#                size_hint: .9, .9
+#                pos_hint: {"center_x":.5, "center_y":.5}
+#
+#                orientation: "vertical"
 
-            BoxLayout:
-                canvas.before:
+            FloatLayout:
+                canvas:
                     Color:
-                        #rgba: 0, 1, 0, 1
+                        rgb: [35/255,49/255,48/255,1]
                     Rectangle:
-                        source: "auth.png"
-                        # self here refers to the widget i.e FloatLayout
                         pos: self.pos
                         size: self.size
-                size_hint: .5, .5
-                pos_hint: {"center_x":.5, "center_y":.5}
+                MDBoxLayout:
+                    size_hint: .5,.5
+                    #size: 400,600
+                    pos_hint: {"center_x":.5,"center_y":.5}
+                    #elevation: 15
+                    md_bg_color: [35/255,49/255,48/255,1]
+                    padding: 20
+                    spacing: 30
+                    orientation: "vertical"
+                    # Adding items to the card
+                    MDLabel:
+                        text: 'Вход'
+                        font_style: 'Button'
+                        font_size: 45
+                        halign: "center"
+                        size_hint_y: None
+                        font_name: "main_font.ttf"
+                        height: self.texture_size[1]
+                        padding_y: 15
+                    MDTextFieldRound:
+                        id: email_l
+                        hint_text: "Логин"
+                        icon_right: "account"
+                        #size_hint_x: None
+                        font_name: "main_font.ttf"
+                        font_size : 25
+                        pos_hint: {"center_x":.5}
+                        color_active: [1,1,1,1]
+                    MDTextFieldRound:
+                        id: password_l
+                        hint_text: "Пароль"
+                        icon_right: "eye-off"
+                        #size_hint_x: None
+                        font_name: "main_font.ttf"
+                        font_size : 25
+                        pos_hint: {"center_x":.5}
+                        color_active: [1,1,1,1]
+                        password: True
+                    MDRoundFlatButton:
+                        text: 'Войти'
+                        font_name: "main_font.ttf"
+                        pos_hint: {"center_x":.5}
+                        font_size: 20
+                        on_press: root.login()
 
-                orientation: "vertical"
+#                Label:
+#                    text: "Введите логин:"
+#                    color: 1,1,1,1
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    size_hint: None, None
+#                    #width: 100
+#                    width: 300
+#                    height: 50
+#                    pos_hint: {"center_x":.5,"center_y":.8}
+#                TextInput:
+#                    id: email_l
+#                    size_hint: None, None
+#                    #width: 100
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                Label:
+#                    text: "Введите пароль:"
+#                    color: 1,1,1,1
+#                    font_name: "main_font.ttf"
+#                    font_size: "16sp"
+#                    size_hint: None, None
+#                    #width: 100
+#                    width: 300
+#                    height: 50
+#                    pos_hint: {"center_x":.5}
+#                TextInput:
+#                    id: password_l
+#                    size_hint: None, None
+#                    #width: 100
+#                    width: 300
+#                    height: 50
+#                    font_name: "main_font.ttf"
+#                    font_size: "40sp"
+#                    pos_hint: {"center_x":.5}
+#                    multiline: False
+#                MDFillRoundFlatButton:
+#
+#                    md_bg_color: 1, 1, 1, 1
+#                    #size_hint: .3, .1
+#
+#                    pos_hint: {"center_x":.5}
+#                    text: "Войти"
+#                    text_color: .1, .6, .8, 1
+#                    on_press: root.login()
 
-                Label:
-                    text: "Введите логин:"
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    color: 1,1,1,1
-                    size_hint: .1,.1
-                    pos_hint: {"center_x":.5}
-                TextInput:
-                    id: email_l
-                    size_hint: .7, None
-                    size: 0, 100
-                    #font_size: 50
-                    font_name: "main_font.ttf"
-                    font_size: 40
-                    pos_hint: {"center_x":.5}
-                    multiline: False
-                Label:
-                    text: "Введите пароль:"
-                    color: 1,1,1,1
-                    font_name: "main_font.ttf"
-                    font_size: "16sp"
-                    size_hint: .1,.1
-                    pos_hint: {"center_x":.5}
-                TextInput:
-                    id: password_l
-                    size_hint: .7, None
-                    size: 0, 100
-                    font_name: "main_font.ttf"
-                    font_size: 40
-                    pos_hint: {"center_x":.5}
-                    multiline: False
-                MDFillRoundFlatButton:
-
-                    md_bg_color: 1, 1, 1, 1
-                    #size_hint: .3, .1
-
-                    pos_hint: {"center_x":.5}
-                    text: "Войти"
-                    text_color: .1, .6, .8, 1
-                    on_press: root.login()
 <Settings_gui>:
 
     MDTabs:
@@ -211,11 +406,6 @@ ScreenManagement:
                 pos_hint: {"center_x":.5,"center_y":.1}
                 orientation: 'horizontal'
 
-<Card>:
-    adaptive_height: True
-    TwoLineIconListItem:
-        text: "(050)-123-45-67"
-        secondary_text: "Mobile"
 
 <Clicker>:
     id: main_gui
@@ -242,15 +432,18 @@ ScreenManagement:
                 keep_ratio: False
 
             MDToolbar:
-                id: toolbar
 
-                left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                title:'Настройки'
-                pos_hint: {"y": .93}
+
+                pos_hint: {"top": 1}
+
                 size_hint_y: .07
-                left_action_items:[['account-cog',lambda x: nav_drawer.set_state("open")]]
+                #left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                title:'Настройки'
+
+                #size_hint_y: .07
+                left_action_items:[['cog',lambda x: nav_drawer.set_state("open")]]
                 right_action_items:[['information',lambda x: root.show_info()]]
-                elevation:10
+                #elevation:10
                 #md_bg_color: 0,0,100/255,1
 
             ButImage:
@@ -276,18 +469,81 @@ ScreenManagement:
                 font_size: "40sp"
                 font_name: "main_font.ttf"
 
-
+            #NavigationLayout:
             MDNavigationDrawer:
                 id: nav_drawer
-
+                orientation: "vertical"
+                padding: "8dp"
+                spacing: "8dp"
+#                MDLabel:
+#                    text: "Ваш аккаунт"
+#                    #font_size: "40sp"
+#                    font_style: "Button"
+#                    size_hint_y: None
+#                    height: self.texture_size[1]
+#
+#                AnchorLayout:
+#                    anchor_x: "left"
+#                    size_hint_y: None
+#                    height: avatar.height
+#
+#                    AsyncImage:
+#                        id: avatar
+#                        size_hint: None, None
+#                        #size: "56dp", "56dp"
+#                        #source: ""
+#
+#                MDLabel:
+#                    id: player_name
+#                    text: "Аккаунт"
+#                    font_style: "C"
+#                    size_hint_y: None
+#                    height: self.texture_size[1]
+#
+#                MDLabel:
+#                    id: player_login
+#                    text: "Логин"
+#                    font_style: "Button"
+#                    size_hint_y: None
+#                    height: self.texture_size[1]
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding: "8dp"
+                    spacing: "8dp"
+                    AsyncImage:
+                        id: avatar
+                        size_hint: (1,1)
+                        #source: "mine.jpg"
+                    MDLabel:
+                        id: player_name
+                        text: "Attreya"
+                        font_style: "Subtitle1"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDLabel:
+                        id: player_login
+                        text: "attreya01@gmail.com"
+                        size_hint_y: None
+                        font_style: "Caption"
+                        height: self.texture_size[1]
                 ScrollView:
                     MDList:
-
-
-                        OneLineListItem:
-                            icon: "account-cog"
-                            text: "Выйти из текущего аккаунта"
+                        id: md_list
+                        OneLineIconListItem:
+                            text: "Выйти"
                             on_press: root.sign_out()
+                            IconLeftWidget:
+                                icon: "logout"
+
+
+
+
+            MDSpinner:
+                id: loading
+                size_hint: None, None
+                size: "46dp", "46dp"
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                active: False
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
@@ -327,28 +583,151 @@ ScreenManagement:
                 SettingsTab:
 
                     text: "Кликер"
+
                     ScrollView:
                         #size_hint: 1,1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
                         adaptive_height: True
+
                         MDList:
 
                             id: bot_shop
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
-                            TwoLineAvatarListItem:
+
+                            ThreeLineAvatarListItem:
                                 id: text_bot
 
                                 icon: "account-cog"
                                 text: "Автомайнер"
                                 secondary_text: "Автоматически майнит"
-                                on_press: root.buy_confirm(name= "автомайнер")
+                                tertiary_text: "Цена: 1 TON"
+                                on_press: root.buy_confirm(name="автомайнер")
                                 ImageLeftWidget:
                                     source: "bot.png"
+                            ThreeLineAvatarListItem:
 
-                                #on_press:
+
+                                icon: "account-cog"
+                                text: "Celeron Pro"
+                                secondary_text: "Чистая скорость добычи: 0.000001 в секунду"
+                                tertiary_text: "Цена: 0.10 TON"
+                                on_press: root.buy_confirm(name="Celeron Pro")
+                                ImageLeftWidget:
+                                    source: "processor.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Gt 770"
+                                secondary_text: "Чистая скорость добычи: 0.00002 в секунду"
+                                tertiary_text: "Цена: 0.50 TON"
+                                on_press: root.buy_confirm(name="Gt 770")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Gt 870"
+                                secondary_text: "Чистая скорость добычи: 0.00003"
+                                tertiary_text: "Цена: 0.70 TON"
+                                on_press: root.buy_confirm(name="Gt 870")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Gtx 970"
+                                secondary_text: "Чистая скорость добычи: 0.00004"
+                                tertiary_text: "Цена: 0.90 TON"
+                                on_press: root.buy_confirm(name="Gtx 970")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 1050"
+                                secondary_text: "Чистая скорость добычи: 0.00005"
+                                tertiary_text: "Цена: 1 TON"
+                                on_press: root.buy_confirm(name="Rtx 1050")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 1070"
+                                secondary_text: "Чистая скорость добычи: 0.00006"
+                                tertiary_text: "Цена: 1.5 TON"
+                                on_press: root.buy_confirm(name="Rtx 1070")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 2060"
+                                secondary_text: "Чистая скорость добычи: 0.00007"
+                                tertiary_text: "Цена: 1.9 TON"
+                                on_press: root.buy_confirm(name="Rtx 2060")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 2070 Super"
+                                secondary_text: "Чистая скорость добычи: 0.00008"
+                                tertiary_text: "Цена: 2.1 TON"
+                                on_press: root.buy_confirm(name="Rtx 2070 Super")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 2080 TI"
+                                secondary_text: "Чистая скорость добычи: 0.00009"
+                                tertiary_text: "Цена: 2.6 TON"
+                                on_press: root.buy_confirm(name="Rtx 2080 TI")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 3060 Super"
+                                secondary_text: "Чистая скорость добычи: 0.0015"
+                                tertiary_text: "Цена: 3.0 TON"
+                                on_press: root.buy_confirm(name="Rtx 3060 Super")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 3090 Super TI"
+                                secondary_text: "Чистая скорость добычи: 0.0095"
+                                tertiary_text: "Цена: 3.8 TON"
+                                on_press: root.buy_confirm(name="Rtx 3090 Super TI")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+                            ThreeLineAvatarListItem:
+
+
+                                icon: "account-cog"
+                                text: "Rtx 8000 Super TI Extreme Edition"
+                                secondary_text: "Чистая скорость добычи: 1.2"
+                                tertiary_text: "Цена: 4.5 TON"
+                                on_press: root.buy_confirm(name="Rtx 8000 Super TI Extreme Edition")
+                                ImageLeftWidget:
+                                    source: "video card.png"
+
                         #size_hint: 1,1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
@@ -360,7 +739,7 @@ ScreenManagement:
 
 
                 SettingsTab:
-                    text: "Скоро!!!"
+                    title: "Скоро!!!"
                     FloatLayout:
                         MDLabel:
                             color: 0,0,0,1
@@ -382,7 +761,7 @@ ScreenManagement:
                 lock_swiping: True
                 SettingsTab:
 
-                    text: "Рулетка"
+                    title: "Рулетка"
 
 
 
@@ -398,13 +777,18 @@ ScreenManagement:
                             color: 0,0,0,1
                             pos_hint: {"center_x":.5,"center_y":.8}
                             #text_size: self.width, None
-                        ButImage:
+                        Button:
 
 
-                            size_hint: None, None
-                            size: 200, 100
+                            size_hint: .2, .1
+                            #size: 200, 100
                             pos_hint: {"center_x":.5,"center_y":.5}
 
+                            text: "Крутить"
+                            font_size: "20sp"
+                            font_name: "main_font.ttf"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
 
 
                             allow_stretch: True
@@ -414,13 +798,6 @@ ScreenManagement:
 
                             on_press: root.find_it()
 
-                            source: "button_normal.jpg"
-                            Label:
-                                text: "Крутить"
-                                font_size: "20sp"
-                                #font_name: "main_font.ttf"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
 
                         Label:
                             text: "Установите ставку в %:"
@@ -444,7 +821,7 @@ ScreenManagement:
 
 
                 SettingsTab:
-                    text: "Скоро!!!"
+                    title: "Скоро!!!"
                     FloatLayout:
                         Label:
                             color: 0,0,0,1

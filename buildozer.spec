@@ -36,7 +36,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,ping3,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,https://github.com/kivymd/KivyMD/archive/b70abb5.zip,pyjnius,plyer,requests,urllib3,chardet,idna,pip,Image,PIL
+requirements = python3,ping3,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,requests,urllib3,chardet,idna,pip,Image,PIL
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -85,7 +85,7 @@ fullscreen = 0
 #android.presplash_color = #FFFFFF
 
 # (list) Permissions
-android.permissions = INTERNET
+android.permissions = INTERNET, NETWORK
 
 # (int) Target Android API, should be as high as possible.
 #android.api = 27
