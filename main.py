@@ -6,7 +6,7 @@ from kivy.clock import Clock
 
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-
+from kivy.core.audio import SoundLoader
 
 import pickle
 
@@ -22,7 +22,7 @@ from firebase_admin import db
 import random
 from ping3 import ping
 from threading import Thread
-
+from kivy.logger import Logger
 from kivy.uix.screenmanager import NoTransition
 
 up_data = True
@@ -31,8 +31,13 @@ offline = False
 already_auth = False
 data = {}
 max_ping = 300
+def set_data():
+    c = Clicker
 
-
+    c.account = data["account"]
+    c.player_data = data["data"]
+    c.bot_data = data["data"]["bot"]
+    c.summation_data = data["data"]["summation"]
 class SettingsTab(MDCard, MDTabsBase):
     pass
 
@@ -76,7 +81,7 @@ class Error_show(Screen):
 
                 offline = True
                 auth_succefull = True
-
+                set_data()
                 self.manager.current = "clicker"
 
         except:
@@ -107,7 +112,9 @@ class Error_show(Screen):
                     ref.set(data)
 
                 auth_succefull = True
+                set_data()
                 self.manager.current = "clicker"
+
             except:
 
                 self.manager.current = "auth"
@@ -118,7 +125,6 @@ class Auth(Screen):
 
         # self.f1 = Widget()
         super().__init__(**kwargs)
-        self.game = Clicker()
 
         # self.main_font_size = main_font_size
 
@@ -166,7 +172,7 @@ class Auth(Screen):
 
                 data = ref.get()
 
-                self.game = Clicker
+
                 # self.game.test()
                 # print(123)
 
@@ -186,8 +192,8 @@ class Auth(Screen):
 ''')
 
     def registration(self):
-        #self.manager.current = "loading"
-        th = Thread(target=self.start_login)
+        self.manager.current = "loading"
+        th = Thread(target=self.start_registration)
         th.start()
     def start_registration(self):
         global data
@@ -198,7 +204,7 @@ class Auth(Screen):
         player_name = self.ids["name_r"].text
         player_email = self.ids["email_r"].text
         player_password = self.ids["password_r"].text
-        if player_password != "" and player_email != "" and player_name != "":
+        if player_password != "" and player_email != "" and player_name != "" and "/" not in player_password and "/" not in player_email and "/" not in player_name:
             ref = db.reference(f"/players/{player_email}")
             account = ref.get()
 
@@ -214,7 +220,10 @@ class Auth(Screen):
                                      "video card": "Celeron Pro", "bot_price": 1,
                                      "summation_price": 0.000001, "summation_num": 0.000001},
 
-                             "summation": {"summation_price": 0.000001, "summation_num": 0.000001}
+                             "summation": {"summation_price": 0.000001, "summation_num": 0.000001},
+                             "tired_num": 20,
+                             "is_tired": False,
+
                              }
                 }
 
@@ -225,15 +234,18 @@ class Auth(Screen):
 
                 self.start_loops()
             else:
+                #self.manager.transition = NoTransition()
+                self.manager.current = "auth"
                 self.show_dialog('''
 Аккаует с таким ником или логином уже существует!
 Придумайте новый!
 ''')
 
         else:
+            self.manager.current = "auth"
             self.show_dialog('''
 Все поля должны быть заполнены!
-И не должны содержать специальные симбволы: . ! : ; ' " @ -
+И не должны содержать симбвол: /
 ''')
 
     def start_loops(self):
@@ -241,15 +253,12 @@ class Auth(Screen):
 
         # c = Clicker()
         # c.set_data()
+        set_data()
         auth_succefull = True
         with open("data.pickle", "wb") as f:
             pickle.dump(data, f)
-        c = Clicker
 
-        c.account = data["account"]
-        c.player_data = data["data"]
-        c.bot_data = data["data"]["bot"]
-        c.summation_data = data["data"]["summation"]
+        #self.manager.transition = FadeTransition()
         self.manager.current = "clicker"
 
 
@@ -287,11 +296,14 @@ class ScreenManagement(ScreenManager):
 class Clicker(Screen):
 
     def __init__(self, **kwargs):
-
-        # self.f1 = Widget()
         super().__init__(**kwargs)
+        # self.f1 = Widget()
+
+        #Logger.info('Loader: Game screen has been loaded.')
+        print(122222222222222222222222222)
         # self.main_font_size = main_font_size
         self.connect_error = False
+        self.name = "clicker"
         # self.bitcoin = 0
         # self.bitcoin = 0
         # self.size_hint = (1,1)
@@ -370,11 +382,11 @@ class Clicker(Screen):
                     self.player_data["TON"] -= price
                     self.bot_data["video card"] = name
                 elif self.player_data["TON"] - price <= 0:
-                    Snackbar(text="У вас не хватает на это средств!").open()
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
             elif index > self.videocards[name]["index"]:
-                Snackbar(text="Эта видеокарта хуже, чем у вас есть!").open()
+                Snackbar(text="Эта видеокарта хуже, чем у вас есть!",duration=.2).open()
             elif index == self.videocards[name]["index"]:
-                Snackbar(text="У вас уже усть ета видеокарта!").open()
+                Snackbar(text="У вас уже усть ета видеокарта!",duration=.2).open()
         else:
             if name == "удвоение майнинга":
                 if self.player_data["TON"] - self.player_data["doubling_price"] >= 0:
@@ -383,7 +395,7 @@ class Clicker(Screen):
                     self.player_data["TON"] -= self.player_data["doubling_price"]
                     self.player_data["doubling_price"] += self.player_data["doubling_price"] / 100 * 30
                 else:
-                    Snackbar(text="У вас не хватает на это средств!").open()
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
             if name == "прокачка кнопки":
                 if self.player_data["TON"] - self.summation_data["summation_price"] >= 0:
                     self.player_data["TON"] -= self.summation_data["summation_price"]
@@ -392,7 +404,7 @@ class Clicker(Screen):
 
                     self.summation_data["summation_price"] += 0.000001 * 100
                 else:
-                    Snackbar(text="У вас не хватает на это средств!").open()
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
             if name == "прокачка майнинга бота":
                 if self.player_data["TON"] - self.bot_data["summation_price"] >= 0:
                     self.player_data["TON"] -= self.bot_data["summation_price"]
@@ -401,7 +413,7 @@ class Clicker(Screen):
 
                     self.bot_data["summation_price"] += 0.000001 * 100
                 else:
-                    Snackbar(text="У вас не хватает на это средств!").open()
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
             if name == "автомайнер":
                 if self.player_data["TON"] - self.bot_data["bot_price"] >= 0 and self.bot_data["alow_bot"] == False:
                     self.player_data["TON"] -= self.bot_data["bot_price"]
@@ -409,7 +421,7 @@ class Clicker(Screen):
 
 
                 else:
-                    Snackbar(text="У вас не хватает на это средств!").open()
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
 
     def show_value(self):
         b = self.ids['bet_value'].value
@@ -475,6 +487,7 @@ class Clicker(Screen):
     def update_data(self):
         # print(self.player_data)
         global offline
+
         # print(self.account["login"])
         # print('{0:.6f}'.format(self.player_data["TON"]))
         with open("data.pickle", "wb") as f:
@@ -483,28 +496,32 @@ class Clicker(Screen):
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
         #print(p)
         if p != False and p != None and p < max_ping:
+            self.ids["wifi_error"].opacity = 0
             ref = db.reference(f"/players/{self.account['login']}")
             ref.set({"account": self.account, "data": self.player_data})
             # offline = False
         #    self.settings = pickle.load(f)
         #    self.main_font_size = self.settings["font_size"]
         else:
-
-            if offline == False:
-                self.manager.current = "error_show"
-                offline = True
+            self.ids["wifi_error"].opacity = .6
+            # if offline == False:
+            #     self.manager.current = "error_show"
+            #     offline = True
 
     def on_tap(self):
         # print('{0:.6f}'.format(self.player_data["TON"]))
-        self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
+        if self.player_data["tired_num"] > 0:
+            self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
+            self.player_data["tired_num"] -= 1
+        #self.player_data["is_tired"] = True
         # print(App.get_running_app().root.ids['hi'])
 
     def sign_out(self):
         # print(self.manager.current)
         global offline, auth_succefull
-        self.ids["loading"].active = True
+
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
-        self.ids["loading"].active = False
+
         print(p)
         if p != False and p != None and p < max_ping:
             auth_succefull = False
@@ -519,25 +536,31 @@ class Clicker(Screen):
     ''')
 
     def main_loop(self, dt):
+        global auth_succefull
         if auth_succefull:
+            th = Thread(target=self.text_update)
+            th.start()
 
-            self.ids["player_name"].text = f'''Имя: {self.account["name"]}'''
-            self.ids["player_login"].text = f'''Логин: {self.account["login"]}'''
-            self.ids["avatar"].source = self.account["avatar"]
-            # print(self.account)
-            self.ids[
-                'text_doubling'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
-            # Удвоение майнинга с:{self.player_data["doubling"] } на 30%
-            self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
-            self.ids[
-                'text_summation'].secondary_text = f'''цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
-            # self.ids['video_shop'].secondary_text = f'''цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON'''
-            # self.ids['text_bot_summation'].secondary_text = f'''цена: {self.bot_data["summation_price"]} TON'''
-            #
-            #             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
-            #
+    def text_update(self):
 
 
+        self.ids["player_name"].text = f'''Имя: {self.account["name"]}'''
+        self.ids["player_login"].text = f'''Логин: {self.account["login"]}'''
+        self.ids["avatar"].source = self.account["avatar"]
+        # print(self.account)
+        self.ids[
+            'text_doubling'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
+        # Удвоение майнинга с:{self.player_data["doubling"] } на 30%
+
+        self.ids[
+            'text_summation'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
+        self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
+        # self.ids['video_shop'].secondary_text = f'''цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON'''
+        # self.ids['text_bot_summation'].secondary_text = f'''цена: {self.bot_data["summation_price"]} TON'''
+        #
+        #             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
+        #
+        self.ids["tired_num"].text = f"   {self.player_data['tired_num']}"
 
     def miner_loop(self, dt):
         global auth_succefull
@@ -546,6 +569,14 @@ class Clicker(Screen):
             th.start()
             th = Thread(target=self.update_data)
             th.start()
+            if self.ids["mining_button"].state != "down" and self.player_data["tired_num"] < 30:
+                self.player_data["tired_num"] += 1
+    def tired_loop(self, dt):
+        global auth_succefull
+        if auth_succefull:
+
+            if self.ids["mining_button"].state != "down" and self.player_data["tired_num"] < 30:
+                self.player_data["tired_num"] += 1
     def autominer(self):
         if self.bot_data["alow_bot"]:
             video = self.bot_data["video card"]
@@ -558,108 +589,88 @@ class Clicker(Screen):
             self.player_data["TON"] += boost
 
 
+
 class Loading(Screen):
     pass
 
 
 
 class app(MDApp):
+
+
     def build(self):
         global auth_succefull, already_auth, data
-        print(123)
+
+
+
         # Clock.schedule_interval(self.start_loops, 1/30)
         self.screen_manager = ScreenManager()
         self.screen_manager.transition = SwapTransition()
-        d = Error_show(name="error_show")
-
-        # d.folder_path = folder_path
-        self.screen_manager.add_widget(d)
-        self.game = Clicker(name="clicker")
-
-        self.screen_manager.add_widget(self.game)
-        Clock.schedule_interval(self.game.main_loop, 1 / 5)
-        #Clock.schedule_interval(self.game.bot_loop, 1)
-        Clock.schedule_interval(self.game.miner_loop, 1)
-
-#        for i in self.game.videocards:
-#            name = self.game.videocards[i]["name"]
-#            boost = self.game.videocards[i]["boost"]
-#            price = self.game.videocards[i]["price"]
-#            type_card = self.game.videocards[i]["type_card"]
-#            image = ImageLeftWidget(source=f"{type_card}.png")
-#            line = ThreeLineAvatarListItem(
-#
-#                text=name,
-#                # source="",
-#
-#                secondary_text=f"Цена: {price} TON",
-#                tertiary_text=f"Добыча валюты: {'{0:.6f}'.format(boost)} TON в секунду",
-#
-#                on_press=lambda event: print(name)
-#
-#            )
-#
-#            line.add_widget(image)
-#
-#            self.game.ids["bot_shop"].add_widget(line)
-
-        # f = MDExpansionPanel(
-        #
-        #     content=Card(),
-        #     panel_cls=MDExpansionPanelThreeLine(
-        #         text="Text",
-        #         secondary_text="Secondary text",
-        #         tertiary_text="Tertiary text",
-        #     )
-        # )
-        #
-        # self.game.ids["bot_shop"].add_widget(f)
-        #
-
-        d = Settings_gui(name="settings")
-
-        # d.folder_path = folder_path
-        self.screen_manager.add_widget(d)
-        auth = Auth(name="auth")
-        self.screen_manager.add_widget(auth)
+        Logger.info('Loader: Screeen manager has been loaded.')
         loading = Loading(name="loading")
-        self.screen_manager.add_widget(loading)
 
+        self.screen_manager.add_widget(loading)
+        Logger.info('Loader: Spinner screen has been loaded.')
         self.screen_manager.current = "loading"
 
-        # self.main_font_size = self.settings["font_size"]
-        # self.title = "Tap-Fight"
-        # self.theme_cls.theme_style = "Dark"
-        # self.theme_cls.primary_palette = "BlueGray"
         print(123)
-        # Add the screens to the manager and then supply a name
-        # that is used to switch screens
 
-        # self.background_color=(1,0.1,0.1)
+        auth = Auth(name="auth")
+        self.screen_manager.add_widget(auth)
+        Logger.info('Loader: Auth screen has been loaded.')
+        d = Error_show(name="error_show")
+        self.screen_manager.add_widget(d)
+        Logger.info('Loader: Error screen has been loaded.')
+
+
+        self.game = Clicker(name="clicker")
+
+
+
+        # self.game = Clicker(name="clicker")
+        #
+        # self.screen_manager.add_widget(self.game)
+        Clock.schedule_interval(self.game.miner_loop, 1)
+        Clock.schedule_interval(self.game.main_loop, 1 / 10)
+        Clock.schedule_interval(self.game.tired_loop, 1 / 1.3)
+
+        self.screen_manager.add_widget(self.game)
+
+        th = Thread(target=self.start_game)
+        th.start()
         return self.screen_manager
 
 
 
-    def on_start(self):
-        # d.folder_path = folder_path
 
-        th = Thread(target=self.start_game)
-        th.start()
-        #self.fps_monitor_start()
+        #    # def on_start(self):
+    #     self.fps_monitor_start()
+    #      # d.folder_path = folder_path
+    #
+
 
     def start_game(self):
         global data,auth_succefull
+        from kivy.core.audio import Sound
+        d = SoundLoader.load("soundtrek.mp3")
+        if d:
+            d.loop = True
+            d.volume = .3
+            d.play()
+
+
 
         cred_obj = firebase_admin.credentials.Certificate('bl-test-671cd-firebase-adminsdk-7uep2-46a3a5832a.json')
         app_d = firebase_admin.initialize_app(cred_obj, {
             'databaseURL': "https://bl-test-671cd-default-rtdb.firebaseio.com/"
         })
-        p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
-        # print(p == "False")
 
+        # print(p == "False")
+        ref = db.reference(f"/lock_project")
+        p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
         if p != False and p != None and p < max_ping:
 
-            ref = db.reference(f"/lock_project")
+
 
             d = ref.get()
             if d == "True":
@@ -671,33 +682,42 @@ class app(MDApp):
                     'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
                 })
 
+
             try:
                 with open("data.pickle", "rb") as f:
                     data = pickle.load(f)
 
                     ref = db.reference(f"/players/{data['account']['login']}")
-                    ref.set(data)
+                    p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
+                    if p != False and p != None and p < max_ping:
+                        ref.set(data)
 
-                auth_succefull = True
-                c = Clicker
 
-                c.account = data["account"]
-                c.player_data = data["data"]
-                c.bot_data = data["data"]["bot"]
-                c.summation_data = data["data"]["summation"]
-                self.screen_manager.current = "clicker"
+
+                        set_data()
+                        auth_succefull = True
+                        self.screen_manager.current = "clicker"
+                    else:
+                        firebase_admin.delete_app(firebase_admin.get_app())
+                        cred_obj = firebase_admin.credentials.Certificate(
+                            'ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
+                        app_d = firebase_admin.initialize_app(cred_obj, {
+                            'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
+                        })
+
+                        self.screen_manager.current = "error_show"
             except:
 
                 self.screen_manager.current = "auth"
 
         else:
+
             firebase_admin.delete_app(firebase_admin.get_app())
             cred_obj = firebase_admin.credentials.Certificate('ton-clicker-firebase-adminsdk-cf1xz-8ad3090323.json')
             app_d = firebase_admin.initialize_app(cred_obj, {
                 'databaseURL': "https://ton-clicker-default-rtdb.firebaseio.com/"
             })
             self.screen_manager.current = "error_show"
-
 # Запуск проекта
 if __name__ == "__main__":
     app().run()

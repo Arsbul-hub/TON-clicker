@@ -1,6 +1,9 @@
 
 <ButImage@ButtonBehavior+AsyncImage>
-
+#<Screens>:
+#    Loading
+#    Auth
+#    Clicker
 <SettingsTab>:
     orientation: "vertical"
     size_hint: 1,1
@@ -46,7 +49,7 @@
 
 
 <Loading>:
-
+    name: "loading"
     MDSpinner:
         size_hint: None, None
         size: dp(46), dp(46)
@@ -54,7 +57,7 @@
         active: True
 
 <Auth>:
-
+    name: "auth"
 
     MDBottomNavigation:
         name: "auth"
@@ -113,7 +116,7 @@
                         pos_hint : {"center_x":.5}
 
                         color_active : [1,1,1,1]
-                        #on_focus: root.load_avatar(self.text)
+                        on_focus: root.load_avatar(self.text)
                     MDTextFieldRound:
                         id: name_r
                         hint_text: "Имя"
@@ -403,6 +406,7 @@
 
 
 <Clicker>:
+    name: "clicker"
     id: main_gui
     main_font_size: 29
     orientation: 'vertical'
@@ -442,7 +446,7 @@
                 #md_bg_color: 0,0,100/255,1
 
             ButImage:
-
+                id: mining_button
 
                 size_hint: (.38,.38) if self.state == 'down' else (.4,.4)
 
@@ -462,6 +466,23 @@
                 pos_hint: {"center_y":.85}
                 #size_hint: 1,1
                 font_size: "40sp"
+                font_name: "main_font.ttf"
+            Image:
+                source: "tired.png"
+                size_hint: .1,.1
+                pos_hint: {"center_x":.43,"center_y":.70}
+            Label:
+                #size_hint: None, None
+                #size: 200, 200
+                id: tired_num
+
+                color: 1,1,1,1
+                #halign: "center"
+                pos_hint: {"center_x":.53,"center_y":.70}
+                #size_hint: 1,1
+                #text: "⚡gerfdsa"
+                color: 1,.8,0,1
+                font_size: "35sp"
                 font_name: "main_font.ttf"
 
             #NavigationLayout:
@@ -533,12 +554,13 @@
 
 
 
-            MDSpinner:
-                id: loading
-                size_hint: None, None
-                size: "46dp", "46dp"
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                active: False
+            Image:
+                id: wifi_error
+                size_hint: .1,.1
+                source: "wifi-off.png"
+                opacity: 0
+                pos_hint: {"center_x": .5}
+
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
@@ -580,10 +602,10 @@
                     text: "Кликер"
 
                     ScrollView:
-                        #size_hint: 1,1
+                        #size_hint_y: .1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
-                        adaptive_height: True
+                        #adaptive_height: True
 
                         MDList:
 
@@ -637,7 +659,7 @@
 
                                 icon: "account-cog"
                                 text: "Gtx 970"
-                                secondary_text: "Чистая скорость добычи: 0.00004"
+                                secondary_text: "Скорость добычи: 0.00004"
                                 tertiary_text: "Цена: 0.90 TON"
                                 on_press: root.buy_confirm(name="Gtx 970")
                                 ImageLeftWidget:
@@ -647,7 +669,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 1050"
-                                secondary_text: "Чистая скорость добычи: 0.00005"
+                                secondary_text: "Скорость добычи: 0.00005"
                                 tertiary_text: "Цена: 1 TON"
                                 on_press: root.buy_confirm(name="Rtx 1050")
                                 ImageLeftWidget:
@@ -657,7 +679,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 1070"
-                                secondary_text: "Чистая скорость добычи: 0.00006"
+                                secondary_text: "Скорость добычи: 0.00006"
                                 tertiary_text: "Цена: 1.5 TON"
                                 on_press: root.buy_confirm(name="Rtx 1070")
                                 ImageLeftWidget:
@@ -667,7 +689,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 2060"
-                                secondary_text: "Чистая скорость добычи: 0.00007"
+                                secondary_text: "Скорость добычи: 0.00007"
                                 tertiary_text: "Цена: 1.9 TON"
                                 on_press: root.buy_confirm(name="Rtx 2060")
                                 ImageLeftWidget:
@@ -677,7 +699,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 2070 Super"
-                                secondary_text: "Чистая скорость добычи: 0.00008"
+                                secondary_text: "Скорость добычи: 0.00008"
                                 tertiary_text: "Цена: 2.1 TON"
                                 on_press: root.buy_confirm(name="Rtx 2070 Super")
                                 ImageLeftWidget:
@@ -687,7 +709,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 2080 TI"
-                                secondary_text: "Чистая скорость добычи: 0.00009"
+                                secondary_text: "Скорость добычи: 0.00009"
                                 tertiary_text: "Цена: 2.6 TON"
                                 on_press: root.buy_confirm(name="Rtx 2080 TI")
                                 ImageLeftWidget:
@@ -697,7 +719,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 3060 Super"
-                                secondary_text: "Чистая скорость добычи: 0.0015"
+                                secondary_text: "Скорость добычи: 0.0015"
                                 tertiary_text: "Цена: 3.0 TON"
                                 on_press: root.buy_confirm(name="Rtx 3060 Super")
                                 ImageLeftWidget:
@@ -707,7 +729,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 3090 Super TI"
-                                secondary_text: "Чистая скорость добычи: 0.0095"
+                                secondary_text: "Скорость добычи: 0.0095"
                                 tertiary_text: "Цена: 3.8 TON"
                                 on_press: root.buy_confirm(name="Rtx 3090 Super TI")
                                 ImageLeftWidget:
@@ -717,7 +739,7 @@
 
                                 icon: "account-cog"
                                 text: "Rtx 8000 Super TI Extreme Edition"
-                                secondary_text: "Чистая скорость добычи: 1.2"
+                                secondary_text: "Скорость добычи: 1.2"
                                 tertiary_text: "Цена: 4.5 TON"
                                 on_press: root.buy_confirm(name="Rtx 8000 Super TI Extreme Edition")
                                 ImageLeftWidget:
@@ -730,6 +752,8 @@
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
+
+
 
 
 
@@ -762,7 +786,7 @@
 
                     FloatLayout:
                         id: find_it1
-                        Label:
+                        MDLabel:
                             id: value_bet_text
                             text: "Ваша ставка: ??? TON"
                             font_size: "25sp"
@@ -770,39 +794,9 @@
 #                            size_hint: None, None
 #                            size: 200, 200
                             color: 0,0,0,1
-                            pos_hint: {"center_x":.5,"center_y":.8}
+                            halign: "center"
+                            pos_hint: {"center_y":.8}
                             #text_size: self.width, None
-                        Button:
-
-
-                            size_hint: .2, .1
-                            #size: 200, 100
-                            pos_hint: {"center_x":.5,"center_y":.5}
-
-                            text: "Крутить"
-                            font_size: "20sp"
-                            font_name: "main_font.ttf"
-                            center_x: self.parent.center_x
-                            center_y: self.parent.center_y
-
-
-                            allow_stretch: True
-                            keep_ratio: False
-                            id: buy_doubling
-
-
-                            on_press: root.find_it()
-
-
-                        Label:
-                            text: "Установите ставку в %:"
-                            font_size: "25sp"
-                            #font_name: "main_font.ttf"
-                            #size_hint: None, None
-                            #size: 200, 200
-                            color: 0,0,0,1
-                            pos_hint: {"center_x":.5,"center_y":.2}
-
                         MDSlider:
                             id: bet_value
                             min: 0
@@ -811,8 +805,25 @@
                             step: 1
                             on_touch_up: root.show_value()
                             size_hint: .8,.3
-                            pos_hint: {"center_x":.5,"center_y":.1}
+                            pos_hint: {"center_x":.5,"center_y":.5}
                             orientation: 'horizontal'
+
+                        MDFillRoundFlatButton:
+                            text: "Крутить"
+                            font_size: "25sp"
+
+                            font_name: "main_font.ttf"
+                            pos_hint: {"center_x":.5,"center_y":.3}
+
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+
+
+
+                            on_press: root.find_it()
+
+
+
 
 
                 SettingsTab:

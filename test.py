@@ -1,31 +1,28 @@
-# Program to explain how to add image in kivy
-
-# import kivy module
-import kivy
-
-# base Class of your App inherits from the App class.
-# app:always refers to the instance of your application
 from kivy.app import App
-
-# this restrict the kivy version i.e
-# below this kivy version you cannot
-# use the app or software
-kivy.require('1.9.0')
-
-# The Image widget is used to display an image
-# this module contain all features of images
+from kivy.core.audio import SoundLoader
 from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
 
-
-# creating the App class
-class MyApp(App):
-
-    # defining build()
+# our main window class
+class Player(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.music = SoundLoader.load('test.mp3')
+    def play(self):
+        self.music.play()
+    def pause(self):
+        self.music.pause()
+class MusicWindow(App):
 
     def build(self):
-        # return image
-        return Label(text="fds0", font_name="main_font.ttf")
+        # load the mp3 music
 
 
-# run the App
-MyApp().run()
+        # check the exisitence of the music
+
+        return Player()
+
+
+if __name__ == "__main__":
+    window = MusicWindow()
+    window.run()
