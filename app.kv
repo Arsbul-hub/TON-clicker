@@ -564,14 +564,14 @@
         MDBottomNavigationItem:
             id: store
             text: "Магазин"
-            icon: 'store'
+            icon: 'cart'
             name: 'store'
             MDTabs:
                 lock_swiping: True
                 SettingsTab:
                     text: "Майнинг"
 
-                    ScrollView:
+                    RecycleView:
                         #size_hint: 1,1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
@@ -579,20 +579,74 @@
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
-                            TwoLineAvatarListItem:
-                                id: text_summation
-                                icon: "account-cog"
-                                text: "Прокачка кнопки"
-                                on_press: root.buy_confirm(name= "прокачка кнопки")
-                                ImageLeftWidget:
-                                    source: "1.png"
+#                            TwoLineAvatarListItem:
+#                                id: text_summation
+#                                icon: "account-cog"
+#                                text: "Прокачка кнопки"
+#                                on_press: root.buy_confirm(name= "прокачка кнопки")
+#                                ImageLeftWidget:
+#                                    source: "1.png"
 
                             TwoLineAvatarListItem:
                                 id: text_doubling
                                 icon: "account-cog"
                                 text: "Удвоение майнинга"
 
-                                on_press: root.buy_confirm(name= "удвоение майнинга")
+                                on_press: root.buy_confirm(name="perple")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Фиолетовая кнопка"
+
+                                on_press: root.buy_confirm(name="Фиолетовая кнопка")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Зелёная кнопка"
+
+                                on_press: root.buy_confirm(name="Зелёная кнопка")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Красная кнопка"
+
+                                on_press: root.buy_confirm(name="Красная кнопка")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Желтая кнопка"
+
+                                on_press: root.buy_confirm(name="Желтая кнопка")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Оранжевая кнопка"
+
+                                on_press: root.buy_confirm(name="Оранжевая кнопка")
+
+                                ImageLeftWidget:
+                                    source: "2.png"
+                            TwoLineAvatarListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Черная кнопка"
+
+                                on_press: root.buy_confirm(name="Черная кнопка")
 
                                 ImageLeftWidget:
                                     source: "2.png"
@@ -601,7 +655,7 @@
 
                     text: "Кликер"
 
-                    ScrollView:
+                    RecycleView:
                         #size_hint_y: .1
                         #pos_hint: {"center_x": .5}
                         #Удвоение майнинга
@@ -639,7 +693,7 @@
 
                                 icon: "account-cog"
                                 text: "Gt 770"
-                                secondary_text: "Чистая скорость добычи: 0.00002 в секунду"
+                                secondary_text: "Скорость добычи: 0.00002 в секунду"
                                 tertiary_text: "Цена: 0.50 TON"
                                 on_press: root.buy_confirm(name="Gt 770")
                                 ImageLeftWidget:
@@ -649,7 +703,7 @@
 
                                 icon: "account-cog"
                                 text: "Gt 870"
-                                secondary_text: "Чистая скорость добычи: 0.00003"
+                                secondary_text: "Скорость добычи: 0.00003"
                                 tertiary_text: "Цена: 0.70 TON"
                                 on_press: root.buy_confirm(name="Gt 870")
                                 ImageLeftWidget:
@@ -837,3 +891,37 @@
                             font_name: "main_font.ttf"
                             halign: "center"
                             text: "Скоро появятся новые миниигры!!! Ждите!!"
+        MDBottomNavigationItem:
+            id: auction
+            text: "Аукцион"
+            icon: "store"
+#            BoxLayout:
+#                Button:
+#                    text: "load items"
+#                    on_press: root.update_auction()
+#                Button:
+#                    text: "add item"
+#                    on_press: root.add_auction()
+            #ScrollView:
+            MDBoxLayout:
+                orientation: "vertical"
+                id: auction_items
+                MDLabel:
+                    font_style: "H1"
+                    halign: "center"
+                    text: "Извиниете!"
+                MDLabel:
+                    font_style: "H3"
+                    halign: "center"
+                    text: "Это пока не доступно."
+                MDLabel:
+                    halign: "center"
+                    text: "Из-за того, что у нас ограниченный бюджет и маленькая база данных мы пока еще не добавили эту функцию в кликер. В будующем для продажи валюты потребуется привилегия VIP, если вы захотите поддержать проект и отправите сумму, больше 200 рублей, то вы автоматически становитесь VIP."
+                MDFillRoundFlatButton:
+
+                    #size_hint: .3, .3
+                    text: "Поддержать"
+                    pos_hint: {"center_x":.5}
+
+                    font_size: 40
+                    on_press: root.open_web()

@@ -24,7 +24,7 @@ from ping3 import ping
 from threading import Thread
 from kivy.logger import Logger
 from kivy.uix.screenmanager import NoTransition
-
+from kivymd.uix.list import TwoLineIconListItem
 up_data = True
 auth_succefull = False
 offline = False
@@ -214,13 +214,15 @@ class Auth(Screen):
                     "account": {"name": player_name,
                                 "login": player_email,
                                 "password": player_password,
-                                "avatar": avatar, },
+                                "avatar": avatar,
+                                "priv": None},
                     "data": {"TON": 0, "doubling": 1, "doubling_price": 0.001,
                              "bot": {"alow_bot": False, "doubling": 1, "doubling_price": 0.001,
                                      "video card": "Celeron Pro", "bot_price": 1,
                                      "summation_price": 0.000001, "summation_num": 0.000001},
 
                              "summation": {"summation_price": 0.000001, "summation_num": 0.000001},
+                             "button": "Голубая кнопка",
                              "tired_num": 20,
                              "is_tired": False,
 
@@ -308,8 +310,7 @@ class Clicker(Screen):
         # self.bitcoin = 0
         # self.size_hint = (1,1)
         self.videocards = {
-            "Celeron Pro": {"index": 0, "name": "Celeron Pro", "type_card": "processor", "boost": 0.000001,
-                            "price": 0.10},
+            "Celeron Pro": {"index": 0, "name": "Celeron Pro", "type_card": "processor", "boost": 0.000001, "price": 0.10},
             "Gt 770": {"index": 1, "name": "Gt 770", "type_card": "video card", "boost": 0.00002, "price": 0.50},
             "Gt 870": {"index": 2, "name": "Gt 870", "type_card": "video card", "boost": 0.00003, "price": 0.70},
             "Gtx 970": {"index": 3, "name": "Gtx 970", "type_card": "video card", "boost": 0.00004, "price": 0.90},
@@ -321,6 +322,20 @@ class Clicker(Screen):
             "Rtx 3060 Super": {"index": 9, "name": "Rtx 3060 Super", "type_card": "video card", "boost": 0.0015,"price": 3.0},
             "Rtx 3090 Super TI": {"index": 10, "name": "Rtx 3090 Super TI", "type_card": "video card", "boost": 0.0095,"price": 3.8},
             "Rtx 8000 Super TI Extreme Edition": {"index": 11, "name": "Rtx 8000 Super TI Extreme Edition","type_card": "video card", "boost": 1.2, "price": 4.5}
+        }
+
+
+
+        self.buttons = {
+            "Голубая кнопка": {"index": 0, "texture": "blue.png", "name": "Голубая кнопка", "boost": 0.000001, "price": 0.000001},
+            "Фиолетовая кнопка": {"index": 1, "texture": "purple.png", "name": "Фиолетовая кнопка", "boost": 0.00001, "price": 0.0001},
+            "Зелёная кнопка": {"index": 2, "texture": "green.png", "name": "Зелёная кнопка", "boost": 0.00005, "price": 0.0009},
+            "Красная кнопка": {"index": 3, "texture": "red.png", "name": "Красная кнопка", "boost": 0.0001, "price": 0.009},
+            "Жёлтая кнопка": {"index": 4, "texture": "yellow.png", "name": "Жёлтая кнопка", "boost": 0.0005, "price": 0.09},
+            "Оранжевая кнопка": {"index": 5, "texture": "orange.png", "name": "Оранжевая кнопка", "boost": 0.001, "price": 0.1},
+            "Черная кнопка": {"index": 6, "texture": "black.png", "name": "Черная кнопка", "boost": 0.005, "price": 1},
+
+
         }
         self.n = 0
 
@@ -368,14 +383,16 @@ class Clicker(Screen):
     def buy(self, name):
         self.dialog.dismiss()
         print(self.bot_data)
-        video = self.bot_data["video card"]
-        index = self.videocards[video]["index"]
-        name_video = self.videocards[video]["name"]
-        boost = self.videocards[video]["boost"]
-        price = self.videocards[video]["price"]
-        type_card = self.videocards[video]["type_card"]
+
 
         if name in self.videocards:
+            video = self.bot_data["video card"]
+            index = self.videocards[video]["index"]
+            price = self.videocards[name]["price"]
+            name_video = self.videocards[video]["name"]
+            boost = self.videocards[video]["boost"]
+
+            type_card = self.videocards[video]["type_card"]
             if index < self.videocards[name]["index"]:
                 if self.player_data["TON"] - price >= 0 and video != name:
 
@@ -386,6 +403,21 @@ class Clicker(Screen):
             elif index > self.videocards[name]["index"]:
                 Snackbar(text="Эта видеокарта хуже, чем у вас есть!",duration=.2).open()
             elif index == self.videocards[name]["index"]:
+                Snackbar(text="У вас уже усть ета видеокарта!",duration=.2).open()
+        elif name in self.buttons:
+            button = self.player_data["button"]
+            index = self.buttons[button]["index"]
+            price = self.buttons[name]["price"]
+            if index < self.buttons[name]["index"]:
+                if self.player_data["TON"] - price >= 0 and button != name:
+
+                    self.player_data["TON"] -= price
+                    self.player_data["button"] = name
+                elif self.player_data["TON"] - price <= 0:
+                    Snackbar(text="У вас не хватает на это средств!",duration=.2).open()
+            elif index > self.buttons[name]["index"]:
+                Snackbar(text="Эта видеокарта хуже, чем у вас есть!",duration=.2).open()
+            elif index == self.buttons[name]["index"]:
                 Snackbar(text="У вас уже усть ета видеокарта!",duration=.2).open()
         else:
             if name == "удвоение майнинга":
@@ -452,7 +484,7 @@ class Clicker(Screen):
     def show_info(self):
 
         self.show_alert_dialog(title="Информация о майнинге", text=f'''
-Клик: {'{0:.6f}'.format(self.summation_data["summation_num"])} TON
+Клик: {'{0:.6f}'.format(self.buttons[self.player_data["button"]]["boost"])} TON
 Удвоение майнинга: x{self.player_data["doubling"]}
 Бот: {self.bot_data["alow_bot"]}
 Текущая видеокарта: {self.bot_data["video card"]}
@@ -510,8 +542,9 @@ class Clicker(Screen):
 
     def on_tap(self):
         # print('{0:.6f}'.format(self.player_data["TON"]))
+
         if self.player_data["tired_num"] > 0:
-            self.player_data["TON"] += self.summation_data["summation_num"] * self.player_data["doubling"]
+            self.player_data["TON"] += self.buttons[self.player_data["button"]]["boost"] * self.player_data["doubling"]
             self.player_data["tired_num"] -= 1
         #self.player_data["is_tired"] = True
         # print(App.get_running_app().root.ids['hi'])
@@ -538,10 +571,10 @@ class Clicker(Screen):
     def main_loop(self, dt):
         global auth_succefull
         if auth_succefull:
-            th = Thread(target=self.text_update)
+            th = Thread(target=self.ui_update)
             th.start()
 
-    def text_update(self):
+    def ui_update(self):
 
 
         self.ids["player_name"].text = f'''Имя: {self.account["name"]}'''
@@ -552,8 +585,8 @@ class Clicker(Screen):
             'text_doubling'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
         # Удвоение майнинга с:{self.player_data["doubling"] } на 30%
 
-        self.ids[
-            'text_summation'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
+#        self.ids[
+#            'text_summation'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.summation_data["summation_price"])} TON'''
         self.ids['TON_num'].text = '{0:.6f}'.format(self.player_data["TON"])
         # self.ids['video_shop'].secondary_text = f'''цена: {'{0:.6f}'.format(self.bot_data["doubling_price"])} TON'''
         # self.ids['text_bot_summation'].secondary_text = f'''цена: {self.bot_data["summation_price"]} TON'''
@@ -561,7 +594,7 @@ class Clicker(Screen):
         #             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
         #
         self.ids["tired_num"].text = f"   {self.player_data['tired_num']}"
-
+        self.ids["mining_button"].source = self.buttons[self.player_data["button"]]["texture"]
     def miner_loop(self, dt):
         global auth_succefull
         if auth_succefull:
@@ -571,6 +604,7 @@ class Clicker(Screen):
             th.start()
             if self.ids["mining_button"].state != "down" and self.player_data["tired_num"] < 30:
                 self.player_data["tired_num"] += 1
+
     def tired_loop(self, dt):
         global auth_succefull
         if auth_succefull:
@@ -588,8 +622,36 @@ class Clicker(Screen):
 
             self.player_data["TON"] += boost
 
+    def update_auction(self):
+        th = Thread(target=self.load_ah)
+        th.start()
 
+    def load_ah(self):
+        ref = db.reference(f"/auction/")
+        items = ref.get()
+        if items:
+            for name, item in items:
+                price = item["price"]
+                card_number = item["card_number"]
+                product = item["product"]
 
+                #image = ImageLeftWidget(source=f"{}.png")
+                line = TwoLineIconListItem(
+
+                    text=f"{product} TON за {price} руб.",
+                    # source="",
+
+                    secondary_text=f"",
+                    name=name,
+                    type="ah_item",
+                    on_press=lambda event: self.buy(name="test")
+
+                )
+
+                #line.add_widget(image)
+                self.ids["auction_items"].add_widget(line)
+    def add_auction(self):
+        pass
 class Loading(Screen):
     pass
 
@@ -638,6 +700,8 @@ class app(MDApp):
 
         th = Thread(target=self.start_game)
         th.start()
+
+
         return self.screen_manager
 
 
@@ -652,7 +716,30 @@ class app(MDApp):
     def start_game(self):
         global data,auth_succefull
         from kivy.core.audio import Sound
-        d = SoundLoader.load("soundtrek.mp3")
+        from kivymd.uix.list import ThreeLineAvatarListItem, ImageLeftWidget
+        # for i in self.game.videocards:
+        #     name = self.game.videocards[i]["name"]
+        #     boost = self.game.videocards[i]["boost"]
+        #     price = self.game.videocards[i]["price"]
+        #     type_card = self.game.videocards[i]["type_card"]
+        #     image = ImageLeftWidget(source=f"{type_card}.png")
+        #     line = ThreeLineAvatarListItem(
+        #
+        #         text=name,
+        #         # source="",
+        #
+        #         secondary_text=f"Цена: {price} TON",
+        #         tertiary_text=f"Добыча валюты: {'{0:.6f}'.format(boost)} TON в сек",
+        #         #name=name,
+        #         #type=type_card,
+        #         on_press=lambda event: self.game.buy_confirm(name="автомайнер")
+        #
+        #     )
+        #
+        #     line.add_widget(image)
+        #
+        #     self.game.ids["bot_shop"].add_widget(line)
+        d = SoundLoader.load("soundtrek.wav")
         if d:
             d.loop = True
             d.volume = .3
