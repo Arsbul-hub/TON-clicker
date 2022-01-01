@@ -156,7 +156,7 @@ class Auth(Screen):
         self.ids["avatar_image"].source = p
 
     def login(self):
-        #self.manager.current = "loading"
+        self.manager.current = "loading"
         th = Thread(target=self.start_login)
         th.start()
     def start_login(self):
@@ -179,6 +179,7 @@ class Auth(Screen):
                 self.start_loops()
 
             else:
+                self.manager.current = "auth"
                 self.show_dialog('''
 Неверный логин или пароль!
 Проверьте их корректность!
@@ -186,6 +187,7 @@ class Auth(Screen):
 
 
         else:
+            self.manager.current = "auth"
             self.show_dialog('''
 Все поля должны быть заполнены!
 И не должны содержать специальные симбволы: . ! : ; ' " @ -
@@ -197,10 +199,10 @@ class Auth(Screen):
         th.start()
     def start_registration(self):
         global data
-        if self.ids["avatar"].text:
-            avatar = self.ids["avatar"].text
-        else:
-            avatar = "https://i.ibb.co/zr8HtNr/classic-avatar.png"
+        #if self.ids["avatar"].text:
+        #    avatar = self.ids["avatar"].text
+        #else:
+        avatar = "blue.png"
         player_name = self.ids["name_r"].text
         player_email = self.ids["email_r"].text
         player_password = self.ids["password_r"].text
@@ -566,20 +568,21 @@ class Clicker(Screen):
 Эта кнопка не доступна!
 Вы в режиме оффлайн майнинга!
 Проверьте подключение к интернету и попробуйте снова.
-    ''')
+''')
 
     def main_loop(self, dt):
         global auth_succefull
         if auth_succefull:
-            th = Thread(target=self.ui_update)
-            th.start()
-
+            # th = Thread(target=self.ui_update)
+            # th.start()
+            self.ui_update()
     def ui_update(self):
-
+        self.ids["avatar"].source = self.buttons[self.player_data["button"]]["texture"]
+        self.ids["mining_button"].source = self.buttons[self.player_data["button"]]["texture"]
 
         self.ids["player_name"].text = f'''Имя: {self.account["name"]}'''
         self.ids["player_login"].text = f'''Логин: {self.account["login"]}'''
-        self.ids["avatar"].source = self.account["avatar"]
+
         # print(self.account)
         self.ids[
             'text_doubling'].secondary_text = f'''Цена: {'{0:.6f}'.format(self.player_data["doubling_price"])} TON'''
@@ -594,7 +597,8 @@ class Clicker(Screen):
         #             #App.get_running_app().root.ids['TON_num_natural'].text = f"точнее: {self.player_data['TON']}"
         #
         self.ids["tired_num"].text = f"   {self.player_data['tired_num']}"
-        self.ids["mining_button"].source = self.buttons[self.player_data["button"]]["texture"]
+
+
     def miner_loop(self, dt):
         global auth_succefull
         if auth_succefull:

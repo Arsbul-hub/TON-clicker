@@ -98,25 +98,25 @@
                         padding_y : 30
                     AsyncImage:
                         id: avatar_image
-                        source: "classic_avatar.png"
+                        source: "blue.png"
                         size_hint : None,None
                         pos_hint: {"center_x": .5}
                         size: 90,90
 
-                    MDTextFieldRound :
-                        id: avatar
-                        hint_text : "url аватара"
-                        #size_hint : .6,.6
-                        font_name: "main_font.ttf"
-                        icon_right : "account"
-    #                    width : 270
-
-                        font_size : 25
-
-                        pos_hint : {"center_x":.5}
-
-                        color_active : [1,1,1,1]
-                        on_focus: root.load_avatar(self.text)
+#                    MDTextFieldRound :
+#                        id: avatar
+#                        hint_text : "url аватара"
+#                        #size_hint : .6,.6
+#                        font_name: "main_font.ttf"
+#                        icon_right : "account"
+#    #                    width : 270
+#
+#                        font_size : 25
+#
+#                        pos_hint : {"center_x":.5}
+#
+#                        color_active : [1,1,1,1]
+#                        on_focus: root.load_avatar(self.text)
                     MDTextFieldRound:
                         id: name_r
                         hint_text: "Имя"
@@ -450,7 +450,7 @@
 
                 size_hint: (.38,.38) if self.state == 'down' else (.4,.4)
 
-                source: 'mining.png'
+                #source: 'purple.png'
 
                 pos_hint: {"center_x":.5,"center_y":.5}
 
@@ -526,10 +526,10 @@
                     orientation: 'vertical'
                     padding: "8dp"
                     spacing: "8dp"
-                    AsyncImage:
+                    Image:
                         id: avatar
                         size_hint: (1,1)
-                        #source: "mine.jpg"
+                        #source: "purple.png"
                     MDLabel:
                         id: player_name
                         #text: "Attreya"
@@ -592,7 +592,7 @@
                                 icon: "account-cog"
                                 text: "Удвоение майнинга"
 
-                                on_press: root.buy_confirm(name="perple")
+                                on_press: root.buy_confirm(name="doubling")
 
                                 ImageLeftWidget:
                                     source: "2.png"
@@ -600,56 +600,56 @@
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Фиолетовая кнопка"
-
+                                secondary_text: "Клик: 0.00001"
                                 on_press: root.buy_confirm(name="Фиолетовая кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "purple.png"
                             TwoLineAvatarListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Зелёная кнопка"
-
+                                secondary_text: "Клик: 0.00005"
                                 on_press: root.buy_confirm(name="Зелёная кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "green.png"
                             TwoLineAvatarListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Красная кнопка"
-
+                                secondary_text: "Клик: 0.0001"
                                 on_press: root.buy_confirm(name="Красная кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "red.png"
                             TwoLineAvatarListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Желтая кнопка"
-
+                                secondary_text: "Клик: 0.0005"
                                 on_press: root.buy_confirm(name="Желтая кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "yellow.png"
                             TwoLineAvatarListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Оранжевая кнопка"
-
+                                secondary_text: "Клик: 0.001"
                                 on_press: root.buy_confirm(name="Оранжевая кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "orange.png"
                             TwoLineAvatarListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
                                 text: "Черная кнопка"
-
+                                secondary_text: "Клик: 0.005"
                                 on_press: root.buy_confirm(name="Черная кнопка")
 
                                 ImageLeftWidget:
-                                    source: "2.png"
+                                    source: "black.png"
 
                 SettingsTab:
 
