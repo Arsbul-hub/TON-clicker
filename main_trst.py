@@ -1,1 +1,0 @@
-psutil pyglet pyshaders opensimplex

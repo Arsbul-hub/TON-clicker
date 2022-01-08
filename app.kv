@@ -1,5 +1,8 @@
 
 <ButImage@ButtonBehavior+AsyncImage>
+#<RightText@IRightBodyTouch+MDLabel>
+
+
 #<Screens>:
 #    Loading
 #    Auth
@@ -103,20 +106,20 @@
                         pos_hint: {"center_x": .5}
                         size: 90,90
 
-#                    MDTextFieldRound :
-#                        id: avatar
-#                        hint_text : "url аватара"
-#                        #size_hint : .6,.6
-#                        font_name: "main_font.ttf"
-#                        icon_right : "account"
-#    #                    width : 270
-#
-#                        font_size : 25
-#
-#                        pos_hint : {"center_x":.5}
-#
-#                        color_active : [1,1,1,1]
-#                        on_focus: root.load_avatar(self.text)
+                    MDTextFieldRound :
+                        id: avatar
+                        hint_text : "url аватара"
+                        #size_hint : .6,.6
+                        font_name: "main_font.ttf"
+                        icon_right : "account"
+    #                    width : 270
+
+                        font_size : 25
+
+                        pos_hint : {"center_x":.5}
+
+                        color_active : [1,1,1,1]
+                        on_focus: root.load_avatar(self.text)
                     MDTextFieldRound:
                         id: name_r
                         hint_text: "Имя"
@@ -363,7 +366,7 @@
 #                    text: "Войти"
 #                    text_color: .1, .6, .8, 1
 #                    on_press: root.login()
-
+#<RightText>:
 <Settings_gui>:
 
     MDTabs:
@@ -404,8 +407,40 @@
                 pos_hint: {"center_x":.5,"center_y":.1}
                 orientation: 'horizontal'
 
+<Chest_content>
 
-<Clicker>:
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+#    MDLabel:
+#        halign: "center"
+#        text: "Открыть сундук"
+#        font_size: 20
+#        #ize_hint_y: .4
+    #BoxLayout:
+
+
+    MDFillRoundFlatButton:
+
+
+        font_size: 20
+
+        pos_hint: {"center_x": .5}
+
+        text: "Посмотреть видео"
+        on_press: app.game.ads.show_rewarded_ad()
+    MDFillRoundFlatButton:
+
+        #\md_bg_color: 1, 1, 1, 1
+        #size_hint: .3, .3
+        font_size: 20
+
+        pos_hint: {"center_x": .5}
+
+        text: "Открыть за " + str(app.game.player_data["chest"]["price"]) + " TON"
+        on_press: app.game.buy(name="chest")
+<Clicker>
     name: "clicker"
     id: main_gui
     main_font_size: 29
@@ -450,7 +485,7 @@
 
                 size_hint: (.38,.38) if self.state == 'down' else (.4,.4)
 
-                #source: 'purple.png'
+                source: 'blue.png'
 
                 pos_hint: {"center_x":.5,"center_y":.5}
 
@@ -484,13 +519,20 @@
                 color: 1,.8,0,1
                 font_size: "35sp"
                 font_name: "main_font.ttf"
-
+            ButImage:
+                id: chest
+                source: "chest_normal.png"
+                anim_delay: .05
+                size_hint: .1,.1
+                pos_hint: {"x": .9}
+                on_press: root.chest_panel()
             #NavigationLayout:
             MDNavigationDrawer:
                 id: nav_drawer
                 orientation: "vertical"
                 padding: "8dp"
                 spacing: "8dp"
+
 #                MDLabel:
 #                    text: "Ваш аккаунт"
 #                    #font_size: "40sp"
@@ -579,7 +621,7 @@
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
-#                            TwoLineAvatarListItem:
+#                            TwoLineAvatarIconListItem:
 #                                id: text_summation
 #                                icon: "account-cog"
 #                                text: "Прокачка кнопки"
@@ -587,70 +629,106 @@
 #                                ImageLeftWidget:
 #                                    source: "1.png"
 
-                            TwoLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
                                 id: text_doubling
                                 icon: "account-cog"
                                 text: "Удвоение майнинга"
 
-                                on_press: root.buy_confirm(name="doubling")
+                                on_press: root.buy_confirm(name="удвоение майнинга", call="doubling")
 
                                 ImageLeftWidget:
                                     source: "2.png"
-                            TwoLineAvatarListItem:
-                                #id: text_doubling
-                                icon: "account-cog"
-                                text: "Фиолетовая кнопка"
-                                secondary_text: "Клик: 0.00001"
-                                on_press: root.buy_confirm(name="Фиолетовая кнопка")
+#                            ThreeLineAvatarIconListItem:
+#                                #id: text_doubling
+#                                icon: "account-cog"
+#                                name: "Oklick 105S"
+#                                text: self.name
+#                                secondary_text: "Клик: 0.00001"
+#                                tertiary_text: "Показатель сталости: 100%"
+#
+#                                on_press: root.buy_confirm(name=self.name)
+#
+#                                IconLeftWidget:
+#
+#                                    icon: "mouse-variant"
+#                                RightWidget:
+#                                    #size_hint_x: 1
+#                                    adaptive_width: True
+#                                    #md_bg_color: .2,.2,.2,1
+#                                    #size: 200,100
+#                                    #height: 200
+#                                    #pos_hint: {"x": .1}
+#                                    MDLabel:
+#                                        valign: "center"
+#                                        #font_size: 1
+#                                        text: "Цена: 0.000001"
 
-                                ImageLeftWidget:
-                                    source: "purple.png"
-                            TwoLineAvatarListItem:
+                            ThreeLineAvatarIconListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
-                                text: "Зелёная кнопка"
+                                text: "Canyon CNE-CMS05DG"
                                 secondary_text: "Клик: 0.00005"
-                                on_press: root.buy_confirm(name="Зелёная кнопка")
+                                tertiary_text: "Показатель сталости: 90%"
+                                on_press: root.buy_confirm(name="Canyon CNE-CMS05DG", call="mouse")
 
-                                ImageLeftWidget:
-                                    source: "green.png"
-                            TwoLineAvatarListItem:
+                                IconLeftWidget:
+
+                                    icon: "mouse-variant"
+                            ThreeLineAvatarIconListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
-                                text: "Красная кнопка"
+                                text: "QUMO Office M14"
                                 secondary_text: "Клик: 0.0001"
-                                on_press: root.buy_confirm(name="Красная кнопка")
+                                tertiary_text: "Показатель сталости: 80%"
+                                on_press: root.buy_confirm(name="QUMO Office M14", call="mouse")
 
-                                ImageLeftWidget:
-                                    source: "red.png"
-                            TwoLineAvatarListItem:
+                                IconLeftWidget:
+
+                                    icon: "mouse-variant"
+                            ThreeLineAvatarIconListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
-                                text: "Желтая кнопка"
+                                text: "Ritmix ROM-111"
                                 secondary_text: "Клик: 0.0005"
-                                on_press: root.buy_confirm(name="Желтая кнопка")
+                                tertiary_text: "Показатель сталости: 70%"
+                                on_press: root.buy_confirm(name="Ritmix ROM-111", call="mouse")
 
-                                ImageLeftWidget:
-                                    source: "yellow.png"
-                            TwoLineAvatarListItem:
+                                IconLeftWidget:
+
+                                    icon: "mouse-variant"
+                            ThreeLineAvatarIconListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
-                                text: "Оранжевая кнопка"
+                                text: "Oklick 145M"
                                 secondary_text: "Клик: 0.001"
-                                on_press: root.buy_confirm(name="Оранжевая кнопка")
+                                tertiary_text: "Показатель сталости: 60%"
+                                on_press: root.buy_confirm(name="Oklick 145M", call="mouse")
 
-                                ImageLeftWidget:
-                                    source: "orange.png"
-                            TwoLineAvatarListItem:
+                                IconLeftWidget:
+
+                                    icon: "mouse-variant"
+                            ThreeLineAvatarIconListItem:
                                 #id: text_doubling
                                 icon: "account-cog"
-                                text: "Черная кнопка"
+                                text: "Ritmix ROM-202"
                                 secondary_text: "Клик: 0.005"
-                                on_press: root.buy_confirm(name="Черная кнопка")
+                                tertiary_text: "Показатель сталости: 50%"
+                                on_press: root.buy_confirm(name="Ritmix ROM-202", call="mouse")
 
-                                ImageLeftWidget:
-                                    source: "black.png"
+                                IconLeftWidget:
 
+                                    icon: "mouse-variant"
+                            ThreeLineAvatarIconListItem:
+                                #id: text_doubling
+                                icon: "account-cog"
+                                text: "Smartbuy ONE SBM-265-K"
+                                secondary_text: "Клик: 0.005"
+                                tertiary_text: "Показатель сталости: 40%"
+                                on_press: root.buy_confirm(name="Smartbuy ONE SBM-265-K", call="mouse")
+
+                                IconLeftWidget:
+
+                                    icon: "mouse-variant"
                 SettingsTab:
 
                     text: "Кликер"
@@ -668,134 +746,134 @@
                             #pos_hint: {"center_x": .5}
                             #orientation: "vertical"
 
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
                                 id: text_bot
 
                                 icon: "account-cog"
                                 text: "Автомайнер"
                                 secondary_text: "Автоматически майнит"
-                                tertiary_text: "Цена: 1 TON"
-                                on_press: root.buy_confirm(name="автомайнер")
+                                #tertiary_text: "Цена: 1 TON"
+                                on_press: root.buy_confirm(name="автомайнер", call="bot")
                                 ImageLeftWidget:
                                     source: "bot.png"
-                            ThreeLineAvatarListItem:
-
-
-                                icon: "account-cog"
-                                text: "Celeron Pro"
-                                secondary_text: "Чистая скорость добычи: 0.000001 в секунду"
-                                tertiary_text: "Цена: 0.10 TON"
-                                on_press: root.buy_confirm(name="Celeron Pro")
-                                ImageLeftWidget:
-                                    source: "processor.png"
-                            ThreeLineAvatarListItem:
+#                            TwoLineAvatarIconListItem:
+#
+#
+#                                icon: "account-cog"
+#                                text: "Celeron Pro"
+#                                secondary_text: "Чистая скорость добычи: 0.000001 в секунду"
+#                                #tertiary_text: "Цена: 0.10 TON"
+#                                on_press: root.buy_confirm(name="Celeron Pro", call="video_card")
+#                                ImageLeftWidget:
+#                                    source: "processor.png"
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Gt 770"
                                 secondary_text: "Скорость добычи: 0.00002 в секунду"
-                                tertiary_text: "Цена: 0.50 TON"
-                                on_press: root.buy_confirm(name="Gt 770")
+                                #tertiary_text: "Цена: 0.50 TON"
+                                on_press: root.buy_confirm(name="Gt 770", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Gt 870"
                                 secondary_text: "Скорость добычи: 0.00003"
-                                tertiary_text: "Цена: 0.70 TON"
-                                on_press: root.buy_confirm(name="Gt 870")
+                                #tertiary_text: "Цена: 0.70 TON"
+                                on_press: root.buy_confirm(name="Gt 870", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Gtx 970"
                                 secondary_text: "Скорость добычи: 0.00004"
-                                tertiary_text: "Цена: 0.90 TON"
-                                on_press: root.buy_confirm(name="Gtx 970")
+                                #tertiary_text: "Цена: 0.90 TON"
+                                on_press: root.buy_confirm(name="Gtx 970", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 1050"
                                 secondary_text: "Скорость добычи: 0.00005"
-                                tertiary_text: "Цена: 1 TON"
-                                on_press: root.buy_confirm(name="Rtx 1050")
+                                #tertiary_text: "Цена: 1 TON"
+                                on_press: root.buy_confirm(name="Rtx 1050", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 1070"
                                 secondary_text: "Скорость добычи: 0.00006"
-                                tertiary_text: "Цена: 1.5 TON"
-                                on_press: root.buy_confirm(name="Rtx 1070")
+                                #tertiary_text: "Цена: 1.5 TON"
+                                on_press: root.buy_confirm(name="Rtx 1070", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 2060"
                                 secondary_text: "Скорость добычи: 0.00007"
-                                tertiary_text: "Цена: 1.9 TON"
-                                on_press: root.buy_confirm(name="Rtx 2060")
+                                #tertiary_text: "Цена: 1.9 TON"
+                                on_press: root.buy_confirm(name="Rtx 2060", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 2070 Super"
                                 secondary_text: "Скорость добычи: 0.00008"
-                                tertiary_text: "Цена: 2.1 TON"
-                                on_press: root.buy_confirm(name="Rtx 2070 Super")
+                                #tertiary_text: "Цена: 2.1 TON"
+                                on_press: root.buy_confirm(name="Rtx 2070 Super", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 2080 TI"
                                 secondary_text: "Скорость добычи: 0.00009"
-                                tertiary_text: "Цена: 2.6 TON"
-                                on_press: root.buy_confirm(name="Rtx 2080 TI")
+                                #tertiary_text: "Цена: 2.6 TON"
+                                on_press: root.buy_confirm(name="Rtx 2080 TI", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 3060 Super"
                                 secondary_text: "Скорость добычи: 0.0015"
-                                tertiary_text: "Цена: 3.0 TON"
-                                on_press: root.buy_confirm(name="Rtx 3060 Super")
+                                #tertiary_text: "Цена: 3.0 TON"
+                                on_press: root.buy_confirm(name="Rtx 3060 Super", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 3090 Super TI"
                                 secondary_text: "Скорость добычи: 0.0095"
-                                tertiary_text: "Цена: 3.8 TON"
-                                on_press: root.buy_confirm(name="Rtx 3090 Super TI")
+                                #tertiary_text: "Цена: 3.8 TON"
+                                on_press: root.buy_confirm(name="Rtx 3090 Super TI", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
-                            ThreeLineAvatarListItem:
+                            TwoLineAvatarIconListItem:
 
 
                                 icon: "account-cog"
                                 text: "Rtx 8000 Super TI Extreme Edition"
                                 secondary_text: "Скорость добычи: 1.2"
-                                tertiary_text: "Цена: 4.5 TON"
-                                on_press: root.buy_confirm(name="Rtx 8000 Super TI Extreme Edition")
+                                #tertiary_text: "Цена: 4.5 TON"
+                                on_press: root.buy_confirm(name="Rtx 8000 Super TI Extreme Edition", call="video_card")
                                 ImageLeftWidget:
                                     source: "video card.png"
 
