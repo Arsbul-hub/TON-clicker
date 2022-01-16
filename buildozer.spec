@@ -36,7 +36,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,requests,urllib3,chardet,idna,pip,Image,PIL,jnius
+requirements = python3,cloudipsp,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,requests,urllib3,chardet,idna,pip,Image,PIL,jnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
