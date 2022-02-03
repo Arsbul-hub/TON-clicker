@@ -36,7 +36,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,cloudipsp,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,requests,urllib3,chardet,idna,pip,Image,PIL,jnius
+requirements = python3,requests,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,urllib3,chardet,idna,pip,Image,PIL,jnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -46,7 +46,7 @@ requirements = python3,cloudipsp,ping3,android,kivmob,openssl, jwt, cryptography
 #garden_requirements =
 
 # (str) Presplash of the application
-presplash.filename = %(source.dir)s/presplash.png
+presplash.filename = %(source.dir)s/presplash.jpg
 
 # (str) Icon of the application
 icon.filename = ./blue.png
@@ -82,7 +82,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-android.presplash_color = #BC3265
+android.presplash_color = #E040FC
 
 # (list) Permissions
 android.permissions = INTERNET, NETWORK, ACCESS_NETWORK_STATE
