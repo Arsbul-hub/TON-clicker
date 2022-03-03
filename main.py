@@ -23,35 +23,35 @@ from kivy.utils import get_color_from_hex as C
 
 main_font_size = 20
 import os
-
+import requests
 import firebase_admin
 from firebase_admin import db
 import random
 import time
 from ping3 import ping
 from threading import Thread
-# from kivy.logger import Logger
+from kivy.logger import Logger
 from kivymd.uix.list import TwoLineAvatarIconListItem, OneLineIconListItem
 from kivy.uix.popup import Popup
-from kivy.uix.floatlayout import FloatLayout
+from kivymd.uix.floatlayout import FloatLayout, MDFloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 
 from kivy.clock import Clock
 
-from kivymd.uix.list import IRightBodyTouch, IRightBody, ILeftBody, ImageLeftWidget
+from kivymd.uix.list import IRightBodyTouch, IRightBody, ILeftBody, ImageLeftWidget, ImageRightWidget
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivy.uix.image import AsyncImage, Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import StringProperty
 from kivymd.uix.relativelayout import MDRelativeLayout
-
+from kivy.animation import Animation
 # from kivy.uix.boxlayout import BoxLayout
 import datetime
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.graphics import RoundedRectangle
 
-# from kivymd.uix.button import
+from kivy.uix.tabbedpanel import TabbedPanel
 
 # from kivy.lang.builder import Builder
 
@@ -74,12 +74,13 @@ no_data = {
                 },
     "data": {"TON": 0,
 
-             "doubling": {"value": 1, "price": 0.001},
+             # "doubling": {"value": 1, "price": 0.001},
              "bot": {"alow_bot": False, "doubling": {"value": 1, "doubling_price": 0.001},
                      "video card": "Celeron Pro", "price": 1,
+                     "active": False,
                      "summation_price": 0.000001, "summation_num": 0},
-             "token": {"price": 0.000100, "value": 5},
-             "summation": {"price": 0.000001, "value": 0.000001},
+             # "token": {"price": 0.000100, "value": 5},
+             # "summation": {"price": 0.000001, "value": 0.000001},
              # "chest_last_opened": datetime(year=2021,month=1,day=1,hour=1,minute=1),
              "chest": {"num": 1, "price": 0.000150, "last_opened": datetime.datetime.now().isoformat()},
              "mouse": "Oklick 105S",
@@ -104,13 +105,18 @@ def set_data():
     # adaptive_width = True
 
 
+def check_lost_keys():
+    if "active" not in data["data"]["bot"]:
+        data["data"]["bot"]["active"] = False
+
+
 def timer(command, seconds=1):
-    Thread(target=lambda: start_timer(seconds, command)).start()
+    Thread(target=lambda: start_timer(command, seconds)).start()
 
 
 def start_timer(command, seconds=1):
-    for i in range(seconds):
-        time.sleep(1)
+    # for i in range(seconds):
+    time.sleep(seconds)
     command()
 
 
@@ -178,6 +184,12 @@ class RoundedRectangleButton(Button):
     pass
 
 
+class Test(TabbedPanel):
+    def __init__(self, *args, **kwargs):
+        super(Test, self).__init__(*args, **kwargs)
+        Clock.schedule_once(self.on_tab_width, 0.1)
+
+
 # class ImageLeftWidget(ILeftBody, AsyncImage):
 #     pass
 class GameTemplate(FloatLayout):
@@ -195,7 +207,7 @@ class GameTemplate(FloatLayout):
         )
         self.add_widget(self.platform)
         self.add_widget(CustomLabel(
-            text=f"Текущий выйгрыш: ",
+            text=f"Текущий выигрыш: ",
             font_name="main_font.ttf",
             font_size="25sp"
         ))
@@ -285,7 +297,7 @@ class Navigate_with_account(Screen):
 
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
 
-        print(p)
+
         if p != False and p != None and p < max_ping:
             auth_succefull = False
             os.remove("data.pickle")
@@ -351,7 +363,7 @@ class Navigate_without_account(Screen):
 
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
 
-        print(p)
+
         if p != False and p != None and p < max_ping:
             auth_succefull = False
             os.remove("data.pickle")
@@ -415,6 +427,7 @@ class Edit_profile(MDBoxLayout):
 
                         ref = db.reference(f"/players/{player_name}")
                         ref.set(data)
+                        # os.remove("avatar.png")
                         auth_succefull = True
                         # self.start_loops()
                     else:
@@ -453,8 +466,8 @@ class Check(MDCheckbox, IRightBodyTouch):
     pass
 
 
-class SettingsTab(FloatLayout, MDTabsBase):
-    pass
+class Tab(MDFloatLayout, MDTabsBase):
+    '''Class implementing content for a tab.'''
 
 
 # class RightLabel(IRightBodyTouch, MDLabel):
@@ -521,7 +534,7 @@ class Error_show(Screen):
 
                 offline = True
                 auth_succefull = True
-                set_data()
+                # set_data()
                 self.manager.current = "clicker"
 
         except:
@@ -535,7 +548,7 @@ class Error_show(Screen):
 
         global auth_succefull, data
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
-        print(p)
+
         if p != False and p != None and p < max_ping:
 
             # firebase_admin.delete_app(firebase_admin.get_app())
@@ -552,7 +565,7 @@ class Error_show(Screen):
                     ref.set(data)
 
                 auth_succefull = True
-                set_data()
+                # set_data()
                 self.manager.current = "clicker"
 
             except:
@@ -578,9 +591,10 @@ class Auth(Screen):
         self.ids["avatar_image"].source = p
 
     def login(self):
-        self.manager.current = "loading"
-        th = Thread(target=self.start_login)
-        th.start()
+        # self.manager.current = "loading"
+        self.start_login()
+        # th = Thread(target=self.start_login)
+        # th.start()
 
     def start_login(self):
         global data
@@ -631,9 +645,10 @@ class Auth(Screen):
                 ''')
 
     def registration(self):
-        self.manager.current = "loading"
-        th = Thread(target=self.start_registration)
-        th.start()
+        # self.manager.current = "loading"
+        # th = Thread(target=self.start_registration)
+        # th.start()
+        self.start_registration()
 
     def start_registration(self):
         global data
@@ -648,8 +663,7 @@ class Auth(Screen):
         string_check = re.match('''[#$. /?]''', player_name)
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
         if p != False and p != None and p < max_ping:
-            if player_password != "" and player_name != "" and string_check == None:
-
+            if len(player_name) >= 5 and player_password != "" and player_name != "" and string_check == None:
                 try:
                     ref = db.reference(f"/players/{player_name}")
                     account = ref.get()
@@ -667,6 +681,7 @@ class Auth(Screen):
                         ref.set(data)
 
                         self.ids["password_r"].ids["text_field"].text = self.norm
+
                         self.start_loops()
                     else:
                         # self.manager.transition = NoTransition()
@@ -681,13 +696,17 @@ class Auth(Screen):
 Ошибка подключения!
 Повторите попытку!
                                     ''')
-
+            elif len(player_name) < 5:
+                show_dialog('''
+Имя должнобыть не меньше 5 симбволов в длину!
+''')
             else:
                 self.manager.current = "auth"
                 show_dialog('''
 Все поля должны быть заполнены!
 И не должны содержать специальные симбволы пробела и #$./?
     ''')
+
         else:
             self.manager.current = "auth"
             show_dialog('''
@@ -703,20 +722,23 @@ class Auth(Screen):
         # print(p)
         if p != False and p != None and p < max_ping:
             auth_succefull = False
+
             os.remove("data.pickle")
+
             self.manager.current = "auth"
         else:
 
             show_dialog(title="Ошибка!", text='''
-        Проверьте подключение к интернету и попробуйте снова.
+Проверьте подключение к интернету и попробуйте снова.
         ''')
 
     def start_loops(self):
         global auth_succefull, offline, data, cur_nav
 
         # c = Clicker()
-        # c.set_data()
-        set_data()
+        # c.#set_data()
+        # set_data()
+        check_lost_keys()
         auth_succefull = True
         self.game = Clicker
         cur_nav = "nav_drawer1"
@@ -781,7 +803,7 @@ class Buy_content(MDBoxLayout):
 
 
 class Clicker(Screen):
-    # set_data()
+    # #set_data()
     def __init__(self, **kwargs):
         import time
         start_time = time.time()
@@ -950,7 +972,7 @@ class Clicker(Screen):
         # self.ids["scroll_top"].do_scroll = False
         # self.ids["retry_load_top"].opacity = 0
         # self.ids["top_loading"].active = False
-        self.ids["players_top"].clear_widgets()
+
         # self.ids["top_loading"].active = True
         self.ads.show_interstitial()
         p = ping('ton-clicker-default-rtdb.firebaseio.com', timeout=1, unit="ms")
@@ -969,8 +991,12 @@ class Clicker(Screen):
             # Clock.schedule_once(self.loading_top)
             # self.loading_top()
             # self.loading_top()
-            th = Thread(target=self.loading_top)
-            th.start()
+
+
+            self.ids["loading_top_text"].opacity = 1
+            timer(self.loading_top, .1)
+
+
             print("--- %s seconds ---" % (time.time() - start_time))
             # self.loading_top()
         # th.join()
@@ -982,6 +1008,8 @@ class Clicker(Screen):
         # self.ids["retry_load_top"].opacity = 1
         # self.ids["top_loading"].active = False
         else:
+            self.ids["players_top"].opacity = 0
+            self.ids["players_top"].disabled = True
             self.ids["error_load_top"].text = "Произошла ошибка подключения!\nОбновите список"
             # self.ids["players_top"].add_widget(
         #     CustomLabel(text="Произошла ошибка подключения!\nОбновите список заново", font_name="main_font.ttf",
@@ -991,18 +1019,56 @@ class Clicker(Screen):
         # self.ids["retry_load_top"].opacity = 1
         # self.ids["top_loading"].active = False
 
+    def bot_state(self, state):
+        if state == "on":
+            data["data"]["bot"]["active"] = True
+        if state == "off":
+            data["data"]["bot"]["active"] = False
+
     def loading_top(self):
+        ref = db.reference(f'/players/')
+        sorted_data = ref.order_by_child(f'data/TON').limit_to_last(15).get()
+        results = list(sorted_data)
+        # print(results)
 
-        async def lt(players_top):
-            sleep = asynckivy.sleep
-            await sleep(0)
-            ref = db.reference(f'/players/')
-            sorted_data = ref.order_by_child(f'data/TON').limit_to_last(15).get()
-            results = list(sorted_data)
-            # print(results)
+        stage = 0
+        if self.ids["players_top"].children:
+            for i in range(len(results) - 1, -1, -1):
+                # time.sleep(1)
+                stage += 1
+                # print(sorted_data[results[i]]["data"]["TON"])
+                ton = sorted_data[results[i]]["data"]["TON"]
+                name = sorted_data[results[i]]["account"]["name"]
 
-            stage = 0
+                avatar = sorted_data[results[i]]["account"]["avatar"]
+                # print(name)
+                privilege = sorted_data[results[i]]["account"]["privilege"]
+                old_players = self.ids["players_top"].children
 
+                widget = old_players[i]
+
+                widget.text = f"{name}"
+                widget.secondary_text = f"TON: {'{0:.6f}'.format(ton)}"
+                widget.avatar.source = avatar
+                widget.text_color = (0, 0, 0, 1)
+                # widget.right_text.text = ""
+                if privilege and privilege == "Админ":
+                    widget.text = f"{name} - Админ"
+                    widget.theme_text_color = "Custom"
+                    widget.text_color = (1, .1, .1, 1)
+                if stage == 1:
+                    widget.medal.source = "gold_medal.png"
+                elif stage == 2:
+                    widget.medal.source = "silver_medal.png"
+                elif stage == 3:
+                    widget.medal.source = "bronze_medal.png"
+                # if name == data["account"]["name"]:
+                #     # text = RightText(text="Вы")
+                #     widget.right_text.text = "Вы"
+
+
+        else:
+            self.ids["players_top"].clear_widgets()
             for i in range(len(results) - 1, -1, -1):
                 # time.sleep(1)
                 stage += 1
@@ -1014,8 +1080,7 @@ class Clicker(Screen):
                 # print(name)
                 privilege = sorted_data[results[i]]["account"]["privilege"]
                 line = TwoLineAvatarIconListItem(
-
-                    text=f"{stage}: {name}",
+                    text=f"{name}",
                     # source="",
                     secondary_text=f"TON: {'{0:.6f}'.format(ton)}",
                     # font_name="main_font.ttf",
@@ -1025,126 +1090,45 @@ class Clicker(Screen):
                 # on_press=lambda a: print("Hello")
 
                 if privilege and privilege == "Админ":
-                    line.text = f"{stage}:  {name} - Админ"
+                    line.text = f"{name} - Админ"
                     line.theme_text_color = "Custom"
                     line.text_color = (1, .1, .1, 1)
+                medal = ImageRightWidget()
 
+                line.add_widget(medal)
+                line.medal = medal
+                if stage == 1:
+                    medal.source = "gold_medal.png"
+                elif stage == 2:
+                    medal.source = "silver_medal.png"
+                elif stage == 3:
+                    medal.source = "bronze_medal.png"
+                # text = RightText(text="")
+                # if name == data["account"]["name"]:
+                #     text.text = "Вы"
+                # line.add_widget(text)
+                # line.right_text = text
                 try:
                     image = ImageLeftWidget(source=avatar)
 
                     line.add_widget(image)
+                    line.avatar = image
                 except:
                     pass
-                if name == data["account"]["name"]:
-                    text = RightText(text="Вы")
-                    line.add_widget(text)
+
                 # ak.and_()
-                players_top.add_widget(line)
 
-        asynckivy.start(lt(self.ids["players_top"]))
-        # time.sleep()
-        # Clock.schedule_once(partial(self.ld, sorted_data, results, i, stage))
-        #
-        # line = TwoLineAvatarIconListItem(
-        #
-        #
-        #     text=f"{stage}: {name}",
-        #     # source="",
-        #     secondary_text=f"TON: {'{0:.6f}'.format(ton)}",
-        #     # font_name="main_font.ttf",
-        #     # font_style="H6",
-        #     # type=type_card,
-        # )
-        # # on_press=lambda a: print("Hello")
-        #
-        # if privilege and privilege == "Админ":
-        #     line.text = f"{stage}:  {name} - Админ"
-        #     line.theme_text_color = "Custom"
-        #     line.text_color = (1, .1, .1, 1)
-        #
-        # try:
-        #     image = ImageLeftWidget(source=avatar)
-        #
-        #     line.add_widget(image)
-        # except:
-        #     pass
-        # if name == data["account"]["name"]:
-        #     text = RightText(text="Вы")
-        #     line.add_widget(text)
-        # # ak.and_()
-        # self.ids["players_top"].add_widget(line)
-
-    # def ld(self, sorted_data, results, i, stage, *largs):
-    # print(args)
-    # = args
-    # print(results)
-    # time.sleep(5)
-
-    # def ld(self):
-    #
-    #     ref = db.reference(f'/players/')
-    #     sorted_data = ref.order_by_child(f'data/TON').limit_to_last(15).get()
-    #     results = list(sorted_data)
-    #     self.i = len(results)-1
-    #     # print(results)
-    #     # Clock.max_iteration = len(results)
-    #     if self.tr:
-    #         self.tr.cancel()
-    #     self.tr = Clock.schedule_interval(lambda a: self.loading_top(sorted_data, results), 1 / 60)
-    #
-    # def loading_top(self, sorted_data, results):
-    #     #global i, stage
-    #     #i = len(results)
-    #     #print(self.i)
-    #     #stage = 0
-    #     #for i in range(len(results) - 1, -1, -1):
-    #     if self.i > 0:
-    #
-    #         self.stage += 1
-    #         # print(sorted_data[results[i]]["data"]["TON"])
-    #         ton = sorted_data[results[self.i]]["data"]["TON"]
-    #         name = sorted_data[results[self.i]]["account"]["name"]
-    #
-    #         avatar = sorted_data[results[self.i]]["account"]["avatar"]
-    #         # print(name)
-    #         privilege = sorted_data[results[self.i]]["account"]["privilege"]
-    #
-    #         line = TwoLineAvatarIconListItem(
-    #
-    #             text=f"{self.stage}: {name}",
-    #             # source="",
-    #             secondary_text=f"TON: {'{0:.6f}'.format(ton)}",
-    #             # font_name="main_font.ttf",
-    #             # font_style="H6",
-    #             # type=type_card,
-    #         )
-    #         # on_press=lambda a: print("Hello")
-    #
-    #         if privilege and privilege == "Админ":
-    #             line.text = f"{self.stage}:  {name} - Админ"
-    #             line.theme_text_color = "Custom"
-    #             line.text_color = (1, .1, .1, 1)
-    #
-    #         try:
-    #             image = ImageLeftWidget(source=avatar)
-    #
-    #             line.add_widget(image)
-    #         except:
-    #             pass
-    #         if name == data["account"]["name"]:
-    #             text = RightText(text="Вы")
-    #             line.add_widget(text)
-    #         # ak.and_()
-    #         self.ids["players_top"].add_widget(line)
-    #         self.i -= 1
-    #     else:
-    #         self.tr.cancel()
-    #         self.i = 0
-    #         self.ids["scroll_top"].opacity = 1
-    #         self.ids["scroll_top"].do_scroll = True
-    #         self.stage = 0
+                self.ids["players_top"].add_widget(line)
+        self.ids["players_top"].opacity = 1
+        self.ids["players_top"].disabled = False
+        self.ids["loading_top_text"].opacity = 0
     def effect(self, name, time, lvl):
         self.current_effect = {"name": name, "time": time, "lvl": lvl}
+        timer(self.clear_effect, 60)
+
+    def clear_effect(self):
+        Snackbar(text="Эффект бодрости снят", duration=.4).open()
+        self.current_effect = {"name": None, "time": None, "lvl": None}
 
     def start_game(self, name, *args):
         if name == "roulette":
@@ -1171,11 +1155,11 @@ class Clicker(Screen):
                     if r == 3:
                         self.effect(name="disable_tired", time=60, lvl=2)
                         data["data"]["TON"] += bet
-                        show_dialog(title="Поздравляем!", text=f"Вам выдан еффект бодрости 2 уровня на 30 секунд!\n")
+                        show_dialog(title="Поздравляем!", text=f"Вам выдан еффект бодрости 2 уровня на 60 секунд!\n")
                     if r == 6:
                         self.effect(name="disable_tired", time=60, lvl=4)
                         data["data"]["TON"] += bet
-                        show_dialog(title="Поздравляем!", text=f"Вам выдан еффект бодрости 4 уровня на 30 сукунд!\n")
+                        show_dialog(title="Поздравляем!", text=f"Вам выдан еффект бодрости 4 уровня на 60 сукунд!\n")
                 elif b < data["data"]["TON"] * .3:
                     self.ids[
                         'bet_value'].helper_text = f'''Ставка не может быть меньше {'{0:.6f}'.format(data["data"]["TON"] * .3)} TON'''
@@ -1217,15 +1201,16 @@ class Clicker(Screen):
                     )
                     self.bombs_platform.add_widget(self.platform)
                     self.win_label = CustomLabel(
-                        text=f"Текущий выйгрыш: ",
+                        text=f"Текущий выигрыш: ",
                         font_name="main_font.ttf",
                         font_size="25sp",
                         halign="center",
                         pos_hint={"center_x": .5, "center_y": .85},
+                        markup=True,
 
                     )
                     self.bombs_platform.add_widget(self.win_label)
-                    self.bombs_platform.add_widget(MDFillRoundFlatIconButton(
+                    self.collect = MDFillRoundFlatIconButton(
                         text="Забрать",
                         font_size="25sp",
                         font_name="main_font.ttf",
@@ -1234,9 +1219,11 @@ class Clicker(Screen):
                         md_bg_color=C("fe5722"),
                         pos_hint={"center_x": .5, "center_y": .7},
                         on_press=lambda a: self.is_won(name="bombs")
-                    ))
+                    )
+                    self.bombs_platform.add_widget(self.collect)
                     self.ids["bombs_layout"].add_widget(self.bombs_platform)
                     bet = float(self.ids["bet_find_it"].text)
+                    self.old_bet = bet
                     data["data"]["TON"] -= bet
                     if self.bombs == 5:
                         self.bet = bet * .5
@@ -1313,7 +1300,8 @@ class Clicker(Screen):
             data["data"]["TON"] += len(self.finded_numbers) * self.bet
             self.finded_numbers = []
             for i in self.ids["bombs_num"].children:
-                    i.opacity = .6
+                i.opacity = .6
+
     def find_it(self, obj):
         # self.ids["find_it"].opacity = 1
         # print(obj.name)
@@ -1322,23 +1310,28 @@ class Clicker(Screen):
         if obj.name == 1:
             self.finded_numbers.append(obj)
             # obj.source = "plate_win.png"
-            self.win_label.text = f'Текущий выйгрыш: {"{0:.6f}".format(len(self.finded_numbers) * self.bet)} TON'
+            self.win_label.text = f'Текущий выигрыш: \n[color=37e066][b]{"{0:.6f}".format(len(self.finded_numbers) * self.bet)} TON[/b][/color]'
+
+            # timer(1, lambda: self.game_state("set_black_win_text"))
+            obj.color = C("37e066")
             obj.disabled = True
         if obj.name == 0:
             # obj.disabled = True
-
+            self.collect.disabled = True
             for i in self.platform.children:
                 i.disabled = True
                 if i.name == 0:
                     i.color = C("f54334")
-                elif i in self.finded_numbers:
-                    i.color = C("37e066")
                 else:
                     i.color = C("388e3c")
+                if i in self.finded_numbers:
+                    i.color = C("37e066")
             # for i in self.finded_numbers:
             #     i.color = C("37e066")
             # obj.color = C("f54334")
-            timer(3, lambda: self.game_state("bombs_undo"))
+            self.win_label.text = f'Текущий выигрыш: \n[color=ff0000][b]-{"{0:.6f}".format(self.old_bet)} TON[/b][/color]'
+            timer(lambda: self.game_state("bombs_undo"), 3)
+
             # bombs_count = 0
             # for i in self.finded_numbers:
             # if i.name == 1:
@@ -1365,18 +1358,17 @@ class Clicker(Screen):
 
                 if i == args[2]:
 
-                    i.opacity = 1
+                    i.source = f"{i.name}_down.png"
                 else:
-                    i.opacity = .5
+                    i.source = f"{i.name}.png"
         if args[0] == "bombs_undo":
-            show_dialog(title="Увы!",
-                        text=f"Вы проиграли!",
-                        auto_close=False,
-                        command=lambda: self.ids["bombs_layout"].remove_widget(self.bombs_platform))
-            for i in self.ids["bombs_num"].children:
-                    i.opacity = .6
+            self.ids["bombs_layout"].remove_widget(self.bombs_platform)
+
             self.finded_numbers = []
         # self.ids["withdraw_bombs"].opacity = 0
+        if args[0] == "set_black_win_text":
+            self.win_label.color = C("000000")
+            # print(self.win_label.color)
 
     def show_rewarded_ad(self, command=None):
         self.ads.show_rewarded_ad()
@@ -1538,7 +1530,13 @@ class Clicker(Screen):
                     self.dialog = Popup(title=name.capitalize(), title_color=(0, 0, 0, 1), title_font="main_font.ttf",
                                         title_align="center", title_size="30sp", content=b,
                                         size_hint=(.9, .7), background="dialog.png")
-
+                else:
+                    if not data["data"]["bot"]["active"]:
+                        data["data"]["bot"]["active"] = True
+                        obj.secondary_text = "Активен"
+                    elif data["data"]["bot"]["active"]:
+                        data["data"]["bot"]["active"] = False
+                        obj.secondary_text = "Неактивен"
             elif name in self.store_items and self.store_items[name]["type"] == "video card" or self.store_items[name][
                 "type"] == "processor":
                 if name in data["data"]["inventory"]:
@@ -1552,11 +1550,13 @@ class Clicker(Screen):
                         font_size="25sp", )
                     b.add_widget(self.video_card_price)
                     self.video_card_speed = CustomLabel(
-                        text=f'Скорость: {"{0:.7f}".format(data["data"]["inventory"][name]["boost"])} + {"{0:.7f}".format(data["data"]["inventory"][name]["boost"] * .3)} TON/сек',
+                        text=f'Скорость: {"{0:.7f}".format(data["data"]["inventory"][name]["boost"])}[color=2dbb54] + {"{0:.7f}".format(data["data"]["inventory"][name]["boost"] * .3)} TON/сек[/color]',
                         halign="center",
                         # color=(0, 0, 0, 1),
                         font_name="main_font.ttf",
-                        font_size="25sp", )
+                        font_size="25sp",
+                        markup=True,
+                    )
                     b.add_widget(self.video_card_speed)
 
                     # f.add_widget(b)
@@ -1618,7 +1618,7 @@ class Clicker(Screen):
                                         title_align="center", title_size="30sp", content=b,
                                         size_hint=(.9, .7), background="dialog.png")
             elif name in self.store_items and self.store_items[name]["type"] == "mouse":
-                print(name)
+
                 if name in data["data"]["inventory"]:
                     f = FloatLayout()
                     b = MDBoxLayout(orientation="vertical")
@@ -1630,18 +1630,22 @@ class Clicker(Screen):
                         font_size="25sp", )
                     b.add_widget(self.mouse_price)
                     self.mouse_speed = CustomLabel(
-                        text=f'Скорость: {"{0:.7f}".format(data["data"]["inventory"][name]["boost"])} + {"{0:.7f}".format(data["data"]["inventory"][name]["boost"] * .3)} TON/клик',
+                        text=f'Скорость: {"{0:.7f}".format(data["data"]["inventory"][name]["boost"])}[color=2dbb54] + {"{0:.7f}".format(data["data"]["inventory"][name]["boost"] * .3)} TON/клик[/color]',
                         halign="center",
                         # color=(0, 0, 0, 1),
                         font_name="main_font.ttf",
-                        font_size="25sp", )
+                        font_size="25sp",
+                        markup=True,
+                    )
                     b.add_widget(self.mouse_speed)
                     self.mouse_tired = CustomLabel(
-                        text=f'Склонность к усталости: {int(data["data"]["inventory"][name]["tired"] * 100)}% - 2%',
+                        text=f'Склонность к усталости: {int(data["data"]["inventory"][name]["tired"] * 100)}%[color=ff0000] - 2%[/color]',
                         halign="center",
                         # color=(0, 0, 0, 1),
                         font_name="main_font.ttf",
-                        font_size="25sp", )
+                        font_size="25sp",
+                        markup=True,
+                    )
                     b.add_widget(self.mouse_tired)
                     # f.add_widget(b)
                     b2 = MDBoxLayout(spacing="5sp")
@@ -1896,6 +1900,7 @@ class Clicker(Screen):
                     # print(self.ids["bot_shop"].ids)
                     self.ids["mining_shop"].ids[f"choose_current_{name}"].opacity = 1
                     self.ids["mining_shop"].ids[f"choose_current_{name}"].active = True
+                    self.ids["mining_shop"].ids[f"choose_current_{name}"].disabled = False
                     Snackbar(text=f"Выбрана мышка {name}", duration=.1).open()
                     # for key, obj in self.ids["bot_shop"].ids.items():
                     #     if obj.name not in data['data']["inventory"]:
@@ -1912,6 +1917,7 @@ class Clicker(Screen):
                 elif type_item == "video card":
                     self.ids["bot_shop"].ids[f"choose_current_{name}"].opacity = 1
                     self.ids["bot_shop"].ids[f"choose_current_{name}"].active = True
+                    self.ids["bot_shop"].ids[f"choose_current_{name}"].disabled = False
                     data["data"]["bot"]["video card"] = name
                     Snackbar(text=f"Выбрана видеокарта {name}", duration=.1).open()
                 data["data"]["inventory"][name] = self.store_items[name]
@@ -2007,15 +2013,17 @@ class Clicker(Screen):
         self.ids['value_bet_text'].text = f"Ваша ставка: {'{0:.6f}'.format(w)} TON"
 
     def show_info(self):
-        if data["data"]["bot"]["alow_bot"]:
+        if data["data"]["bot"]["active"]:
             alow_bot = "Активен"
         else:
             alow_bot = "Неактивен"
+        if not data["data"]["bot"]["active"]:
+            alow_bot = "Не куплен"
         show_dialog(title="Информация", text=f'''
 Клик: {'{0:.6f}'.format(data["data"]["inventory"][data["data"]["mouse"]]["boost"])} TON
 Мышка: {data["data"]["mouse"]}
 
-Бот: {alow_bot}
+Автомайнер: {alow_bot}
 Текущая видеокарта: {data["data"]["bot"]["video card"]}
 Майнинг автомайнера: {'{0:.6f}'.format(data["data"]["inventory"][data["data"]["bot"]["video card"]]["boost"])} TON в секунду
 ''')
@@ -2274,17 +2282,33 @@ class Clicker(Screen):
     def on_tap(self):
         # print('{0:.6f}'.format(data["data"]["TON"]))
         mouse = data["data"]["mouse"]
+
         if data["data"]["tired_num"] - float(Decimal(f'{data["data"]["inventory"][mouse]["tired"]}')) >= 0:
 
             data["data"]["TON"] += data["data"]["inventory"][mouse]["boost"]
+
             if self.current_effect["name"] == "disable_tired":
                 data["data"]["tired_num"] -= self.current_effect["lvl"] / self.current_effect["lvl"] ** 3
             else:
                 data["data"]["tired_num"] -= float(Decimal(f'{data["data"]["inventory"][mouse]["tired"]}'))
         else:
+            old_color_icon = (1, .8, 0, 1)
+            if self.ids["tired_num"].color != (1, 0, 0, 1):
+                self.ids["tired_icon"].color = (1, 0, 0, 1)
+                self.ids["tired_num"].color = (1, 0, 0, 1)
+            timer(self.start_animation, .5)
             self.ads.show_interstitial()
         # data["data"]["is_tired"] = True
         # print(App.get_running_app().root.ids['hi'])
+
+    def start_animation(self):
+        self.ids["tired_num"].color = (1, .8, 0, 1)
+        oc = self.ids["tired_icon"].color
+        self.ids["tired_icon"].color = (1, .8, 0, 1)
+
+
+    def set_color(self, obj, color):
+        obj.color = color
 
     def send_rasban(self):
         b = MDBoxLayout(
@@ -2376,7 +2400,9 @@ class Clicker(Screen):
         # if p != False and p != None and p < max_ping:
         # auth_succefull = False
         data = no_data
-        set_data()
+        # os.remove("avatar.png")
+        os.remove("data.pickle")
+        # set_data()
         self.ids[cur_nav].set_state()
         cur_nav = "nav_drawer2"
         self.ads.show_interstitial()
@@ -2415,6 +2441,13 @@ class Clicker(Screen):
     def ui_update(self):
 
         # self.ids["tokens_num_games"].text = f'''Жетоны: {data["data"]["token"]["value"]}'''
+        if data["data"]["bot"]["alow_bot"]:
+            if data["data"]["bot"]["active"]:
+                self.ids["autominer"].secondary_text = "Активен"
+
+            else:
+                self.ids["autominer"].secondary_text = "Неактивен"
+
         self.ids["ton_num_shop"].text = f'''TON: {'{0:.6f}'.format(data["data"]["TON"])}'''
         self.ids["ton_num_games"].text = f'''TON: {'{0:.6f}'.format(data["data"]["TON"])}'''
         # self.ids[
@@ -2429,6 +2462,7 @@ class Clicker(Screen):
             else:
                 self.ids["privilege"].color = (0, 0, 0, 1)
             self.ids["player_password"].text = f'''Пароль: {data["account"]["password"]}'''
+
             self.ids["avatar"].source = data["account"]["avatar"]
         # self.ids["token_price"].text = f'''Цена: {'{0:.6f}'.format(data["data"]["token"]["price"])} TON'''
 
@@ -2458,16 +2492,11 @@ class Clicker(Screen):
     def miner_loop(self, dt):
         global auth_succefull
         # if auth_succefull:
-        if self.current_effect["time"] >= 0:
-            self.current_effect["time"] -= 1
-        elif self.current_effect["name"] != None:
-            Snackbar(text="Эффект бодрости снят", duration=.4).open()
-            self.current_effect["name"] = None
+
         if auth_succefull:
             th = Thread(target=self.autominer)
             th.start()
-            th = Thread(target=self.update_data)
-            th.start()
+
         # if self.ids["mining_button"].state != "down" and data['data']["tired_num"] < 30:
         #     data['data']["tired_num"] += 1
 
@@ -2780,8 +2809,10 @@ class app(MDApp):
                 line = TwoLineAvatarIconListItem(
 
                     text=name,
+
                     # source="",
                     secondary_text=f"Цена: {'{0:.6f}'.format(price)} TON",
+                    # font_style="Custom",
                     # font_name="main_font.ttf",
                     # font_style="Subtitle1",
                     # type=type_card,
@@ -2805,13 +2836,15 @@ class app(MDApp):
                                       radio_icon_normal="check-circle", on_press=self.game.current_item)
                     if i in data["data"]["inventory"]:
                         check.opacity = 1
+
                     else:
                         check.opacity = 0
+                        check.disabled = True
                     check.name = name
                     line.add_widget(check)
                     bot_shop.ids[f"choose_current_{name}"] = check
                     bot_shop.add_widget(line)
-                    # check = Check(group="current_video card", on_press=self.game.current_item)
+
                 elif type_item == "mouse":
                     if name == data["data"]["mouse"]:
                         check = Check(group="current_mouse", radio_icon_down="check-circle",
@@ -2824,6 +2857,7 @@ class app(MDApp):
                         check.opacity = 1
                     else:
                         check.opacity = 0
+                        check.disabled = True
                     check.name = name
                     line.add_widget(check)
                     mining_shop.ids[f"choose_current_{name}"] = check
@@ -2832,11 +2866,15 @@ class app(MDApp):
             # self.load_music()
 
         asynckivy.start(ls(self.game.ids["bot_shop"], self.game.ids["mining_shop"]))
-        while True:
+        timer(lambda: self.game.bot_state("off"), 30 * 60)
+        self.background_loop_state = True
+        while self.background_loop_state:
             time.sleep(1)
-
-            self.game.miner_loop(dt=1)
-            # print(123)
+            if data["data"]["bot"]["active"]:
+                self.game.miner_loop(dt=1)
+            if auth_succefull:
+                th = Thread(target=self.game.update_data)
+                th.start()
 
     # @cache
     #    def ls(self, i):
@@ -2848,10 +2886,13 @@ class app(MDApp):
         try:
             with open("data.pickle", "rb") as f:
                 data = pickle.load(f)
+                check_lost_keys()
+                Logger.info('INFO: Account detected')
         except:
             no_data["data"]["inventory"] = {"Oklick 105S": self.game.store_items["Oklick 105S"],
                                             "Celeron Pro": self.game.store_items["Celeron Pro"]}
             data = no_data
+            Logger.info('INFO: No account')
 
         auth_succefull = True
 
@@ -2866,7 +2907,7 @@ class app(MDApp):
                     raise BaseException("It is Star Wormwood inc. project!")
         except:
             pass
-        set_data()
+        # set_data()
 
         if data["account"]["name"]:
             cur_nav = "nav_drawer1"

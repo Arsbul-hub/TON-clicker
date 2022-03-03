@@ -7,7 +7,7 @@ title = TON clicker
 package.name = ton_clicker
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = org.ton_clicker
 
 # (str) Source code where the main.py live
 source.dir = .

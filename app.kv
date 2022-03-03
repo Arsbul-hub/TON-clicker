@@ -2,7 +2,10 @@
 #:import C kivy.utils.get_color_from_hex
 <ButImage>:
 
-
+<CustomWidthTabb@TabbedPanelItem>
+    width: self.texture_size[0]
+    padding: 10, 0
+    size_hint_x: None
 #<ImageLeftWidget>
 <RoundedRectangleButton>:
     #text_color: 0,0,0,1
@@ -65,11 +68,11 @@
         source: "classic_avatar.png"
         size_hint : None,None
         pos_hint: {"center_x": .5}
-        size: 90,90
+        size: 160,160
 
     MDTextFieldRound :
         id: avatar
-        hint_text : "Прямая ссылка аватара"
+        hint_text : "ПРЯМАЯ ссылка аватара"
         #size_hint : .6,.6
         font_name: "main_font.ttf"
         icon_right : "web"
@@ -202,7 +205,7 @@
     group: 'group'
     size_hint: None, None
     size: dp(48), dp(48)
-#<SettingsTab>:
+#<Tab>:
     #orientation: "vertical"
     #size_hint: 1,1
     #pos_hint: {"center_x": .5, "center_y": .5}
@@ -309,11 +312,11 @@
                         source: "classic_avatar.png"
                         size_hint : None,None
                         pos_hint: {"center_x": .5}
-                        size: 120,120
+                        size: 160,160
 
                     MDTextFieldRound :
                         id: avatar
-                        hint_text : "Прямая ссылка аватара"
+                        hint_text : "ПРЯМАЯ ссылка аватара"
                         #size_hint : .6,.6
                         font_name: "main_font.ttf"
                         icon_right : "web"
@@ -440,7 +443,7 @@
 
     MDTabs:
         lock_swiping: True
-        SettingsTab:
+        Tab:
             text: "Аккаунт"
             Button:
 
@@ -454,7 +457,7 @@
                 id: f
                 text: "Ваш аккаунт"
                 color: 0,0,0,1
-        SettingsTab:
+        Tab:
             text: "Шрифт"
             Button:
 
@@ -533,6 +536,7 @@
         MDBottomNavigationItem:
             name: 'main'
             text: "Майнинг"
+
             icon: 'diamond-stone'
             id: hi
 
@@ -549,7 +553,7 @@
 
                 size_hint_y: .07
                 #left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                title:'Настройки'
+                #title:'Настройки'
 
                 #size_hint_y: .07
                 left_action_items:[['cog', lambda x: root.open_account_info()]]
@@ -580,8 +584,10 @@
                 font_size: "35sp"
                 font_name: "main_font.ttf"
             Image:
+                id: tired_icon
                 source: "tired.png"
                 size_hint: .1,.1
+                #color: 1,0,0,.5
                 pos_hint: {"center_x":.43,"center_y":.60}
             Label:
                 #size_hint: None, None
@@ -599,7 +605,7 @@
             ButImage:
                 id: chest
                 source: "chest_normal.png"
-                anim_delay: .05
+                #anim_delay: .05
                 size_hint: .2,.2
                 pos_hint: {"right": 1}
                 on_release: root.chest_panel()
@@ -619,7 +625,7 @@
                     AsyncImage:
                         id: avatar
                         #size_hint: (1,1)
-                        #source: "purple.png"
+                        #source: "avatar.png"
                     MDBoxLayout:
                         #orientation: "vertical"
 
@@ -767,6 +773,8 @@
                 MDToolbar:
                     size_hint_y: .1
                     title: "Магазин"
+                    #anchor_title: "center"
+                    #font_name: "main_font.ttf"
 
                     #MDBoxLayout:
 
@@ -786,8 +794,10 @@
                     MDLabel:
                         id: ton_num_shop
                         size_hint_x: .1
-                        halign: "right"
+                        halign: "center"
                         pos_hint: {"center_x": .9}
+                        font_name: "main_font.ttf"
+                        font_size: "20sp"
                         color: 1,1,1,1
                         size_hint_x: .5
                         halign: "right"
@@ -805,13 +815,20 @@
                     #headline_text: "rfdcs"
                         #pos_hint: {"x": .9}
                         #text: "fedcs"
+
                 MDTabs:
                     lock_swiping: True
-                    SettingsTab:
-                        text: "Мышки"
 
-                        ScrollView:
+                    allow_stretch: False
+
+                    Tab:
+
+                        text: "Майнинг"
+
+
+                        RecycleView:
                             id: scroll_mining
+                            viewclass: 'TwoLineAvatarIconListItem'
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #Удвоение майнинга
@@ -819,52 +836,19 @@
                             MDList:
 
                                 id: mining_shop
-                                #size_hint: 1,1
-                                #pos_hint: {"center_x": .5}
-                                #orientation: "vertical"
-#                                TwoLineAvatarIconListItem:
-#                                    #id: text_summation
-#                                    #icon: "account-cog"
-#                                    #text: "Прокачка кнопки"
-#                                    name: "Oklick 105S"
-#                                    text: self.name
-#                                    secondary_text: str(root.store_items[self.name]["price"])
-#                                    on_press: root.buy_confirm(obj=self)
-#                                    ImageLeftWidget:
-#                                        source: "mouse.png"
-
-#                                TwoLineAvatarIconListItem:
-#                                    id: text_doubling
-#                                    name: "удвоение майнинга"
-#                                    icon: "account-cog"
-#                                    text: "Удвоение майнинга"
-#                                    #text_autoupdate: True
-#                                    #secondary_text: root.player_data["doubling"]["price"]
-#                                    on_release: root.buy_confirm(obj=self)
-#
-#
-#                                    ImageLeftWidget:
-#                                        source: "2.png"
-#                                TwoLineAvatarIconListItem:
-#                                    id: summation_text
-#                                    name: "суммирование майнинга"
-#                                    icon: "account-cog"
-#                                    text: "Прибавление майнинга"
-#                                    #text_autoupdate: True
-#                                    #secondary_text: root.player_data["doubling"]["price"]
-#                                    on_release: root.buy_confirm(obj=self)
-#
-#
-#                                    ImageLeftWidget:
-#                                        source: "2.png"
 
 
-                    SettingsTab:
 
-                        text: "Автомайнер"
+                    Tab:
+                        text: 'Автомайнер'
 
-                        ScrollView:
+                        RecycleView:
                             id: scroll_bot
+                            viewclass: 'TwoLineAvatarIconListItem'
+
+
+
+
                             #size_hint_y: .1
                             #pos_hint: {"center_x": .5}
                             #Удвоение майнинга
@@ -876,6 +860,7 @@
                                 #pos_hint: {"center_x": .5}
                                 #orientation: "vertical"
                                 TwoLineAvatarIconListItem:
+                                    id: autominer
                                     #md_bg_color: 1,0,0,0
                                     #font_size: "30sp"
                                     name: "автомайнер"
@@ -888,7 +873,8 @@
                                     ImageLeftWidget:
                                         source: "bot.png"
 
-#                    SettingsTab:
+
+#                    Tab:
 #                        id: token
 #                        name: token
 #                        text: "Жетоны"
@@ -916,7 +902,7 @@
 #                                font_name: "main_font.ttf"
 #                                pos_hint: {"center_x":.5,"center_y":.2}
 #                                on_release: root.buy(obj=self)
-                    SettingsTab:
+                    Tab:
                         title: "Скоро!!!"
                         FloatLayout:
                             MDLabel:
@@ -938,12 +924,23 @@
 
             BoxLayout:
                 orientation: "vertical"
+#                FloatLayout:
+#                    cols: 2
+#                    size_hint_y: .1
                 MDLabel:
                     text: "Топ 15 игроков"
                     font_name: "main_font.ttf"
                     font_size: "30sp"
+                    pos_hint: {"center_x": .5}
                     halign: "center"
                     size_hint_y: .1
+
+                    #color: C("2196f3")
+
+#                Image:
+#                    #pos: self.pos
+#                    pos_hint: {"center_x": .1}
+#                    source: "gold_medal.png"
 
                 FloatLayout:
                     id: fl
@@ -956,6 +953,14 @@
 ##                        size: dp(46), dp(46)
 ##                        pos_hint: {'center_x': .5, 'center_y': .5}
 ##                        active: True
+                    MDLabel:
+                        id: loading_top_text
+                        text: "Загрузка..."
+                        font_name: "main_font.ttf"
+                        font_size: "25sp"
+                        halign: "center"
+                        opacity: 0
+                        pos_hint: {'center_x': .5, 'center_y': .5}
                     MDLabel:
                         id: error_load_top
                         text: "Ошибка подключения!"
@@ -996,7 +1001,7 @@
                 orientation: "vertical"
                 MDToolbar:
                     size_hint_y: .1
-                    title: "Миниигры"
+                    title: "Мини игры"
                     MDBoxLayout:
                         #spacing: "2sp"
                         #md_bg_color: 1,0,0,1
@@ -1009,14 +1014,17 @@
                             size_hint_x: .1
                             halign: "right"
                             pos_hint: {"center_x": .9}
+                            font_name: "main_font.ttf"
+                            font_size: "20sp"
                             color: 1,1,1,1
                             size_hint_x: .5
                             halign: "right"
 
                 MDTabs:
                     lock_swiping: True
+                    allow_stretch: False
 
-                    SettingsTab:
+                    Tab:
 
                         title: "Рулетка"
 
@@ -1024,16 +1032,20 @@
 
                         FloatLayout:
                             id: find_it1
+                            #size_hint_x: .9
+                            #pos_hint: {"center_x": .5}
                             MDLabel:
                                 #id: value_bet_text
-                                text: "В этой миниигре вам нужно сделать ставку и крутить рулетку и вам может что - нибудь выпасть!"
+                                text: "В этой мини игре вам нужно сделать ставку и крутить рулетку и вам может что - нибудь выпасть!"
                                 font_size: "25sp"
                                 font_name: "main_font.ttf"
-    #                            size_hint: None, None
+                                size_hint_x: .95
+
     #                            size: 200, 200
                                 color: 0,0,0,1
                                 halign: "center"
-                                pos_hint: {"center_y":.8}
+
+                                pos_hint: {"center_x": .5, "center_y":.8}
                                 #text_size: self.width, None
                             MDTextField:
                                 id: bet_value
@@ -1065,21 +1077,25 @@
 
                                 on_release: root.start_game(name="roulette")
 
-                    SettingsTab:
+                    Tab:
 
                         name: "find_it"
                         title: "Бомбы"
                         FloatLayout:
                             id: bombs_layout
+
                             BoxLayout:
+                                #size_hint_x: .9
                                 #background_color: C("#1F1F21")
                                 #spacing: "10sp"
+
                                 orientation: "vertical"
                                 MDLabel:
                                     id: text_find_it
                                     text: "В этой мини игре вам предстоит среди 25 плит не наступить на бомбу."
                                     halign: "center"
                                     font_name: "main_font.ttf"
+                                    size_hint_x: .95
                                     pos_hint: {"center_x": .5}
 
                                     font_size: "25sp"
@@ -1126,9 +1142,10 @@
 
                                         #color: C("a09ea1")
                                         #font_name: "main_font.ttf"
-                                        size_hint: (.5,.5) if self.state == 'down' else (.45,.45)
+                                        name: "5"
+                                        size_hint: .45,.45
                                         pos_hint: {"center_x": .05, "center_y": .5}
-                                        opacity: .6
+                                        #opacity: .6
                                         #center_x: self.parent.center_x
                                         #center_y: self.parent.center_y
                                         on_release: root.game_state("bombs", 5, self)
@@ -1137,11 +1154,12 @@
                                         id: ten
                                         #id: find_it_start_button
                                         #text: "5"
-                                        opacity: .6
+                                        #opacity: .6
                                         font_size: "25sp"
                                         source: "10.png"
+                                        name: "10"
 
-                                        size_hint: (.5,.5) if self.state == 'down' else (.45,.45)
+                                        size_hint: .45,.45
                                         #pos_hint: {"center_x": .5,"center_y": .4}
                                         pos_hint: {"center_x": .35, "center_y": .5}
                                         #center_x: self.parent.center_x
@@ -1152,9 +1170,10 @@
                                         #id: find_it_start_button
                                         #text: "5"
                                         font_size: "25sp"
-                                        opacity: .6
+                                        #opacity: .6
                                         source: "15.png"
-                                        size_hint: (.5,.5) if self.state == 'down' else (.45,.45)
+                                        size_hint: .45,.45
+                                        name: "15"
 
                                         #pos_hint: {"center_x": .5,"center_y": .4}
                                         pos_hint: {"center_x": .65, "center_y": .5}
@@ -1166,10 +1185,11 @@
                                         #id: find_it_start_button
                                         #text: "5"
                                         #font_size: "25sp"
-                                        opacity: .6
+                                        #opacity: .6
                                         source: "24.png"
+                                        name: "24"
                                         #size_hint: .5,.5
-                                        size_hint: (.5,.5) if self.state == 'down' else (.45,.45)
+                                        size_hint: .45,.45
                                         #pos_hint: {"center_x": .5,"center_y": .4}
                                         pos_hint: {"center_x": .95, "center_y": .5}
                                         #center_x: self.parent.center_x
@@ -1234,7 +1254,7 @@
 #                                            size: self.size
 
 
-                    SettingsTab:
+                    Tab:
                         title: "Скоро!!!"
                         FloatLayout:
                             MDLabel:
