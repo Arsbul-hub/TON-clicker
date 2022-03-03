@@ -4,10 +4,10 @@
 title = TON clicker
 
 # (str) Package name
-package.name = ton_clicker
+package.name = tonclicker
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.ton_clicker
+package.domain = org.tonclicker
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -88,7 +88,7 @@ android.presplash_color = #E040FC
 android.permissions = INTERNET, NETWORK, ACCESS_NETWORK_STATE
 
 # (int) Target Android API, should be as high as possible.
-android.api = 28
+android.api = 30
 
 # (int) Minimum API your APK will support.
 android.minapi = 21
@@ -99,6 +99,7 @@ android.sdk = 24
 # (str) Android NDK version to use
 android.ndk = 19b
 
+android.release_artifact = aab
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 #android.ndk_api = 21
 
@@ -219,7 +220,7 @@ android.logcat_filters = *:S python:D
 #android.copy_libs = 1
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-android.arch = armeabi-v7a
+android.arch = armeabi-v7a, arm64-v8a
 
 #
 # Python for android (p4a) specific
@@ -229,7 +230,7 @@ android.arch = armeabi-v7a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = master
+p4a.branch = develop
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir =

@@ -2719,7 +2719,7 @@ class app(MDApp):
         # Clock.schedule_interval(self.game.miner_loop, 1)
         Clock.schedule_interval(self.game.main_loop, 1 / 10)
         Clock.schedule_interval(self.game.tired_loop, 1)
-        #
+
         # # self.load_store_items()
         self.screen_manager.add_widget(self.game)
         print("--- %s seconds ---" % (time.time() - start_time))
