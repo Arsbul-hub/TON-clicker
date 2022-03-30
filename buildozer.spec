@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = TON clicker
+title = TON кликер
 
 # (str) Package name
 package.name = tonclicker
@@ -13,7 +13,7 @@ package.domain = org.tonclicker
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,ttf,json,jpg,kv,atlas,wav
+source.include_exts = py,png,ttf,ico,json,jpg,kv,atlas,wav
 
 # (list) List of inclusions using pattern matching
 source.include_patterns = assets/*,magic/*.wav
@@ -28,7 +28,7 @@ source.include_patterns = assets/*,magic/*.wav
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0
+version = 2.4.3
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -36,7 +36,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,asyncgui,asynckivy,requests,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,plyer,urllib3,chardet,idna,pip,Image,PIL,jnius
+requirements = python3,requests,ping3,android,kivmob,openssl, jwt, cryptography, pyparsing, PIL, google-api-python-client, google-cloud-storage, google-cloud-firestore, google-api-core,  protobuf, cachecontrol, gcloud, google-cloud, httplib2,google.cloud, certifi, google.cloud.storage, google.auth, cachetools, pyasn1, pyasn1_modules, rsa, firebase_admin,pickle-mixin,kivy,kivymd,pyjnius,https://github.com/kivy/plyer/archive/refs/heads/master.zip,urllib3,chardet,idna,pip,Image,PIL,jnius
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -204,7 +204,7 @@ android.gradle_dependencies = 'com.google.firebase:firebase-ads:10.2.0'
 #android.wakelock = False
 
 # (list) Android application meta-data to set (key=value format)
-android.meta_data = com.google.android.gms.APPLICATION_ID = ca-app-pub-3940256099942544~3347511713
+android.meta_data = com.google.android.gms.APPLICATION_ID = ca-app-pub-9371118693960899~5621013296
 
 # (list) Android library project to add (will be added in the
 # project.properties automatically.)
