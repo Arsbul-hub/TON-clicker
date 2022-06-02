@@ -1,6 +1,67 @@
 #:import webbrowser webbrowser
 #:import C kivy.utils.get_color_from_hex
+#:import swichToScreen settings.swichToScreen
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import NoTransition kivy.uix.screenmanager.NoTransition
 <ButImage>:
+<ShopItem>
+    padding: 16
+    adaptive_width: True
+    size_hint: 1, None
+
+    height: "150sp"
+    #background: "background_card.jpg"
+
+
+    #MDRelativeLayout:
+    orientation: "vertical"
+
+    MDRelativeLayout:
+
+        pos_hint: {"center_y": .8}
+        #md_bg_color: 1,0,0,1
+        #disabled: True
+        Image:
+            source: root.icon
+            #pos_hint: {"center_y": .8}
+        CustomLabel:
+            id: lvl_text
+            text: "Lvl " + str(root.lvl)
+            color: root.lvl_text_color
+            pos_hint: {"center_y": .95}
+            #halign: "left"
+
+            font_name: "images/main_font.ttf"
+            font_size: "18sp"
+            #color: .2, .2, .2, .8
+            markup: True
+        FloatLayout:
+            id: check
+            Widget:
+                disabled: True
+
+
+
+
+    CustomLabel:
+        id: text
+        text: root.text
+        pos_hint: {"center_x": .5, "center_y": .4}
+        halign: "center"
+        font_name: "images/main_font.ttf"
+        font_size: "20sp"
+        #color: .2, .2, .2, .8
+        markup: True
+    CustomLabel:
+        id: secondary_text
+        text: root.secondary_text
+        pos_hint: {"center_y": .07}
+        font_name: "images/main_font.ttf"
+        font_size: "20sp"
+        color: .2, .2, .2, .8
+        halign: "center"
+        markup: True
+
 
 <CustomWidthTabb@TabbedPanelItem>
     width: self.texture_size[0]
@@ -24,7 +85,7 @@
         size_hint_x: .1
 
         source: "ton_num.png"
-    MDLabel:
+    CustomLabel:
 
         text: "reee"
 <ClickableTextFieldRound>:
@@ -37,7 +98,7 @@
         text: root.text
         password: True
         font_size: "20sp"
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         color_active: [1,1,1,1]
         #icon_left: "key-variant"
         #padding:
@@ -53,6 +114,192 @@
             text_field.password = False if text_field.password is True else True
 
 #:kivy 1.11.1
+<Account_info>
+
+
+    MDBoxLayout:
+        #orientation: "vertical"
+        #md_bg_color: 1,0,0,1
+        #size_hint_y: None
+        adaptive_width: True
+        adaptive_height: True
+
+        pos_hint: {"center_x": .5, "top": 1}
+        spacing: "3sp"
+        MDFillRoundFlatButton:
+            id: bombs_game_start
+            text: "Назад"
+            font_size: "30sp"
+            #icon: "play"
+            #icon_right: "play"
+            font_name: "images/main_font.ttf"
+            #pos_hint: {"center_x": .5,"center_y": .4}
+            #pos_hint: {"left": 1, "top": 1}
+            #pos_hint: {"left": .9, "top": .9}
+            on_release: root.manager.current = "clicker"
+            #center_x: self.parent.center_x
+        MDFillRoundFlatButton:
+            id: bombs_game_start
+            text: "Выйти"
+            font_size: "30sp"
+            #icon: "play"
+            #icon_right: "play"
+            #pos_hint: {"left": .9, "top": .99}
+            font_name: "images/main_font.ttf"
+            #pos_hint: {"center_x": .5,"center_y": .4}
+            #pos_hint: {"left": 1, "top": 1}
+            on_release: root.sign_out()
+            #center_x: self.parent.center_x
+        MDFillRoundFlatButton:
+            id: bombs_game_start
+            text: "Изменить"
+            font_size: "30sp"
+            #icon: "play"
+            #icon_right: "play"
+            #pos_hint: {"left": .9, "top": .99}
+            font_name: "images/main_font.ttf"
+            #pos_hint: {"center_x": .5,"center_y": .4}
+            #pos_hint: {"left": 1, "top": 1}
+            on_release: root.edit_profile(on_edit=root.on_enter)
+            #center_x: self.parent.center_x
+        MDFillRoundFlatButton:
+            id: bombs_game_start
+            text: "Удалить"
+            font_size: "30sp"
+            #icon: "play"
+            #icon_right: "play"
+            color: 1,0,0,1
+            #pos_hint: {"right": 1, "top": .99}
+            font_name: "images/main_font.ttf"
+            #pos_hint: {"center_x": .5,"center_y": .4}
+            #pos_hint: {"left": 1, "top": 1}
+            on_release: root.delete_account_confirm()
+            #center_x: self.parent.center_x
+
+    CustomLabel:
+        text: "Star ID"
+
+        font_style: "Subtitle1"
+        pos_hint: {"center_x": .5, "center_y": .9}
+        halign: "center"
+        font_size: "45sp"
+        font_name: "images/main_font.ttf"
+    Image:
+        id: avatar
+
+        #size_hint: (1,1)
+        #background_color: 1,0,0,1
+        pos_hint: {"center_x": .5, "center_y": .75}
+        size_hint : None,None
+        source: "images/avatar.png"
+        #pos_hint: {"center_x": .5}
+        size: 200,200
+
+        #nocache: True
+
+        #source: "images/avatar.png"
+
+
+
+
+    CustomLabel:
+        text: "Имя:"
+
+        font_style: "Subtitle1"
+
+        halign: "center"
+        pos_hint: {"center_y": .6}
+        font_size: "40sp"
+        font_name: "images/main_font.ttf"
+    CustomLabel:
+        id: player_name
+        #text: "attreya01@gmail.com"
+        #opacity:
+
+        font_size: "30sp"
+        pos_hint: {"center_y": .55}
+        font_name: "images/main_font.ttf"
+        halign: "center"
+
+        #font_style: "Subtitle1"
+        height: self.texture_size[1]
+
+    CustomLabel:
+        text: "Привилегия:"
+
+        font_style: "Subtitle1"
+
+        halign: "center"
+        pos_hint: {"center_y": .5}
+        font_size: "40sp"
+        font_name: "images/main_font.ttf"
+    CustomLabel:
+        id: privilege
+        #text: "attreya01@gmail.com"
+        #opacity: 0
+
+        font_size: "30sp"
+        pos_hint: {"center_y": .45}
+        font_name: "images/main_font.ttf"
+        halign: "center"
+
+        #font_style: "Subtitle1"
+        #height: self.texture_size[1]
+
+    CustomLabel:
+        text: "Пароль:"
+
+
+        halign: "center"
+        pos_hint: {"center_y": .4}
+        font_size: "40sp"
+        font_name: "images/main_font.ttf"
+
+
+    CustomLabel:
+        id: player_password
+        #text: "attreya01@gmail.com"
+        #opacity: 0
+        #password
+        font_size: "30sp"
+        pos_hint: {"center_y": .35}
+        font_name: "images/main_font.ttf"
+        halign: "center"
+
+        password: True
+        #md_bg_color: 1,0,0,1
+        on_touch_down: root.hide_password(self)
+    CustomLabel:
+
+        #text: "attreya01@gmail.com"
+        #opacity: 0
+
+        #password
+        size_hint_y: .5
+        text: "(Нажмите, чтобы показать/скрыть пароль)"
+        font_size: "18sp"
+        pos_hint: {"center_y": .3}
+        opacity: .6
+        font_name: "images/main_font.ttf"
+        halign: "center"
+
+        password: True
+                #md_bg_color: 1,0,0,1
+
+                #font_style: "Subtitle1"
+                #height: self.texture_size[1]
+
+#                MDIconButton:
+#                    icon: "eye-off"
+#                    #ripple_scale: .5
+#                    pos_hint: {"center_y": .5, "center_x": .5}
+#
+#                    font_size: "30sp"
+#                    #pos: text_field.width - self.width + dp(8), 0
+#                    on_release:
+#                        self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+#                        player_password.opacity = 0 if player_password.opacity == 1 else 1
+
 <Edit_profile>
 
     orientation : 'vertical'
@@ -65,7 +312,7 @@
     spacing : 30
     AsyncImage:
         id: avatar_image
-        source: "classic_avatar.png"
+        source: "images/classic_avatar.png"
         size_hint : None,None
         pos_hint: {"center_x": .5}
         size: 160,160
@@ -74,7 +321,7 @@
         id: avatar
         hint_text : "Ссылка аватара"
         #size_hint : .6,.6
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         icon_right : "web"
 #                    width : 270
 
@@ -88,7 +335,7 @@
         id: name_r
         hint_text: "Имя"
         #size_hint_x: None
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         icon_right: "account"
         font_size: "20sp"
         pos_hint: {"center_x":.5}
@@ -100,7 +347,7 @@
         hint_text: "Пароль"
         #password: True
         #size_hint_x: None
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         #icon_right: "eye-off"
         font_size: "20sp"
         pos_hint: {"center_x":.5}
@@ -115,7 +362,7 @@
             text: "Отмена"
             font_size: "25sp"
             size_hint: (.3, None)
-            font_name: "main_font.ttf"
+            font_name: "images/main_font.ttf"
             pos_hint: {"center_x":.5}
             #theme_text_color: "Custom"
             halign: "center"
@@ -124,7 +371,7 @@
             text: "Сохранить"
             font_size: "25sp"
             size_hint: (.3, None)
-            font_name: "main_font.ttf"
+            font_name: "images/main_font.ttf"
             halign: "center"
             #theme_text_color: "Custom"
             pos_hint: {"center_x":.5}
@@ -155,13 +402,13 @@
             id: avatar
             size_hint: (1,1)
             #source: "purple.png"
-        MDLabel:
+        CustomLabel:
             id: player_name
             #text: "Attreya"
             font_style: "Subtitle1"
             size_hint_y: None
             height: self.texture_size[1]
-        MDLabel:
+        CustomLabel:
             id: player_login
             #text: "attreya01@gmail.com"
             size_hint_y: None
@@ -183,7 +430,7 @@
         #Screen:
 
 
-#<RightText@IRightBodyTouch+MDLabel>
+#<RightText@IRightBodyTouch+CustomLabel>
 # ['H1', 'H2', 'H3', 'H4', 'H6', 'H6', 'Subtitle1', 'Subtitle2', 'Body1', 'Body2', 'Button', 'Caption', 'Overline', 'Icon']
 <CustomLabel>:
     text_autoupdate: True
@@ -199,7 +446,7 @@
 
     color: 0,0,0,1
     #halign: "center"
-    font_name: "main_font.ttf"
+    font_name: "images/main_font.ttf"
     font_size: "25sp"
 <Check>:
     on_active: root.on_active
@@ -217,12 +464,12 @@
     MDBoxLayout:
         orientation: "vertical"
         spacing: 10
-        MDLabel:
+        CustomLabel:
             font_style: "H2"
             color: 0,0,0,1
             halign: "center"
             text: "Ошибка!!!"
-        MDLabel:
+        CustomLabel:
 
             color: 0,0,0,1
             halign: "center"
@@ -252,10 +499,10 @@
 
 <Loading>:
     name: "loading"
-    MDLabel:
+    CustomLabel:
         id: loading
         text: "Загрузка..."
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         font_size: "28sp"
         halign: "center"
         opacity: 1
@@ -295,9 +542,22 @@
                     text_color: 1,1,1,1
                     pos_hint: {"left": 1, "top": 1}
                     on_release: root.manager.current = "clicker"
+                CustomLabel :
+                    text : "Star ID"
+                    font_style : "Button"
+                    font_size: "60sp"
+                    halign : "center"
+                    size_hint_y : None
+                    pos_hint: {"top": .95}
+                    theme_text_color: "Custom"
+                    color: 1,1,1,1
+                    font_name: "images/main_font.ttf"
+                    height : self.texture_size[1]
+                    padding_y : 30
                 MDBoxLayout:
-                    orientation : 'vertical'
-                    size_hint: .8,.5
+                    size_hint_x: .8
+                    adaptive_height: True
+                    orientation: "vertical"
                     #size : 400,600
                     pos_hint : {"center_x":.5,"center_y":.5}
                     #elevation : 15
@@ -305,20 +565,20 @@
                     padding : 20
                     spacing : 30
 
-                    MDLabel :
+                    CustomLabel :
                         text : "Регистрация"
                         font_style : "Button"
-                        font_size: "30sp"
+                        font_size: "35sp"
                         halign : "center"
                         size_hint_y : None
                         theme_text_color: "Custom"
                         color: 1,1,1,1
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         height : self.texture_size[1]
                         padding_y : 30
                     AsyncImage:
                         id: avatar_image
-                        source: "classic_avatar.png"
+                        source: "images/classic_avatar.png"
                         size_hint : None,None
                         pos_hint: {"center_x": .5}
                         size: 160,160
@@ -327,7 +587,7 @@
                         id: avatar
                         hint_text : "Ссылка аватара"
                         #size_hint : .6,.6
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         icon_right : "web"
     #                    width : 270
 
@@ -341,7 +601,7 @@
                         id: name_r
                         hint_text: "Имя"
                         #size_hint_x: None
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         icon_right: "account"
                         font_size: "20sp"
                         pos_hint: {"center_x":.5}
@@ -351,7 +611,7 @@
 #                        id: email_r
 #                        hint_text: "Логин"
 #                        #size_hint_x: None
-#                        font_name: "main_font.ttf"
+#                        font_name: "images/main_font.ttf"
 #                        icon_right: "email"
 #                        font_size : 30
 #                        pos_hint: {"center_x":.5}
@@ -362,7 +622,7 @@
                         hint_text: "Пароль"
                         #password: True
                         #size_hint_x: None
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         #icon_right: "eye-off"
                         font_size: "20sp"
                         pos_hint: {"center_x":.5}
@@ -372,7 +632,7 @@
                     MDFillRoundFlatButton:
                         text: "Регистрация"
                         font_size: "23sp"
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         pos_hint: {"center_x":.5}
                         theme_text_color: "Custom"
 
@@ -399,26 +659,41 @@
                     text_color: 1,1,1,1
                     pos_hint: {"left": 1, "top": 1}
                     on_release: root.manager.current = "clicker"
-
+                CustomLabel :
+                    text : "Star ID"
+                    font_style : "Button"
+                    font_size: "60sp"
+                    halign : "center"
+                    size_hint_y : None
+                    pos_hint: {"top": .95}
+                    theme_text_color: "Custom"
+                    color: 1,1,1,1
+                    font_name: "images/main_font.ttf"
+                    height : self.texture_size[1]
+                    padding_y : 30
                 MDBoxLayout:
-                    size_hint: .8,.5
+                    size_hint_x: .8
+                    adaptive_height: True
                     #size: 400,600
                     pos_hint: {"center_x":.5,"center_y":.5}
                     #elevation: 15
-                    md_bg_color: [35/255,49/255,48/255,1]
-                    padding: 20
-                    spacing: 30
+                    #md_bg_color: [35/255,49/255,48/255,1]
+
+                    #padding: 20
+                    spacing: "20sp"
+                    #md_bg_color:
                     orientation: "vertical"
                     # Adding items to the card
-                    MDLabel:
+
+                    CustomLabel:
                         text: 'Вход'
                         font_style: 'Button'
-                        font_size: "30sp"
+                        font_size: "35sp"
                         halign: "center"
                         size_hint_y: None
                         theme_text_color: "Custom"
                         color: 1,1,1,1
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         height: self.texture_size[1]
                         padding_y: 15
                     MDTextFieldRound:
@@ -426,7 +701,7 @@
                         hint_text: "Имя"
                         icon_right: "account"
                         #size_hint_x: None
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         font_size: "20sp"
                         #size_hint_x: .5
                         pos_hint: {"center_x":.5}
@@ -436,14 +711,14 @@
                         hint_text: "Пароль"
                         #icon_right: "eye-off"
                         #size_hint_x: None
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         font_size: "20sp"
                         pos_hint: {"center_x":.5}
                         color_active: [1,1,1,1]
                         #password: True
                     MDFillRoundFlatButton:
                         text: 'Войти'
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         pos_hint: {"center_x":.5}
                         font_size: "23sp"
                         on_release: root.login()
@@ -495,7 +770,7 @@
     pos_hint: {"center_y": .5}
     #md_bg_color: 1,0,0,1
     #size_hint_y: .5
-#    MDLabel:
+#    CustomLabel:
 #        halign: "center"
 #        text: "Открыть сундук"
 #        font_size: 20
@@ -526,7 +801,7 @@
     MDFlatButton:
         text: "Отмена"
         font_size: "20sp"
-        font_name: "main_font.ttf"
+        font_name: "images/main_font.ttf"
         pos_hint: {"right": 1, "center_y": .1}
         on_release: app.game.chest_dialog.dismiss()
 <Clicker>
@@ -551,7 +826,7 @@
 
 
             Image:
-                source: "background.png"
+                source: "images/background.png"
                 allow_stretch: True
                 keep_ratio: False
 
@@ -569,13 +844,37 @@
                 right_action_items:[['information',lambda x: root.show_info()]]
                 #elevation:10
                 #md_bg_color: 0,0,100/255,1
+            MDBoxLayout:
+                size_hint_y: None
 
+                #md_bg_color: 1,0,0,1
+                spacing: "5sp"
+                orientation: "vertical"
+                pos_hint: {"center_x": .5, "center_y": .85}
+                CustomLabel:
+                    #size_hint: None, None
+                    #size: 200, 200
+                    id: lvl_text
+
+                    color: 1,1,1,1
+                    halign: "center"
+                    text: "Lvl: 0"
+                    #pos_hint: {"center_y": .80}
+                    #size_hint: 1,1
+                    font_size: "27sp"
+                    font_name: "images/main_font.ttf"
+                MDProgressBar:
+                    id: lvl_bar
+                    max: 100
+                    size_hint_x: .5
+                    pos_hint: {"center_x": .5}
+                    color: 1,.2,.2,1
             ButImage:
                 id: privilege_icon
 
                 size_hint: (.1,.1)
 
-                source: 'moderator.png'
+                source: 'images/player.png'
 
                 pos_hint: {"right": 1, "top": .9}
 
@@ -586,14 +885,14 @@
 
                 size_hint: (.45,.45) if self.state == 'down' else (.48,.48)
 
-                source: 'blue.png'
+                source: 'images/blue.png'
 
                 pos_hint: {"center_x":.5,"center_y":.34}
 
                 on_release: root.on_tap()
 
 
-            MDLabel:
+            CustomLabel:
                 #size_hint: None, None
                 #size: 200, 200
                 id: TON_num
@@ -603,7 +902,7 @@
                 pos_hint: {"center_y":.75}
                 #size_hint: 1,1
                 font_size: "35sp"
-                font_name: "main_font.ttf"
+                font_name: "images/main_font.ttf"
 #            MDIcon:
 #                id: tired_icon
 #                icon: "lightning-bolt"
@@ -615,7 +914,7 @@
 #                pos_hint: {"center_x":.43,"center_y":.60}
             Image:
                 id: tired_icon
-                source: "tired.png"
+                source: "images/tired.png"
                 size_hint: .1,.1
                 #color: 1,0,0,.5
                 pos_hint: {"center_x":.43,"center_y":.60}
@@ -631,10 +930,10 @@
                 #text: "⚡gerfdsa"
                 color: 1,.8,0,1
                 font_size: "35sp"
-                font_name: "main_font.ttf"
+                font_name: "images/main_font.ttf"
             ButImage:
                 id: chest
-                source: "chest_normal.png"
+                source: "images/chest_normal.png"
                 #anim_delay: .05
                 size_hint: .2,.2
                 pos_hint: {"right": 1}
@@ -658,35 +957,35 @@
 
                         #size_hint: (1,1)
                         #background_color: 1,0,0,1
-                        source: "1.png"
+                        source: "images/avatar.png"
 
                     MDBoxLayout:
                         #orientation: "vertical"
 
-                        MDLabel:
+                        CustomLabel:
                             id: player_name
                             #text: "Attreya"
                             font_style: "Subtitle1"
                             size_hint_y: None
                             font_size: "20sp"
-                            font_name: "main_font.ttf"
+                            font_name: "images/main_font.ttf"
 
-                        MDLabel:
+                        CustomLabel:
                             id: privilege
                             #text: "Attreya"
                             font_style: "Subtitle1"
                             halign: "right"
                             size_hint_y: None
                             font_size: "20sp"
-                            font_name: "main_font.ttf"
+                            font_name: "images/main_font.ttf"
                     MDBoxLayout:
-                        MDLabel:
+                        CustomLabel:
                             id: player_password
                             #text: "attreya01@gmail.com"
                             opacity: 0
                             size_hint_y: None
                             font_size: "20sp"
-                            font_name: "main_font.ttf"
+                            font_name: "images/main_font.ttf"
                             pos_hint: {"center_y": .5}
                             #font_style: "Subtitle1"
                             height: self.texture_size[1]
@@ -718,11 +1017,7 @@
                             on_press: [root.edit_profile()]
                             IconLeftWidget:
                                 icon: "account-edit"
-                        OneLineIconListItem:
-                            text: "Перевод валюты"
-                            on_press: [root.transfer_ton()]
-                            IconLeftWidget:
-                                icon: "credit-card-outline"
+
 
                         OneLineIconListItem:
                             text: "Выйти"
@@ -741,21 +1036,21 @@
                 spacing: "8dp"
             #GridLayout:
                 FloatLayout:
-                    MDLabel:
+                    CustomLabel:
                         text: "Вы не вошли в аккаунт!"
                         font_size: "25sp"
                         halign: "center"
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         pos_hint: {"center_x":.5, "center_y":.6}
                     MDFillRoundFlatButton:
                         id: nav_drawer_button
                         #size_hint: .3, .3
                         text: "Авторизация"
                         pos_hint: {"center_x":.5, "center_y":.4}
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         font_size: "30sp"
                         on_release: root.to_auth()
-#                MDLabel:
+#                CustomLabel:
 #                    text: "Ваш аккаунт"
 #                    #font_size: "40sp"
 #                    font_style: "Button"
@@ -773,14 +1068,14 @@
 #                        #size: "56dp", "56dp"
 #                        #source: ""
 #
-#                MDLabel:
+#                CustomLabel:
 #                    id: player_name
 #                    text: "Аккаунт"
 #                    font_style: "C"
 #                    size_hint_y: None
 #                    height: self.texture_size[1]
 #
-#                MDLabel:
+#                CustomLabel:
 #                    id: player_login
 #                    text: "Логин"
 #                    font_style: "Button"
@@ -790,7 +1085,7 @@
 
 #            ButImage:
 #                #markup: True
-#                #font_name: "main_font.ttf"
+#                #font_name: "images/main_font.ttf"
 #                #font_size: "20sp"
 #                theme_text_color: "Custom"
 #                text_color: 1,1,1,1
@@ -811,10 +1106,12 @@
             MDBoxLayout:
                 orientation: "vertical"
                 MDToolbar:
+                    id: shop_bar
                     size_hint_y: .1
-                    title: "Магазин"
+
+                    left_action_items:[['home', lambda x: swichToScreen(shop_types, "shop_buttons")]]
                     #anchor_title: "center"
-                    #font_name: "main_font.ttf"
+                    #font_name: "images/main_font.ttf"
 
                     #MDBoxLayout:
 
@@ -831,12 +1128,12 @@
 #                        #color: .4470588235118, .1960787254902, 0, 1
 #                        icon: 'diamond-stone'
                     MDBoxLayout:
-                        MDLabel:
+                        CustomLabel:
                             id: ton_num_shop
                             size_hint_x: .1
                             halign: "right"
                             pos_hint: {"center_x": .9}
-                            font_name: "main_font.ttf"
+                            font_name: "images/main_font.ttf"
                             font_size: "20sp"
                             color: 1,1,1,1
                             size_hint_x: .5
@@ -844,7 +1141,7 @@
 
 
 
-#                        MDLabel:
+#                        CustomLabel:
 #
 #                            id: ton_num_shop
 #
@@ -858,81 +1155,97 @@
                         #pos_hint: {"x": .9}
                         #text: "fedcs"
 
-                MDTabs:
-                    lock_swiping: True
-
-                    allow_stretch: False
-
-                    Tab:
-
-                        text: "Майнинг"
+                ScreenManager:
+                    id: shop_types
+                    #lock_swiping: True
+                    transition: NoTransition()
+                    Screen:
+                        name: "shop_buttons"
 
 
-                        RecycleView:
+                        MDFillRoundFlatButton:
+                            text: "Мышки для майнинга"
+                            #size_hint_x: .5
+
+                            pos_hint: {"center_x": .5, "center_y": .7}
+
+                            font_size: "35sp"
+
+                            font_name: "images/main_font.ttf"
+                            on_release: shop_types.current = "mining_shop"
+                       #
+                        MDFillRoundFlatButton:
+                            text: "Автомайнер и прочее"
+                            #size_hint_x: .5
+
+                            pos_hint: {"center_x": .5, "center_y": .4}
+
+                            font_size: "35sp"
+
+                            font_name: "images/main_font.ttf"
+
+                            on_release: shop_types.current = "bot_shop"
+                    Screen:
+                        name: "mining_shop"
+
+
+
+                        ScrollView:
                             id: scroll_mining
-                            viewclass: 'TwoLineAvatarIconListItem'
+
+                            #size: self.size
+
                             #size_hint: 1,1
                             #pos_hint: {"center_x": .5}
                             #Удвоение майнинга
+                            #MDList:
+                                #orientation: "vertical"
+                                #size_hint_y: None
 
-                            MDList:
-
+                            #MDList:
+                            ScrollContainer:
                                 id: mining_shop
+                                cols: 2
+                                spacing: "5sp"
 
 
+                    Screen:
+                        name: "bot_shop"
 
-                    Tab:
-                        text: 'Автомайнер'
 
                         RecycleView:
                             id: scroll_bot
-                            viewclass: 'TwoLineAvatarIconListItem'
 
-
-
-
-                            #size_hint_y: .1
-                            #pos_hint: {"center_x": .5}
-                            #Удвоение майнинга
-                            #adaptive_height: True
-
-                            MDList:
+                            ScrollContainer:
                                 id: bot_shop
-                                #size_hint: 1,1
-                                #pos_hint: {"center_x": .5}
-                                #orientation: "vertical"
-                                TwoLineAvatarIconListItem:
+                                cols: 2
+                                spacing: "5sp"
+                                ShopItem:
                                     id: autominer
-                                    #md_bg_color: 1,0,0,0
-                                    #font_size: "30sp"
-                                    name: "автомайнер"
-                                    font_name: "main_font.ttf"
-                                    font_style: "Subtitle1"
                                     text: "Автомайнер"
+                                    name: "автомайнер"
+                                    icon: "images/bot.png"
+                                    lvl: 103
+
                                     secondary_text: "Цена: 1 TON"
                                     on_press: root.buy_confirm(obj=self)
-
-                                    ImageLeftWidget:
-                                        source: "bot.png"
-
-
 #                    Tab:
 #                        id: token
 #                        name: token
 #                        text: "Жетоны"
 #                        FloatLayout:
-#                            MDLabel:
+#                            CustomLabel:
 #                                text: "Купить жетоны для некоторых мини игр"
 #                                halign: "center"
-#                                font_name: "main_font.ttf"
+#                                font_name: "images/main_font.ttf"
 #                                pos_hint: {"center_y": .8}
 #
 #                                font_size: "25sp"
-#                            MDLabel:
+#                            CustomLabel:
 #                                id: token_price
 #                                text: "Цена: ??? TON"
 #                                halign: "center"
-#                                font_name: "main_font.ttf"
+#                                font_name: "images/main_font.ttf"
 #                                pos_hint: {"center_y": .5}
 #
 #                                font_size: "25sp"
@@ -941,72 +1254,80 @@
 #                                text: "Купить!"
 #                                font_size: "25sp"
 #
-#                                font_name: "main_font.ttf"
+#                                font_name: "images/main_font.ttf"
 #                                pos_hint: {"center_x":.5,"center_y":.2}
 #                                on_release: root.buy(obj=self)
-                    Tab:
-                        title: "Скоро!!!"
-                        FloatLayout:
-                            MDLabel:
-                                color: 0,0,0,1
-                                font_name: "main_font.ttf"
-                                font_size: "22sp"
-
-                                #size_hint: None, None
-                                #size: 200, 200
-
-                                halign: "center"
-                                text: "Скоро появятся новые акции!!! Ждите!!"
-                                #text_size: self.width, None
+#                    Tab:
+#                        title: "Скоро!!!"
+#                        FloatLayout:
+#                            CustomLabel:
+#                                color: 0,0,0,1
+#                                font_name: "images/main_font.ttf"
+#                                font_size: "22sp"
+#
+#                                #size_hint: None, None
+#                                #size: 200, 200
+#
+#                                halign: "center"
+#                                text: "Скоро появятся новые акции!!! Ждите!!"
+#                                #text_size: self.width, None
         MDBottomNavigationItem:
             text: "Топ 30"
             icon: "account"
             name: "top 30"
+
             on_tab_press: root.load_top()
+            ScreenManager
+                id: top_screens
+                transition: NoTransition()
+                Screen:
+                    name: "normal"
+                    BoxLayout:
+                        orientation: "vertical"
+        #                FloatLayout:
+        #                    cols: 2
+        #                    size_hint_y: .1
+                        CustomLabel:
+                            text: "Топ 30 игроков"
+                            font_name: "images/main_font.ttf"
+                            font_size: "30sp"
+                            pos_hint: {"center_x": .5}
+                            halign: "center"
+                            size_hint_y: .1
 
-            BoxLayout:
-                orientation: "vertical"
-#                FloatLayout:
-#                    cols: 2
-#                    size_hint_y: .1
-                MDLabel:
-                    text: "Топ 30 игроков"
-                    font_name: "main_font.ttf"
-                    font_size: "30sp"
-                    pos_hint: {"center_x": .5}
-                    halign: "center"
-                    size_hint_y: .1
+                            #color: C("2196f3")
 
-                    #color: C("2196f3")
+        #                Image:
+        #                    #pos: self.pos
+        #                    pos_hint: {"center_x": .1}
+        #                    source: "gold_medal.png"
 
-#                Image:
-#                    #pos: self.pos
-#                    pos_hint: {"center_x": .1}
-#                    source: "gold_medal.png"
 
-                FloatLayout:
-                    id: fl
 
-                    MDLabel:
+                        RecycleView:
+                            id: scroll_top
+                            MDList:
+                                id: players_top
+                Screen:
+                    name: "loading"
+                    CustomLabel:
                         id: loading_top_text
                         text: "Загрузка..."
-                        font_name: "main_font.ttf"
-                        font_size: "25sp"
+                        font_name: "images/main_font.ttf"
+                        font_size: "30sp"
                         halign: "center"
-                        opacity: 0
+
                         pos_hint: {'center_x': .5, 'center_y': .5}
-                    MDLabel:
+                Screen:
+                    name: "error"
+
+                    CustomLabel:
                         id: error_load_top
                         text: "Произошла ошибка подключения!"
-                        font_name: "main_font.ttf"
+                        font_name: "images/main_font.ttf"
                         font_size: "25sp"
                         halign: "center"
                         pos_hint: {'center_x': .5, 'center_y': .5}
-                    RecycleView:
-                        id: scroll_top
-                        MDList:
-                            id: players_top
-
 
         MDBottomNavigationItem:
             id: games
@@ -1025,12 +1346,12 @@
                             #halign: "right"
                         #FloatLayout:
 
-                        MDLabel:
+                        CustomLabel:
                             id: ton_num_games
                             size_hint_x: .1
                             halign: "right"
                             pos_hint: {"center_x": .9}
-                            font_name: "main_font.ttf"
+                            font_name: "images/main_font.ttf"
                             font_size: "20sp"
                             color: 1,1,1,1
                             size_hint_x: .5
@@ -1050,11 +1371,11 @@
                             id: find_it1
                             #size_hint_x: .9
                             #pos_hint: {"center_x": .5}
-                            MDLabel:
+                            CustomLabel:
                                 #id: value_bet_text
                                 text: "В этой мини игре вам нужно сделать ставку и крутить рулетку и вам может что - нибудь выпасть!"
                                 font_size: "25sp"
-                                font_name: "main_font.ttf"
+                                font_name: "images/main_font.ttf"
                                 size_hint: .95, .2
 
     #                            size: 200, 200
@@ -1063,11 +1384,11 @@
 
                                 pos_hint: {"center_x": .5, "center_y":.8}
                                 #text_size: self.width, None
-                            MDLabel:
+                            CustomLabel:
                                 id: value_bet_text
                                 text: ""
                                 font_size: "25sp"
-                                font_name: "main_font.ttf"
+                                font_name: "images/main_font.ttf"
                                 size_hint: .95, .1
 
     #                            size: 200, 200
@@ -1092,7 +1413,7 @@
                                 text: "Крутить"
                                 font_size: "23sp"
 
-                                font_name: "main_font.ttf"
+                                font_name: "images/main_font.ttf"
                                 pos_hint: {"center_x":.5, "center_y":.2}
 
                                 #center_x: self.parent.center_x
@@ -1115,21 +1436,21 @@
                                 #spacing: "10sp"
 
                                 orientation: "vertical"
-                                MDLabel:
+                                CustomLabel:
                                     id: text_find_it
                                     text: "В этой мини игре вам предстоит среди 25 плит не наступить на бомбу."
                                     halign: "center"
-                                    font_name: "main_font.ttf"
+                                    font_name: "images/main_font.ttf"
                                     size_hint_x: .95
                                     #md_bg_color: 1,0,0,1
                                     pos_hint: {"center_x": .5}
 
                                     font_size: "25sp"
-                                MDLabel:
+                                CustomLabel:
                                     id: value_bet_find_it
                                     text: ""
                                     halign: "center"
-                                    font_name: "main_font.ttf"
+                                    font_name: "images/main_font.ttf"
                                     size_hint_x: .95
                                     #md_bg_color: 1,0,0,1
                                     pos_hint: {"center_x": .5}
@@ -1146,11 +1467,11 @@
 
                                     pos_hint: {"center_x":.5,"center_y":.5}
                                     orientation: 'horizontal'
-                                MDLabel:
+                                CustomLabel:
                                     id: text_find_it
                                     text: "Количество бомб:"
                                     halign: "center"
-                                    font_name: "main_font.ttf"
+                                    font_name: "images/main_font.ttf"
                                     pos_hint: {"center_x": .5}
                                     #md_bg_color: 1,0,0,1
                                     font_size: "25sp"
@@ -1171,10 +1492,10 @@
                                         #id: find_it_start_button
                                         #text: "5"
                                         #font_size: "25sp"
-                                        source: "5.png"
+                                        source: "images/5.png"
 
                                         #color: C("a09ea1")
-                                        #font_name: "main_font.ttf"
+                                        #font_name: "images/main_font.ttf"
                                         name: "5"
                                         size_hint: .45,.45
                                         pos_hint: {"center_x": .05, "center_y": .5}
@@ -1189,7 +1510,7 @@
                                         #text: "5"
                                         #opacity: .6
                                         font_size: "25sp"
-                                        source: "10.png"
+                                        source: "images/10.png"
                                         name: "10"
 
                                         size_hint: .45,.45
@@ -1204,7 +1525,7 @@
                                         #text: "5"
                                         font_size: "25sp"
                                         #opacity: .6
-                                        source: "15.png"
+                                        source: "images/15.png"
                                         size_hint: .45,.45
                                         name: "15"
 
@@ -1219,7 +1540,7 @@
                                         #text: "5"
                                         #font_size: "25sp"
                                         #opacity: .6
-                                        source: "24.png"
+                                        source: "images/24.png"
                                         name: "24"
                                         #size_hint: .5,.5
                                         size_hint: .45,.45
@@ -1236,7 +1557,7 @@
                                     font_size: "30sp"
                                     icon: "play"
                                     #icon_right: "play"
-                                    font_name: "main_font.ttf"
+                                    font_name: "images/main_font.ttf"
                                     #pos_hint: {"center_x": .5,"center_y": .4}
                                     pos_hint: {"center_x": .5}
                                     #center_x: self.parent.center_x
@@ -1249,12 +1570,12 @@
                     Tab:
                         title: "Скоро!!!"
                         FloatLayout:
-                            MDLabel:
+                            CustomLabel:
                                 color: 0,0,0,1
                                 #size_hint: None, None
                                 #size: 200, 200
                                 font_size: "22sp"
-                                font_name: "main_font.ttf"
+                                font_name: "images/main_font.ttf"
                                 halign: "center"
                                 text: "Скоро появятся новые мини игры!!! Ждите!!"
 #        MDBottomNavigationItem:
@@ -1274,19 +1595,19 @@
 #                #halign: "center"
 #                #size_hint_x: .9
 #                id: auction_items
-##                MDLabel:
+##                CustomLabel:
 ##                    font_style: "H2"
 ##                    halign: "center"
-##                    font_name: "main_font.ttf"
+##                    font_name: "images/main_font.ttf"
 ##                    text: "Извиниете!"
-#                MDLabel:
+#                CustomLabel:
 #                    font_style: "H4"
 #                    halign: "center"
-#                    font_name: "main_font.ttf"
+#                    font_name: "images/main_font.ttf"
 #                    text: "В разработке"
-#                MDLabel:
+#                CustomLabel:
 #                    halign: "center"
-#                    font_name: "main_font.ttf"
+#                    font_name: "images/main_font.ttf"
 #                    font_size: "20sp"
 #
 #                    text: "Из-за того, что у нас ограниченный бюджет и маленькая база данных мы пока еще не добавили эту функцию в кликер. В будующем для продажи валюты потребуется привилегия VIP, если вы захотите поддержать проект и отправите сумму, больше 200 рублей, то вы автоматически становитесь VIP."
@@ -1294,7 +1615,7 @@
 #
 #                    #size_hint: .3, .3
 #                    text: "Поддержать"
-#                    font_name: "main_font.ttf"
+#                    font_name: "images/main_font.ttf"
 #                    pos_hint: {"center_x":.5}
 #                    md_bg_color: 0.1, 0.6, 0.9, 1.0
 #                    font_size: 40
